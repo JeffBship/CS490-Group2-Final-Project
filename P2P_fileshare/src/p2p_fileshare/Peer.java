@@ -6,8 +6,8 @@ public class Peer {
   
   public static void main(String[] args) throws IOException {
     
-    //String destinationIP = "192.168.1.46";  //Jeff desktop localIP
-    String destinationIP = "192.168.1.118";  //Jeff laptop localIP
+    String destinationIP = "192.168.1.46";  //Jeff desktop localIP
+    //String destinationIP = "192.168.1.118";  //Jeff laptop localIP
     int destinationPort = 50000;
     
     Message outgoing = new Message();

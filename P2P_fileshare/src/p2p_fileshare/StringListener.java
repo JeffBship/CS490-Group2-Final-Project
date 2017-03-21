@@ -7,7 +7,7 @@
  */
 
 
-package stringlistener;
+package p2p_fileshare;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -15,7 +15,9 @@ public class P2P_fileshare {
    * @param args the command line arguments
    */
   public static void main(String[] args) {
-    // TODO code application logic here
+    System.out.println("P2P_fileshare main program compiled. \n"
+        + "From here the user will choose Server or Peer and \n"
+        + "the appropriate app will start.   ");
   }
   
 }

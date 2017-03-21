@@ -1,25 +1,27 @@
 package p2p_fileshare;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.io.IOException;
 
-/**
- *
- * @author Dad
- */
 public class Peer {
   
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     
-    message outgoing = new message();
+    //String destinationIP = "192.168.1.46";  //Jeff desktop localIP
+    String destinationIP = "192.168.1.118";  //Jeff laptop localIP
+    int destinationPort = 50000;
     
-    outgoing.set("this is a big long string of stuff for the outgoing message.");
+    Message outgoing = new Message();
     
+    outgoing.setData("The objective of this project is to develop a simple peer to "
+        + "peer file sharing system that uses a centralized directory server. This "
+        + "project consists of and is delivered in three stages: a survey paper "
+        + "discussing different existing P2P architectures for file sharing; a "
+        + "detailed design of the system to be implemented including its protocols;"
+        + " and the final demonstration of the working system. The overall architecture "
+        + "of the system will be similar to that of the original Napster, as shown below..");
+    System.out.println(" hello there");
+    outgoing.transmit(destinationIP, destinationPort);
         
-    outgoing.transmit();
   }
   
 }

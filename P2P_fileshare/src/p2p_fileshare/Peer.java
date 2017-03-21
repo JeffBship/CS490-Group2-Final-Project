@@ -12,4 +12,14 @@ package p2p_fileshare;
  */
 public class Peer {
   
+  public static void main(String[] args) {
+    
+    message outgoing = new message();
+    
+    outgoing.set("this is a big long string of stuff for the outgoing message.");
+    
+        
+    outgoing.transmit();
+  }
+  
 }

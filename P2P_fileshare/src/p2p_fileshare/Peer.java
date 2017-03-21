@@ -8,7 +8,7 @@ public class Peer {
     
     String destinationIP = "192.168.1.46";  //Jeff desktop localIP
     //String destinationIP = "192.168.1.118";  //Jeff laptop localIP
-    int destinationPort = 50000;
+    int destinationPort = 55000;
     
     Message outgoing = new Message();
     

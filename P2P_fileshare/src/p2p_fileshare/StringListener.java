@@ -20,7 +20,7 @@ public class StringListener {
   public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
 
-        try { serverSocket = new ServerSocket(55555);
+        try { serverSocket = new ServerSocket(55000);
         } catch (IOException ex) {System.out.println("Port not available. ");
         }
 

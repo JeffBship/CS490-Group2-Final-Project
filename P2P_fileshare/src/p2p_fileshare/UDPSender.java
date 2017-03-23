@@ -1,9 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Jeff Blankenship, Adrian Ward-Manthey
+ * CS 490 Final Project
+ * Prof Williams
+ * 
+ * This is some test code to send and receive 128 byte strings via sockets.
  */
-package stringsender;
+
+package p2p_fileshare;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -24,12 +27,10 @@ public class UDPSender {
     return madePacket;
   }
   
-
   public static void main(String[] args) throws IOException {
-    //String destinationIP = "149.152.23.48";
-    //String destinationIP = "73.69.81.72"; //jeff pc public ip
     String destinationIP = "192.168.1.46"; // jeff pc local ip
     //String destinationIP = "192.168.1.118"; // jeff laptop local ip
+    //String destinationIP = "127.0.0.1";  // local host
     int destinationPort = 55000;
 
     String message = "This is a big long String that represents a message we want to send.";
@@ -38,5 +39,4 @@ public class UDPSender {
     datagramSocket.send(outgoingPacket);
     datagramSocket.close();
     }
-  
 }

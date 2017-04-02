@@ -20,7 +20,6 @@ public class StringListener1 {
   public static void main(String[] args) throws IOException {
     
     new Timer(20).start();
-    new Timer2(30).start();
          
     }  
 }

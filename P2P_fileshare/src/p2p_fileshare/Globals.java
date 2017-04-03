@@ -37,7 +37,8 @@ public class Globals {
       "for the hot day made her feel very sleepy and stupid), whether" +
       "the pleasure of making a daisy-chain would be worth the trouble" +
       "of getting up and picking the daisies, when suddenly a White" +
-      "Rabbit with pink eyes ran close by her.\n" +
+      "Rabbit with pink eyes ran close by her.ENDS WITH DIGITS TO ZERO 1234567890";
+      /*
       "\n" +
       "  There was nothing so VERY remarkable in that; nor did Alice\n" +
       "think it so VERY much out of the way to hear the Rabbit say to\n" +
@@ -72,33 +73,6 @@ public class Globals {
       "was empty:  she did not like to drop the jar for fear of killing\n" +
       "somebody, so managed to put it into one of the cupboards as she\n" +
       "fell past it. ENDS WITH DIGITS TO ZERO 1234567890";
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+      */
   
 }

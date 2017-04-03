@@ -10,7 +10,6 @@
 package p2p_fileshare;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 public class Packet {
   byte[] body = new byte[128];
@@ -34,5 +33,51 @@ public class Packet {
      String result = new String(this.body, "UTF-8"  );
      return result;
    }
+   
+   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+   public String getpeerID (){
+     String result = "";
+     String packetString = this.asString();
+     //######################################STOPPED HERE 4/3 1:20PM
+     int i = 0;
+     do{
+       
+       result = result + packetString.charAt(i);
+     }
+     while (  );
+     
+     return result;     
+   }
+   
+   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+   public String getIPAddress (){
+     String result = "";
+     
+     return result;     
+   }
+   
+   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+   public String getSequence (){
+     String result = "";
+     
+     return result;     
+   }
+   
+   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+   public String getPacketsRemaining (){
+     String result = "";
+     
+     return result;     
+   }
+   
+   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+   public String getData (){
+     String result = "";
+     
+     return result;     
+   }
+  
+   
+   
    
  }  

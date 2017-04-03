@@ -3,6 +3,8 @@
  * 
  * This is mostly just practice on multithreading. * 
  * 
+ * Need to add functionality for estimated RTT.
+ * 
  */
 
 

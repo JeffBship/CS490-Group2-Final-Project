@@ -8,6 +8,7 @@
 package p2p_fileshare;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -17,11 +18,51 @@ import java.util.ArrayList;
 class RDT_Sender {
 
   public static void transmit(String destinationIP, int destinationPort, String message) throws IOException{
-           
-    System.out.println("In Transmit to IP " + destinationIP);
-    ArrayList packetList = new ArrayList(0);
+    ArrayList<Packet> packetList = new ArrayList<>();
+    String LocalPeerID = "1";  //temporary.  need to figure out how to manage this.
+    InetAddress LocalIP = InetAddress.getLocalHost();
+    String LocalIPString = LocalIP.getHostAddress();
+    String sequence = "0";
+    String packetsRemaining = "";
+    int packetsRemainingInt = 0;
+    String packetData = "";
     
+    packetsRemainingInt = (int) Math.ceil( message.length() / 95 ) + 1; 
+    //Build the packetList by taking 95 byte chunks of the message
+    while (packetsRemainingInt>0){
+      packetsRemaining = Integer.toString(packetsRemainingInt);
+      int endIndex = 94;
+      String newPacketData;
+      if (message.length()>95){
+        newPacketData = message.substring(0, 94); //first 95 bytes of message
+        message = message.substring(94); //all after the first 95
+        }else{
+          newPacketData = message;
+        }
+      Packet newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining, newPacketData);
+      packetList.add(newPacket); //adds newPacket to the end of the list.
+      if (sequence.equals("0")) { 
+        sequence = "1";
+        } else { 
+        sequence = "0"; 
+        }
+      packetsRemainingInt--;
+    }
+    
+    //
+    for (int i=0;i<packetList.size();i++){
+      System.out.println("--------------------------------------------------------");
+      System.out.println( packetList.get(i).asString()    );
+    }
+    
+    System.out.println("In Transmit,  to IP " + destinationIP);
     DatagramSocket datagramSocket = new DatagramSocket();
+    // do the udt_send stuff here
+    for (int i=0;i<packetList.size();i++){
+      System.out.println("-----SENDING NEXT PACKET-----");
+      System.out.println( packetList.get(i).asString()    );
+    }
+    
     
     datagramSocket.close();
   }
@@ -29,29 +70,33 @@ class RDT_Sender {
   
 
   private void rdt_send(){
-      }
+    // - extract sequence from packet
+    // - send the packet
+    // - Start Timer
+    
+  }
 
-  private static packet rdt_rcv(){
-        packet result = new packet();
-        return result;
-      }
+  private static Packet rdt_rcv() throws UnsupportedEncodingException{
+    Packet result = new Packet();
+    return result;
+  }
 
-  private static packet make_pkt(char state, String data){
-        packet result = new packet();
-        return result;
-      }
+  private static Packet make_pkt(char state, String data) throws UnsupportedEncodingException{
+    Packet result = new Packet();
+    return result;
+  }
 
   private static void udt_send(String destinationIP, int destinationPort, 
-                               packet packetPar, DatagramSocket datagramSocket) 
+                               Packet packetPar, DatagramSocket datagramSocket) 
                                throws IOException{
-    //Now that we have our own packet, we need to make them back into strings to use Datagram Packets :(
+    //Now that we have our own packet, we need to make them back into Datagram Packets
     String packetString = packetPar.toString();
-    DatagramPacket outgoingPacket = makePacket(packetString, destinationIP, destinationPort);
+    DatagramPacket outgoingPacket = makeDatagramPacket(packetString, destinationIP, destinationPort);
     datagramSocket.send(outgoingPacket);
-      }
+  }
       
 
-  public static DatagramPacket makePacket(String msg, String destination, int port) throws UnknownHostException{
+  public static DatagramPacket makeDatagramPacket(String msg, String destination, int port) throws UnknownHostException{
     InetAddress IPaddress =  InetAddress.getByName(destination);
     byte[] data = msg.getBytes();
     int length = msg.length();

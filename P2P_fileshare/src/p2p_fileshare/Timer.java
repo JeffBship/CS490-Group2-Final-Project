@@ -1,3 +1,12 @@
+/**
+ * Timer counts down a number of seconds.
+ * 
+ * This is mostly just practice on multithreading. * 
+ * 
+ */
+
+
+
 package p2p_fileshare;
 
 public class Timer extends Thread {

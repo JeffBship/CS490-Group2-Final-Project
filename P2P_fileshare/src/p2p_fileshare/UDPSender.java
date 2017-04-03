@@ -28,15 +28,17 @@ public class UDPSender {
   }
   
   public static void main(String[] args) throws IOException {
-    String destinationIP = "192.168.1.46"; // jeff pc local ip
-    //String destinationIP = "192.168.1.118"; // jeff laptop local ip
-    //String destinationIP = "127.0.0.1";  // local host
-    int destinationPort = 55000;
+    for(int seq=0;seq<10;seq++){
+        String destinationIP = "192.168.1.46"; // jeff pc local ip
+        //String destinationIP = "192.168.1.118"; // jeff laptop local ip
+        //String destinationIP = "127.0.0.1";  // local host
+        int destinationPort = 55000;
 
-    String message = "This is a big long String that represents a message we want to send.";
-    DatagramSocket datagramSocket = new DatagramSocket();
-    DatagramPacket outgoingPacket = makePacket(message, destinationIP, destinationPort);
-    datagramSocket.send(outgoingPacket);
-    datagramSocket.close();
+        String message = "Packet Number: " + seq +" This is a big long String that represents a message we want to send.";
+        DatagramSocket datagramSocket = new DatagramSocket();
+        DatagramPacket outgoingPacket = makePacket(message, destinationIP, destinationPort);
+        datagramSocket.send(outgoingPacket);
+        datagramSocket.close();
+        }
     }
 }

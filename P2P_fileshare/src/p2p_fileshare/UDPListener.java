@@ -57,7 +57,6 @@ public static class DisplayPacketDetails extends Thread {
       String msg = new String(msgBuffer, offset, length);
       System.out.println("[Server at IP  Address=" + remoteAddr + ", port="
           + remotePort + "]: " + msg);
-      System.out.println("End of thread.");
     }
 }
 }

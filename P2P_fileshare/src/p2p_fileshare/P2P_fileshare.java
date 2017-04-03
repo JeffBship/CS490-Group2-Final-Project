@@ -31,10 +31,10 @@ public class P2P_fileshare {
         + "the appropriate app will start.   ");
     
     InetAddress LocalIP = InetAddress.getLocalHost();
-    System.out.println("Local IP is: " + LocalIP);
     
-    RDT_Sender.transmit( LocalIP.getHostName(), 555);
+    System.out.println("Local IP is: " + LocalIP.getHostAddress());
     
+    RDT_Sender.transmit( Globals.JEFF_PC_IP, Globals.PORT, Globals.ALICE);
   }
   
 }

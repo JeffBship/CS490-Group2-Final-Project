@@ -32,7 +32,7 @@ public class UDPSender {
         String destinationIP = "192.168.1.46"; // jeff pc local ip
         //String destinationIP = "192.168.1.118"; // jeff laptop local ip
         //String destinationIP = "127.0.0.1";  // local host
-        int destinationPort = 55000;
+        int destinationPort = Globals.PORT;
 
         String message = "Packet Number: " + seq +" This is a big long String that represents a message we want to send.";
         DatagramSocket datagramSocket = new DatagramSocket();

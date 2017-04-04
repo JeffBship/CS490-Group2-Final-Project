@@ -5,6 +5,9 @@
  * 
  * This is some test code to send and receive 128 byte strings via sockets.
  * 
+ * 
+ * Sound file IndustrialAlarm courtesy of http://soundbible.com/287-Industrial-Alarm.html
+ * 
  */
 
 
@@ -34,7 +37,7 @@ public class P2P_fileshare {
     
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     
-    RDT_Sender.transmit( Globals.ADRIAN_LAPTOP_IP, Globals.PORT, Globals.ALICE);
+    RDT.transmit( Globals.JEFF_PC_IP, Globals.PORT, Globals.ALICE);
   }
   
 }

@@ -18,8 +18,8 @@ public class UDPListener {
 
   public static void main(String[] args) throws IOException {
     Scanner keyboard = new Scanner(System.in);
-    int port = 55000;
-    InetAddress IP = InetAddress.getByName("192.168.1.46"); // jeff pc local ip
+    int port = Globals.PORT;
+    InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
     
     DatagramSocket datagramSocket = new DatagramSocket(port,IP);
         

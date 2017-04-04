@@ -22,14 +22,24 @@ public class Song {
     this.peer = peerParam;
   }
   
+  public String getName(){
+     return this.filename;
+  }
+  public String getAll(){
+   String result = this.filename + " " + this.filesize + " " + this.peer;
+   return result;
+  }
   
+  public String getKey(){
+    String key = this.filename + " " + this.peer;
+    return key;
+  }
+ 
   public static void main(String[] args) {
     System.out.println("song class compiled and ran successfully.");
   }
   
   
-      
-  
-  
+     
   
 }

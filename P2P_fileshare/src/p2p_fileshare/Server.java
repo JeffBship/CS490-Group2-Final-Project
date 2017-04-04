@@ -57,6 +57,7 @@ public class Server {
   
   // Adrian:  This doesn't work from my maching.  I think it needs a relative file tree.
   
+  
   File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
   File[] listOfFiles = folder.listFiles();
   for(File file : listOfFiles){

@@ -3,6 +3,9 @@
  * CS 490 Final Project
  * Prof Williams
  * 
+ * Notes:
+ * The last packet in the list has packetsRemaining = 1  (not 0)
+ * 
  * 
  */
 package p2p_fileshare;
@@ -27,7 +30,7 @@ class RDT_Sender {
     int packetsRemainingInt = 0;
     String packetData = "";
     
-    packetsRemainingInt = (int) Math.ceil( message.length() / 95 ) + 1; 
+    packetsRemainingInt = (int) Math.ceil( message.length() / 95.0 ) ; 
     //Build the packetList by taking 95 byte chunks of the message
     while (packetsRemainingInt>0){
       packetsRemaining = Integer.toString(packetsRemainingInt);
@@ -49,18 +52,18 @@ class RDT_Sender {
       packetsRemainingInt--;
     }
     
-    //
-    for (int i=0;i<packetList.size();i++){
-      System.out.println("--------------------------------------------------------");
-      System.out.println( packetList.get(i).asString()    );
-    }
     
     System.out.println("In Transmit,  to IP " + destinationIP);
     DatagramSocket datagramSocket = new DatagramSocket();
     // do the udt_send stuff here
     for (int i=0;i<packetList.size();i++){
       System.out.println("-----SENDING NEXT PACKET-----");
-      System.out.println( packetList.get(i).asString()    );
+      System.out.println("getpeerID           : " + packetList.get(i).getpeerID() );
+      System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
+      System.out.println("getSequence         : " + packetList.get(i).getSequence() );
+      System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
+      System.out.println("getData             : " + packetList.get(i).getData() );
+      //System.out.println( packetList.get(i).asString()    );
     }
     
     

@@ -34,7 +34,7 @@ public class P2P_fileshare {
     
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     
-    RDT_Sender.transmit( Globals.JEFF_PC_IP, Globals.PORT, Globals.ALICE);
+    RDT_Sender.transmit( Globals.ADRIAN_LAPTOP_IP, Globals.PORT, Globals.ALICE);
   }
   
 }

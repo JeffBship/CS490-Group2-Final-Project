@@ -22,6 +22,8 @@ class RDT_Sender {
 
   public static void transmit(String destinationIP, int destinationPort, String message) throws IOException{
     ArrayList<Packet> packetList = new ArrayList<>();
+    
+    //This block creates header data to use in the packets
     String LocalPeerID = "1";  //temporary.  need to figure out how to manage this.
     InetAddress LocalIP = InetAddress.getLocalHost();
     String LocalIPString = LocalIP.getHostAddress();
@@ -74,9 +76,10 @@ class RDT_Sender {
 
   private void rdt_send(){
     // - extract sequence from packet
-    // - send the packet
+    // - send the packet UDT_SEND
     // - Start Timer
-    
+    // - IF timeout send udt_send again
+    // - if ACK of correct sequence # , finished
   }
 
   private static Packet rdt_rcv() throws UnsupportedEncodingException{

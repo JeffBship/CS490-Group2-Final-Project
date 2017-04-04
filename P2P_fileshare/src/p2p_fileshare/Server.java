@@ -15,6 +15,7 @@ package p2p_fileshare;
    Will be implemented using a either a HashMap or HashTable
    Java HashTables uses separate chaining to deal with collisions 
 */
+import java.io.*;
 import java.util.*;
 public class Server {
   //Main method just for testing purposes 
@@ -43,6 +44,26 @@ public class Server {
   }
   
   System.out.print("OUTPUTSTREAM" + outputStream);
-  
+  //!!!!!!!!!!!!!!
+  /*Test code to read files from a directory*/
+  //!!!!!!!!!!!!!!!
+  List<String> names;
+  names = new ArrayList<>();
+  /*
+             Things to Figure Out
+    1) How to get associated IP addresses with the songs
+    2) How to get user to input directory themself (perhaps with scanner...)
+  */
+  File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
+  File[] listOfFiles = folder.listFiles();
+  for(File file : listOfFiles){
+  if(file.isFile() && file.getName().endsWith(".mp3"))
+    names.add(file.getName());
   }
+  for(int i = 0; i<names.size(); i++){
+      System.out.println(names.get(i));
+  }
+  
+ 
 }  
+}

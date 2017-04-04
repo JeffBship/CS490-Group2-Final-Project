@@ -37,9 +37,8 @@ public class UDPListener {
         
     datagramSocket.close();
   }  
-
-
-
+  
+  
 
 public static class DisplayPacketDetails extends Thread {
     DatagramPacket packet = new DatagramPacket(new byte[128], 128);

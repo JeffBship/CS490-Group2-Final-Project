@@ -9,25 +9,32 @@ public class Song {
   String filename;
   String filesize;
   String peer;
+  Integer SNum;
   
   public Song(){
     this.filename = "";
     this.filesize = "";
     this.peer = "";
+    this.SNum = 0;
   }
   
-  public Song(String filenameParam, String filesizeParam, String peerParam){
+  public Song(Integer SongNumber, String filenameParam, String filesizeParam, String peerParam){
     this.filename = filenameParam; 
     this.filesize = filesizeParam;
     this.peer = peerParam;
+    this.SNum = SongNumber;
   }
   
   public String getName(){
      return this.filename;
   }
   public String getAll(){
-   String result = this.filename + " " + this.filesize + " " + this.peer;
+   String result = " " + this.SNum + " " + this.filename + " " + this.filesize + " " + this.peer;
    return result;
+  }
+  
+  public Integer getSNum(){
+    return SNum;
   }
   
   public String getKey(){

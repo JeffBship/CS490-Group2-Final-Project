@@ -1,4 +1,4 @@
-  /**
+/**
  * Jeff Blankenship, Adrian Ward-Manthey
  * CS 490 Final Project
  * Prof Williams
@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import static p2p_fileshare.UDPSender.makePacket;
 
@@ -52,10 +52,9 @@ class RDT {
         else {sequence = "0";}
       packetsRemainingInt--;
     }
-    
-    
     System.out.println("In Transmit,  to IP " + transmitIP);
     
+    Globals.timeout = 4.0 * Globals.INIT_EST_RTT;  //reset timeout and estRTT at the start of each packet stack.
     for (int i=0;i<packetList.size();i++){
       System.out.println("-----SENDING NEXT PACKET-----");
 //000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000      
@@ -64,25 +63,36 @@ class RDT {
       //System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
       System.out.println("getSequence         : " + packetList.get(i).getSequence() );
       //System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
-      //System.out.println("getData             : " + packetList.get(i).getData() );
+      System.out.println("getData             : " + packetList.get(i).getData() );
       //System.out.println( packetList.get(i).asString()    );
     }
   }
-        
   
-
   private static void rdt_send(String rdt_sendIP, int rdt_sendPort, 
                                Packet rdt_sendPacket) throws IOException{
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
     
     // - send the packet UDT_SEND
-    udt_send(rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
-    
-    // - Start Timer
-    
-    // - IF timeout send udt_send again
-    // - if ACK of correct sequence # , finished
+    DatagramSocket datagramSocket = new DatagramSocket();
+    datagramSocket.setSoTimeout( (int)Globals.timeout );
+    boolean finished = false;
+    while (!finished){
+      try {
+        datagramSocket.setSoTimeout( (int)Globals.timeout );
+        udt_send(datagramSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
+        long startTime = System.currentTimeMillis();  // - Start Timer
+        // - IF timeout send udt_send again
+        //  LISTEN FOR ACK
+        udt_send(datagramSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
+        // - if ACK of correct sequence # , finished
+          finished = true;
+        } catch (SocketTimeoutException e) {
+          Globals.timeout *= 2.0;  // After a timeout, double the time
+          datagramSocket.setSoTimeout( (int)Globals.timeout );
+          }
+    }
+    datagramSocket.close();
   }
 
   private static Packet rdt_rcv() throws UnsupportedEncodingException{
@@ -95,7 +105,8 @@ class RDT {
     return result;
   }
 
-  private static void udt_send(String udtIP, int destinationPort, 
+  private static void udt_send(DatagramSocket datagramSocket,
+                               String udtIP, int destinationPort, 
                                Packet packetPar) 
                                throws IOException{
     System.out.println("##################### udt_send ######################");
@@ -106,22 +117,11 @@ class RDT {
         int destinationPortx = Globals.PORT;
 
         String message = "this is stupid";
-        DatagramSocket datagramSocket = new DatagramSocket();
         DatagramPacket outgoingPacket = makePacket(packetPar.asString(), udtIP, destinationPortx);
         datagramSocket.send(outgoingPacket);
-        datagramSocket.close();
+        
         
     }
-  
-  
-    
-
-
-  
-      
-
-      
-      
 
 
 
@@ -130,4 +130,3 @@ class RDT {
   }
 
 }
-  

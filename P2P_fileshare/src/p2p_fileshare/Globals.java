@@ -15,11 +15,13 @@ public class Globals {
   
   public static final int PORT = 55000;
   
-  public static final double INIT_EST_RTT = 100;
+  public static final double INIT_EST_RTT = 100.0;
+  public static       double timeout = 4.0 * INIT_EST_RTT;
+  public static final double INIT_TIMEOUT = 400.0;
   public static final double ALPHA = 0.125;
   public static final double BETA = 0.25;
   
-  public static double estimatedRTT = INIT_EST_RTT;
+
   public static String LocalPeerID = "1";
   
   public static final String JEFF_PC_IP = "192.168.1.46";

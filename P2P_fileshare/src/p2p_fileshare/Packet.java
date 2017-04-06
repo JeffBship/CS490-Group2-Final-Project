@@ -34,82 +34,87 @@ throws UnsupportedEncodingException, FileNotFoundException, IOException{
     
   }
 
+public boolean isAck(String seqPar) throws UnsupportedEncodingException{
+  boolean result = (this.getSequence().equals(seqPar)) && (this.getData().equals("ACK"));
+  return result;
+}
+
    
-  public String asString()throws UnsupportedEncodingException{
-     String result = new String(this.body, "UTF-8"  );
-     return result;
+public String asString()throws UnsupportedEncodingException{
+   String result = new String(this.body, "UTF-8"  );
+   return result;
+}
+   
+ //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+public String getpeerID () throws UnsupportedEncodingException{
+  String result = "";
+  String packetString = this.asString();
+  int i = 0;
+  do{
+    result = result + packetString.charAt(i);
+    i++;
+  }
+  while ( packetString.charAt(i) != ' ' );
+  return result;     
+}
+   
+//peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+public String getIPAddress () throws UnsupportedEncodingException{
+  String result = "";
+  String packetString = this.asString();
+  int i = 0;
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
+  do{
+    result = result + packetString.charAt(i);
+    i++;
+  }
+  while ( packetString.charAt(i) != '\n' );
+  return result;     
+}
+   
+ //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+public String getSequence () throws UnsupportedEncodingException{
+  String result = "";
+  String packetString = this.asString();
+  int i = 0;
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
+  while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
+  do{
+    result = result + packetString.charAt(i);
+    i++;
+  }
+  while ( packetString.charAt(i) != ' ' );
+  return result;     
+}
+   
+//peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+public String getPacketsRemaining () throws UnsupportedEncodingException{
+  String result = "";
+  String packetString = this.asString();
+  int i = 0;
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
+  while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the sequence and the space
+  do{
+    result = result + packetString.charAt(i);
+    i++;
+  }
+  while ( packetString.charAt(i) != '\n' );
+  return result;     
   }
    
-   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
-  public String getpeerID () throws UnsupportedEncodingException{
-    String result = "";
-    String packetString = this.asString();
-    int i = 0;
-    do{
-      result = result + packetString.charAt(i);
-      i++;
-    }
-    while ( packetString.charAt(i) != ' ' );
-    return result;     
-  }
-   
-  //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
-  public String getIPAddress () throws UnsupportedEncodingException{
-    String result = "";
-    String packetString = this.asString();
-    int i = 0;
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
-    do{
-      result = result + packetString.charAt(i);
-      i++;
-    }
-    while ( packetString.charAt(i) != '\n' );
-    return result;     
-  }
-   
-   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
-  public String getSequence () throws UnsupportedEncodingException{
-    String result = "";
-    String packetString = this.asString();
-    int i = 0;
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
-    while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
-    do{
-      result = result + packetString.charAt(i);
-      i++;
-    }
-    while ( packetString.charAt(i) != ' ' );
-    return result;     
-  }
-   
-   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
-   public String getPacketsRemaining () throws UnsupportedEncodingException{
-    String result = "";
-    String packetString = this.asString();
-    int i = 0;
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
-    while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the sequence and the space
-    do{
-      result = result + packetString.charAt(i);
-      i++;
-    }
-    while ( packetString.charAt(i) != '\n' );
-    return result;     
-  }
-   
-   //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
-   public String getData () throws UnsupportedEncodingException{
-    String result = "";
-    String packetString = this.asString();
-    int i = 0;
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
-    while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
-    while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the sequence and the space
-    while ( packetString.charAt(i) != '\n' ) {i++;} i++;  //move the index past the packetsRemaining and the \n
-    result = packetString.substring(i);                   //takes the remaining characters.
-    result = result.substring(0, result.length()-1 );     //remove the \n on the end
-    return result;     
+//peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]
+public String getData () throws UnsupportedEncodingException{
+  String result = "";
+  String packetString = this.asString();
+  int i = 0;
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
+  while ( packetString.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
+  while ( packetString.charAt(i) != ' ' ) {i++;} i++;  //move the index past the sequence and the space
+  while ( packetString.charAt(i) != '\n' ) {i++;} i++;  //move the index past the packetsRemaining and the \n
+  result = packetString.substring(i);                   //takes the remaining characters.
+  result = result.substring(0, result.length()-1 );     //remove the \n on the end
+  return result;     
   }
 
   

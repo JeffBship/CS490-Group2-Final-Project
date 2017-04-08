@@ -42,8 +42,14 @@ public Packet (String contents) throws UnsupportedEncodingException{
     }
   }
 
-public boolean isAck(String seqPar) throws UnsupportedEncodingException{
+public boolean isACK(String seqPar) throws UnsupportedEncodingException{
   boolean result = (this.getSequence().equals(seqPar)) && (this.getData().equals("ACK"));
+  return result;
+}
+
+public boolean isFIN() throws UnsupportedEncodingException{
+  boolean result = this.getData().equals("FIN");
+  //System.out.println(" ==========================================in isFIN and FIN equals" + this.getData().equals("FIN") );
   return result;
 }
 
@@ -93,6 +99,16 @@ public String getSequence () throws UnsupportedEncodingException{
   }
   while ( packetString.charAt(i) != ' ' );
   return result;     
+}
+
+public void setSequence (String newSeq) throws UnsupportedEncodingException{
+  String  contents = this.asString();
+  int i = 0;
+  while ( contents.charAt(i) != ' ' ) {i++;} i++;  //move the index past the PeerID and the space
+  while ( contents.charAt(i) != '\n') {i++;} i++;  //move the index past the IPaddress and the \n
+  char[] contentChars = contents.toCharArray();
+  contentChars[i] = newSeq.charAt(0);
+  this.body = new String(contentChars).getBytes("UTF-8");   
 }
    
 //peerID [0-2] \sp[3] IPaddress[4-19] \n[20] sequence[21-26] \sp[27] packetsRemaining[28-33] \n[34] data[35-126] \n[127]

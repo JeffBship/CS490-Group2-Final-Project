@@ -63,9 +63,13 @@ class RDT {
       packetList.add(newPacket); //adds newPacket to the end of the list.
       if (sequence.equals("0")) 
         { sequence = "1";} 
-        else {sequence = "0";}11
+        else {sequence = "0";}
       packetsRemainingInt--;
     }
+    //add FIN packet on the end
+    Packet newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining, "FIN");
+    packetList.add(newPacket); //adds newPacket to the end of the list.
+    
     System.out.println("In Transmit,  to IP " + transmitIP);
     
     for (int i=0;i<packetList.size();i++){
@@ -114,14 +118,14 @@ class RDT {
         // CHECK SEQUENCE NUMBER OF ACK
         // - if ACK of correct sequence # , finished
           Packet response = Packet.extractFromDatagram(DGACKpacket);
-          if ( response.isAck(sequence)  ){
+          if ( response.isACK(sequence)  ){
             System.out.println("------Received good Ack.");
             finished=true;
           } else {
             System.out.println("------Received bad Ack.   BAD ACK BAD ACK BAD ACK BAD ACK BAD ACK BAD ACK  ");
           }
         } catch (SocketTimeoutException e) {
-          timout *= 2;  // After a timeout, double the timer
+          timout *= 1.1;  // After a timeout, double the timer  USING A SMALLER NUMBER DURING TESTING
           System.out.println("WARNING:  THERE WAS A TIMEOUT.  Timeout is now " + (long)timout + " msec.");
           }
     }

@@ -4,6 +4,7 @@ CS 490 Networking, Spring 2017
 Prof. Williams
 
 **To do list:**
+- [ ] Finishe the checkpoint documentation
 - [ ] Ask for destination IP
 - [ ] Ask for and load a file to send
 - [ ] Make the receiver save as a file

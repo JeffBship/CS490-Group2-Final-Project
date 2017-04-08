@@ -88,7 +88,7 @@ class RDT {
       //System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
       //System.out.println("getSequence         : " + packetList.get(i).getSequence() );
       //System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
-      System.out.println("getData             : " + packetList.get(i).getData() );
+      //System.out.println("getData             : " + packetList.get(i).getData() );
       //System.out.println( packetList.get(i).asString()    );
     }
   }

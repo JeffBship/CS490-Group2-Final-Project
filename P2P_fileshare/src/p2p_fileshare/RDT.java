@@ -98,8 +98,9 @@ class RDT {
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
     int port = Globals.ACK_PORT;
-    InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
-    DatagramSocket ACKSocket = new DatagramSocket(Globals.ACK_PORT,IP);
+    //InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
+    
+    DatagramSocket ACKSocket = new DatagramSocket(Globals.ACK_PORT);
     boolean finished = false;
     while (!finished){
       try {

@@ -21,9 +21,8 @@ import static p2p_fileshare.UDPSender.makePacket;
 class RDTack {
 
     static double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
-    static long ACKtime = 4000;         //base  time wait before ack (msec)
-    static long ACKdev = 1;          //amount of variability in time before ack (msec)
-    static String ackIPstring = Globals.JEFF_PC_IP;   //IP address to use, as a String
+    static long ACKtime = 100;         //base  time wait before ack (msec)
+    static long ACKdev = 20;          //amount of variability in time before ack (msec)
 
     public static void main(String[] args)
             throws UnknownHostException, SocketException, IOException, InterruptedException {
@@ -44,13 +43,14 @@ class RDTack {
         boolean drop = false;
 
         int ackPort = Globals.ACK_PORT;
-        InetAddress ackIPinet = InetAddress.getByName(ackIPstring);
+        
+        
         boolean finished = false;
         while (!finished) {
             System.out.println("==================================================");
 
             //RECEIVE NEXT PACKET
-            DatagramSocket MSGSocket = new DatagramSocket(Globals.MSG_PORT, ackIPinet);
+            DatagramSocket MSGSocket = new DatagramSocket(Globals.MSG_PORT);
             DatagramPacket MSGpacket = new DatagramPacket(new byte[128], 128);
             MSGSocket.receive(MSGpacket);
             MSGSocket.close();
@@ -95,6 +95,7 @@ class RDTack {
             ACKseq = newPacket.getSequence();
             DatagramSocket ACKSocket = new DatagramSocket();
             Packet ackPacket = new Packet("XX", "XX", ACKseq, "XX", "ACK");
+            InetAddress ackIPinet = InetAddress.getByName(newPacket.getIPAddress());
             DatagramPacket ACKpacket = makePacket(ackPacket.asString(), ackIPinet, Globals.ACK_PORT);
             //DELAY BY THE Ack Time +/- ACKdev
             delay = (long) (ACKtime - ACKdev / 2 + ACKdev * Math.random());

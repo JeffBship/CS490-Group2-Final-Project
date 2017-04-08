@@ -11,6 +11,7 @@ package p2p_fileshare;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
 
 public class Packet {
   byte[] body = new byte[128];
@@ -32,6 +33,13 @@ throws UnsupportedEncodingException, FileNotFoundException, IOException{
     System.out.println("%%%%%%%%%%  PACKET OVER 128 BYTES  %%%%%%%%%%%%");
     }
     
+  }
+
+public Packet (String contents) throws UnsupportedEncodingException{
+  this.body = contents.getBytes("UTF-8");
+  if (this.body.length > 128) {
+    System.out.println("%%%%%%%%%%  PACKET OVER 128 BYTES  %%%%%%%%%%%%");
+    }
   }
 
 public boolean isAck(String seqPar) throws UnsupportedEncodingException{
@@ -116,6 +124,17 @@ public String getData () throws UnsupportedEncodingException{
   result = result.substring(0, result.length()-1 );     //remove the \n on the end
   return result;     
   }
+
+public static Packet extractFromDatagram (DatagramPacket DGpacket) throws UnsupportedEncodingException {
+      
+      byte[] msgBuffer = DGpacket.getData();
+      int length = DGpacket.getLength();
+      int offset = DGpacket.getOffset();
+      int remotePort = DGpacket.getPort();
+      String DGpayload = new String(msgBuffer, offset, length);
+      //System.out.println("DGpayload: " + DGpayload);
+      return new Packet(DGpayload);
+    }
 
   
    

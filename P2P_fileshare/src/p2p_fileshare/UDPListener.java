@@ -18,9 +18,8 @@ public class UDPListener {
 
   public static void main(String[] args) throws IOException {
     Scanner keyboard = new Scanner(System.in);
-    int port = Globals.PORT;
+    int port = Globals.ACK_PORT;
     InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
-    
     DatagramSocket datagramSocket = new DatagramSocket(port,IP);
         
     System.out.println("Created UDP  server socket at "

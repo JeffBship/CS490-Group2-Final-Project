@@ -12,6 +12,7 @@ package p2p_fileshare;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import static java.lang.Math.abs;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,8 +21,15 @@ import java.util.ArrayList;
 import static p2p_fileshare.UDPSender.makePacket;
 
 class RDT {
+  
+  //Timeout calculation variables
+  static double estimatedRTT;  
+  static double timout;
+  static double devRTT;
+  
+  
 
-  public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException{
+  public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
     ArrayList<Packet> packetList = new ArrayList<>();
     
     //This block creates header data to use in the packets
@@ -32,6 +40,12 @@ class RDT {
     String packetsRemaining = "";
     int packetsRemainingInt = 0;
     String packetData = "";
+    
+    //Timeout calculation data re-initializes for each packetList
+    boolean finished = false;
+    estimatedRTT = Globals.INIT_EST_RTT;  
+    timout = Globals.INIT_TIMEOUT;
+    devRTT = Globals.INIT_DEV_RTT;
     
     packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 95.0 ) ; 
     //Build the packetList by taking 95 byte chunks of the message
@@ -49,52 +63,71 @@ class RDT {
       packetList.add(newPacket); //adds newPacket to the end of the list.
       if (sequence.equals("0")) 
         { sequence = "1";} 
-        else {sequence = "0";}
+        else {sequence = "0";}11
       packetsRemainingInt--;
     }
     System.out.println("In Transmit,  to IP " + transmitIP);
     
-    Globals.timeout = 4.0 * Globals.INIT_EST_RTT;  //reset timeout and estRTT at the start of each packet stack.
     for (int i=0;i<packetList.size();i++){
-      System.out.println("-----SENDING NEXT PACKET-----");
-//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000      
+      System.out.println("--------------SENDING NEXT PACKET----------------------------");
       rdt_send(transmitIP, transmitPort, packetList.get(i));
       //System.out.println("getpeerID           : " + packetList.get(i).getpeerID() );
       //System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
       System.out.println("getSequence         : " + packetList.get(i).getSequence() );
       //System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
-      System.out.println("getData             : " + packetList.get(i).getData() );
+      //System.out.println("getData             : " + packetList.get(i).getData() );
       //System.out.println( packetList.get(i).asString()    );
     }
   }
   
   private static void rdt_send(String rdt_sendIP, int rdt_sendPort, 
-                               Packet rdt_sendPacket) throws IOException{
+                               Packet rdt_sendPacket) throws IOException, InterruptedException{
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
-    
-    // - send the packet UDT_SEND
-    DatagramSocket datagramSocket = new DatagramSocket();
-    datagramSocket.setSoTimeout( (int)Globals.timeout );
+    int port = Globals.ACK_PORT;
+    InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
+    DatagramSocket ACKSocket = new DatagramSocket(Globals.ACK_PORT,IP);
     boolean finished = false;
     while (!finished){
       try {
-        datagramSocket.setSoTimeout( (int)Globals.timeout );
-        udt_send(datagramSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
-        long startTime = System.currentTimeMillis();  // - Start Timer
-        // - IF timeout send udt_send again
-        //  LISTEN FOR ACK
-        udt_send(datagramSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
+        //  SEND THE CURRENT PACKET
+          DatagramSocket MSGSocket = new DatagramSocket();
+          udt_send(MSGSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
+          MSGSocket.close();
+        // Delay for testing only.
+          //System.out.println("<<< PACKET SENT: 1 SECOND DELAY IN EFFECT FOR TESTING >>>");
+          //Thread.sleep(1000);
+        //  LISTEN FOR ACK UNTIL TIMEOUT
+          long startTime = System.currentTimeMillis();  // - Start Timer
+          DatagramPacket DGACKpacket = new DatagramPacket(new byte[128], 128);
+          ACKSocket.setSoTimeout( (int)timout );
+          System.out.println("Listening for ACK on port " + Globals.ACK_PORT + "  timeout="+ (long)timout);
+          ACKSocket.receive(DGACKpacket);
+        //  UPDATE EstimatedRTT, and Timeout   
+          long stopTime = System.currentTimeMillis();  // - Stop Timer
+          long sampleRTT = stopTime - startTime;            
+          estimatedRTT = (1-Globals.ALPHA)*estimatedRTT + (Globals.ALPHA*sampleRTT);
+          devRTT = (long) ((1-Globals.BETA)*devRTT + Globals.BETA * abs(sampleRTT- estimatedRTT ));
+          timout = estimatedRTT + 4*devRTT;
+          //System.out.println("Packet received on ACKSocket.");
+          System.out.println("SampleRTT: " + sampleRTT + "      New timeout: " + (long)timout);
+        // CHECK SEQUENCE NUMBER OF ACK
         // - if ACK of correct sequence # , finished
-          finished = true;
+          Packet response = Packet.extractFromDatagram(DGACKpacket);
+          if ( response.isAck(sequence)  ){
+            System.out.println("------Received good Ack.");
+            finished=true;
+          } else {
+            System.out.println("------Received bad Ack.   BAD ACK BAD ACK BAD ACK BAD ACK BAD ACK BAD ACK  ");
+          }
         } catch (SocketTimeoutException e) {
-          Globals.timeout *= 2.0;  // After a timeout, double the time
-          datagramSocket.setSoTimeout( (int)Globals.timeout );
+          timout *= 2;  // After a timeout, double the timer
+          System.out.println("WARNING:  THERE WAS A TIMEOUT.  Timeout is now " + (long)timout + " msec.");
           }
     }
-    datagramSocket.close();
+    ACKSocket.close();
   }
-
+  
   private static Packet rdt_rcv() throws UnsupportedEncodingException{
     Packet result = new Packet();
     return result;
@@ -109,18 +142,13 @@ class RDT {
                                String udtIP, int destinationPort, 
                                Packet packetPar) 
                                throws IOException{
-    System.out.println("##################### udt_send ######################");
+    System.out.println("#### udt_send ####");
       
         //udtIP = Globals.JEFF_PC_IP; // jeff pc local ip
         //String destinationIP = "192.168.1.118"; // jeff laptop local ip
         //String destinationIP = "127.0.0.1";  // local host
-        int destinationPortx = Globals.PORT;
-
-        String message = "this is stupid";
-        DatagramPacket outgoingPacket = makePacket(packetPar.asString(), udtIP, destinationPortx);
+        DatagramPacket outgoingPacket = makePacket(packetPar.asString(), udtIP, destinationPort);
         datagramSocket.send(outgoingPacket);
-        
-        
     }
 
 
@@ -130,3 +158,5 @@ class RDT {
   }
 
 }
+
+/hello

@@ -28,7 +28,7 @@ public class P2P_fileshare {
    * @throws java.net.UnknownHostException
    */
   
-  public static void main(String[] args) throws UnknownHostException, IOException {
+  public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
     System.out.println("P2P_fileshare main program compiled. \n"
         + "From here the user will choose Server or Peer and \n"
         + "the appropriate app will start.   ");
@@ -37,7 +37,7 @@ public class P2P_fileshare {
     
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     
-    RDT.transmit( Globals.JEFF_PC_IP, Globals.PORT, Globals.ALICE);
+    RDT.transmit( Globals.JEFF_PC_IP, Globals.MSG_PORT, Globals.ALICE);
   }
   
 }

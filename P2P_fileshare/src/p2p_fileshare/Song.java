@@ -28,14 +28,25 @@ public class Song {
   public String getName(){
      return this.filename;
   }
+  
+  public String getFilesize(){
+      return this.filesize;
+  }
+  
+  public Integer getSNum(){
+    return this.SNum;
+  }
+  
+  public String getIP(){
+     return this.peer;
+  }
+  
   public String getAll(){
    String result = " " + this.SNum + " " + this.filename + " " + this.filesize + " " + this.peer;
    return result;
   }
   
-  public Integer getSNum(){
-    return SNum;
-  }
+  
   
   public String getKey(){
     String key = this.filename + " " + this.peer;

@@ -11,7 +11,10 @@ Prof. Williams
 
 ### Implementation checkpoint 4/9 **
 
-Instructions:  
+Video of implementation:
+https://github.com/JeffBship/CS490-Group2-Final-Project/blob/Implentation-Checkpoint/Submission.mp4
+
+Instructions to recreate:  
 Open 2 instances of an IDE (ie Netbeans), or open the project on 2 computers (must be on the same local network).  
 Run the file **RDTack.java**  make note of the local IP.  
 RDTack has some built in testing functions, and will only ACK the percent of packets shown.  The rest will be dropped.  

@@ -49,7 +49,8 @@ public class Globals {
       "for the hot day made her feel very sleepy and stupid), whether \n" +
       "the pleasure of making a daisy-chain would be worth the trouble \n" +
       "of getting up and picking the daisies, when suddenly a White \n" +
-      "Rabbit with pink eyes ran close by her.END\n"       +
+      "Rabbit with pink eyes ran close by her.END\n";
+      /*+
       "\n" +
       "  There was nothing so VERY remarkable in that; nor did Alice\n" +
       "think it so VERY much out of the way to hear the Rabbit say to\n" +
@@ -114,6 +115,7 @@ public class Globals {
       " X                                                              \n"+
       "X                                                               \n"
       ;
+*/
       
   
 }

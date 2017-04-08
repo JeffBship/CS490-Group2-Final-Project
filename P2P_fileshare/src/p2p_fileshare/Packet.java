@@ -47,9 +47,13 @@ public boolean isACK(String seqPar) throws UnsupportedEncodingException{
   return result;
 }
 
+public boolean isSYN() throws UnsupportedEncodingException{
+  boolean result = this.getData().equals("SYN");
+  return result;
+}
+
 public boolean isFIN() throws UnsupportedEncodingException{
   boolean result = this.getData().equals("FIN");
-  //System.out.println(" ==========================================in isFIN and FIN equals" + this.getData().equals("FIN") );
   return result;
 }
 

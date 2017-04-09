@@ -6,27 +6,18 @@
  * THIS IS THE RECEIVER END, IT RECEIVES, ACKS, BUILDS A STRING FROM THE PACKET
  * LIST, AND DISPLAYS THE RESULTS.
  * 
- * THIS CLASS JUST LISTENS AND ACK FOR SENT PACKETS. IT'S HERE FOR TESTING. RUN
- * IT FROM ANOTHER INSTANCE OF THE IDE.
- * 
- *
  */
 package p2p_fileshare;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import static p2p_fileshare.UDPSender.makePacket;
-
+import java.io.IOException;     import java.util.ArrayList;
+import java.net.DatagramPacket; import java.net.DatagramSocket;
+import java.net.InetAddress;    import java.net.SocketException;
+import java.net.UnknownHostException;   
 class RDTack {
 
     static double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
-    static long   ACKtime = 100;         //base  time wait before ack (msec)
-    static long   ACKdev = 20;          //amount of variability in time before ack (msec)
+    static long   ACKtime = 4000;      //base  time wait before ack (msec)
+    static long   ACKdev = 20;         //amount of variability in time before ack (msec)
 
     public static void main(String[] args)
     throws UnknownHostException, SocketException, IOException, InterruptedException {

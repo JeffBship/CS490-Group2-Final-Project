@@ -23,7 +23,7 @@ There is a built in delay to simulate slow networks.  The delay time and variati
 
 This file is purposefully on an infinite loop.  It will continue to receive and process packets until killed.
 
-In the other instance of the IDE, run the project P2P_fileshare.java.  Enter the IP of the target computer running RDTack.java, or just press enter if it's the same computer.
+In the other instance of the IDE, run the project **P2P_fileshare.java**.  Enter the IP of the target computer running RDTack.java, or just press enter if it's the same computer.
 
 
 ```

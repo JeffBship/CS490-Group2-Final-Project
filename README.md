@@ -5,14 +5,14 @@ Prof. Williams
 
 **To do list:**
 - [x] Finish the checkpoint documentation
-- [ ] Ask for destination IP (currently hard coded)
+- [x] Ask for destination IP (currently hard coded)
 - [ ] Ask for and load a file to send (currently sends a large string)
 - [ ] Make the receiver save as a file (currently displays assembled message on console)
 
 ### Implementation checkpoint 4/9 **
 
 Video of implementation:
-https://github.com/JeffBship/CS490-Group2-Final-Project/blob/Implentation-Checkpoint/Submission.mp4
+https://github.com/JeffBship/CS490-Group2-Final-Project/blob/Implentation-Checkpoint/Checkpoint.mp4
 
 Instructions to recreate:  
 Open 2 instances of an IDE (ie Netbeans), or open the project on 2 computers (must be on the same local network).  
@@ -23,10 +23,7 @@ There is a built in delay to simulate slow networks.  The delay time and variati
 
 This file is purposefully on an infinite loop.  It will continue to receive and process packets until killed.
 
-In the file P2P_fileshare.java, on line 40 relace Globals.JEFF_PC_IP with the local IP address of your target computer, such as "182.168.1.18"
-Run the main project.  This will send the first page of Alice in Wonderland to the target.
-
-
+In the other instance of the IDE, run the project P2P_fileshare.java.  Enter the IP of the target computer running RDTack.java, or just press enter if it's the same computer.
 
 
 ```

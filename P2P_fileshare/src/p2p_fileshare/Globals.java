@@ -63,7 +63,8 @@ public class Globals {
       "before seen a rabbit with either a waistcoat-pocket, or a watch to\n" +
       "take out of it, and burning with curiosity, she ran across the\n" +
       "field after it, and fortunately was just in time to see it pop\n" +
-      "down a large rabbit-hole under the hedge.\n" +
+      "down a large rabbit-hole under the hedge.\n";
+    /* +
       "\n" +
       "  In another moment down went Alice after it, never once\n" +
       "considering how in the world she was to get out again.\n" +

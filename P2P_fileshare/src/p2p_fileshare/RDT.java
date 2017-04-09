@@ -47,7 +47,7 @@ class RDT {
     timout = Globals.INIT_TIMEOUT;
     devRTT = Globals.INIT_DEV_RTT;
     
-    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 95.0 ) +2 ; 
+    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 95.0 ) +1 ; 
     // SYN packet isn't a handshake, it tells the receiver to start sequence count over
     // so if a previous message was dropped it can't jinx the sequence.
     sequence = "0";
@@ -89,7 +89,7 @@ class RDT {
       //System.out.println("getSequence         : " + packetList.get(i).getSequence() );
       //System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
       //System.out.println("getData             : " + packetList.get(i).getData() );
-      //System.out.println( packetList.get(i).asString()    );
+      System.out.println( packetList.get(i).asString()    );
     }
   }
   

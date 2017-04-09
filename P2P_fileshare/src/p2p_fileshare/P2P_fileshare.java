@@ -16,6 +16,7 @@ package p2p_fileshare;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 /**
  *
@@ -29,15 +30,22 @@ public class P2P_fileshare {
    */
   
   public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-    System.out.println("P2P_fileshare main program compiled. \n"
-        + "From here the user will choose Server or Peer and \n"
-        + "the appropriate app will start.   ");
+    System.out.println("P2P_fileshare main program ");  
+    String input = "";
+    InetAddress TargetIP = InetAddress.getLocalHost();
+    TargetIP = InetAddress.getByName(input);
     
-    InetAddress LocalIP = InetAddress.getLocalHost();
+    System.out.println("For testing, this will transmit a large message to the target IP.");
+    System.out.println("The file RDTack should be running (as a file, not a project) ");
+    System.out.println("on the target machine.");
+    System.out.println("Local IP is: " + TargetIP.getHostAddress());
+    System.out.println("\n Press Enter to transmit to local IP,");
+    System.out.print(" or enter IP for other target: ");
+    Scanner scan = new Scanner(System.in);
+    input = scan.nextLine();
+    if (input.length()>0) TargetIP = InetAddress.getByName(input);
     
-    System.out.println("Local IP is: " + LocalIP.getHostAddress());
-    
-    RDT.transmit( Globals.JEFF_PC_IP, Globals.MSG_PORT, Globals.ALICE);
+    RDT.transmit( TargetIP.getHostAddress(), Globals.MSG_PORT, Globals.ALICE);
   }
   
 }

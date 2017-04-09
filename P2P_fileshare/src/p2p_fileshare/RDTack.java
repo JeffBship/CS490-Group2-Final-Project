@@ -25,15 +25,19 @@ import static p2p_fileshare.UDPSender.makePacket;
 class RDTack {
 
     static double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
-    static long   ACKtime = 4000;         //base  time wait before ack (msec)
-    static long   ACKdev = 200;          //amount of variability in time before ack (msec)
+    static long   ACKtime = 100;         //base  time wait before ack (msec)
+    static long   ACKdev = 20;          //amount of variability in time before ack (msec)
 
     public static void main(String[] args)
-            throws UnknownHostException, SocketException, IOException, InterruptedException {
+    throws UnknownHostException, SocketException, IOException, InterruptedException {
+        
+        InetAddress LocalIP = InetAddress.getLocalHost();
+        
         System.out.println("RDTack running, will ack received packets as follows:");
-        System.out.println("Percentage of packets to ack: " + ACKpercent);
-        System.out.println("Average msec to ACK is: " + ACKtime + " +/- " + ACKdev);
-        System.out.println("You can change those values in the code if you want.");
+        System.out.println("\tPercentage of packets to ack: " + ACKpercent);
+        System.out.println("\tAverage msec to ACK is: " + ACKtime + " +/- " + ACKdev);
+        System.out.println("You can change those values in the code lines 27-29 if you want.");
+        System.out.println("Listening on Local IP: " + LocalIP.getHostAddress() );
         System.out.println("\n \n THIS IS AN INFINITE LOOP, MANUAL KILL WHEN DONE.");
 
         ArrayList<Packet> packetList = new ArrayList<>();
@@ -112,15 +116,13 @@ class RDTack {
             //PRINT THE MESSAGE IF THE PACKET IS THE LAST
             if (newPacket.isFIN() && !packetList.isEmpty()) {
                 String message = "";
-                //Toss the SYN off the front
-                packetList.remove(0);
-                while (packetList.size() > 2) {
-                    String data = packetList.remove(0).getData();
-                    //System.out.println("Adding:  " + data);
-                    message += data;
+                while  (packetList.size()>0){
+                  Packet nextPacket = packetList.remove(0);
+                  if (!nextPacket.isFIN() && !nextPacket.isSYN()){
+                      System.out.println("Adding: " + nextPacket.getData() );
+                      message += nextPacket.getData();
+                  }
                 }
-                //There's a FIN on the end, so toss that too.
-                packetList.remove(0);
                 lastSeq = "9";
                 System.out.println("Complete Message received.");
                 System.out.println("------------------------------------------------");

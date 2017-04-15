@@ -13,6 +13,7 @@ import java.io.*;
  * 
  *C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files
  * C:\Users\Surface Book\Desktop\Youtube Videos
+ * C:\Users\Surface Book\Desktop
  */
 
 public class Main {
@@ -26,12 +27,15 @@ public class Main {
       //method to send this directory to server 
       //below is just a test to make sure that the server properly processes the arraylist and places
       //the values into a hashtable
-       MainServer.processSongArray(song, MainServer.getTable() );
-       System.out.println("SERVER printServerDirectory Method");
-       MainServer.printServerDirectory(MainServer.getTable());
+      MainServer.processSongArray(song, MainServer.getTable() );
+      System.out.println("SERVER printServerDirectory Method");
+      MainServer.printServerDirectory(MainServer.getTable());
+      
+      //Process Query Not Working Yet
+      MainServer.processQuery(MainServer.getTable());
        //SO FAR SO GOOD!!!! NEED TO USE METHODS FROM RDT AND PACKET TO ACTUALLY SEND
        //ArrayList over UDP
-      
+      /*
       Peer p2 = new Peer();
       song = p1.getDirectory();
       p2.printDirectory(song);
@@ -42,7 +46,7 @@ public class Main {
       MainServer.printServerDirectory(MainServer.getTable());
       //below is a test to make sure that the query works as intended...of course
       //in full application this will utilize RDT.java and Packet.java
-      
+      */
       
      
     

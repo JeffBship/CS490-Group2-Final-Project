@@ -16,7 +16,7 @@ import java.util.*;
 public class Peer {
     
     
-    
+  
     //modify to allow user to designate directory
     //NEEDS TO BE TESTED
     public ArrayList<Song> getDirectory(){
@@ -31,8 +31,6 @@ public class Peer {
         f = new File(directory);
         if (f.isDirectory())
             i=1;     
-        else if(f==null)
-           System.out.println("File is empty...Please choose a different file");
         else{
             System.out.println("Please enter a valid directory");          
         }
@@ -44,7 +42,8 @@ public class Peer {
       int j=0;
       for(File file : listOfFiles)
        if(file.isFile() && file.getName().endsWith(".mp3"))
-            SongL.add(new Song(++j, file.getName(), "Size", "IP" ));
+           //we will use the lowercase name of the song with no white space as the key
+            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), "Size", "IP" ));
       return SongL;
     }
     

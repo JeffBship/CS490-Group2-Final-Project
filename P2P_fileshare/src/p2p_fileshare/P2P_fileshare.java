@@ -33,11 +33,11 @@ public class P2P_fileshare {
         + "From here the user will choose Server or Peer and \n"
         + "the appropriate app will start.   ");
     
-    InetAddress LocalIP = InetAddress.getLocalHost();
+    InetAddress LocalIP = InetAddress.getLocalHost(); 
     
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     
-    RDT.transmit( Globals.JEFF_PC_IP, Globals.MSG_PORT, Globals.ALICE);
+    RDT.transmit( Globals.ADRIAN_LAPTOP_IP, Globals.MSG_PORT, Globals.ALICE);
   }
   
 }

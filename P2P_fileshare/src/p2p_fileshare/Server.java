@@ -15,7 +15,6 @@ package p2p_fileshare;
    Java HashTables uses separate chaining to deal with collisions
    NEED TO IMPLEMENT MULTITHREADING????
 */
-import java.io.*;
 import java.util.*;
 public class Server {
   //Main method just for testing purposes 
@@ -52,7 +51,7 @@ public class Server {
   //might need 2 functions....one to process query, another to use requested IP address by user
   //Perhaps this should be in the Peer class?????
   //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSES
-  public void processQuery(Hashtable<String, Song> sTable){
+  public void processQuery(Hashtable<String, Song> sTable) {
     String IP = "";
     System.out.print("Please enter file name that you would like to query: ");
     String q;
@@ -60,11 +59,16 @@ public class Server {
     q = query.nextLine();
     q = q.toLowerCase().replace(" ", "");
     System.out.println("Q is " + q);
-      if((sTable.get(q).getName()).equals(""))
-          System.out.println("Query empty");
+      //if((sTable.get(q).getName()).equals(""))
+      if(!sTable.containsKey(q)) 
+           System.out.println("Query empty");        
+      else
+        System.out.println(sTable.get(q).getAll());
+               
+      /*
       else
           System.out.println(sTable.get(q).getAll());
-    
+    */
       
   }
   

@@ -5,20 +5,22 @@
  */
 package p2p_fileshare;
 
+import java.net.InetAddress;
+
 public class Song {
   String filename;
-  String filesize;
-  String peer;
+  Long filesize;
+  InetAddress peer;
   Integer SNum;
   
   public Song(){
     this.filename = "";
-    this.filesize = "";
-    this.peer = "";
+    this.filesize = 0L;
+    this.peer = null;
     this.SNum = 0;
   }
   
-  public Song(Integer SongNumber, String filenameParam, String filesizeParam, String peerParam){
+  public Song(Integer SongNumber, String filenameParam, Long filesizeParam, InetAddress peerParam){
     this.filename = filenameParam; 
     this.filesize = filesizeParam;
     this.peer = peerParam;
@@ -29,7 +31,7 @@ public class Song {
      return this.filename;
   }
   
-  public String getFilesize(){
+  public Long getFilesize(){
       return this.filesize;
   }
   
@@ -37,12 +39,12 @@ public class Song {
     return this.SNum;
   }
   
-  public String getIP(){
+  public InetAddress getIP(){
      return this.peer;
   }
   
   public String getAll(){
-   String result = " " + this.SNum + " " + this.filename + " " + this.filesize + " " + this.peer;
+   String result = " " + this.SNum + " " + this.filename + " " + this.filesize + " bytes " + " " + this.peer;
    return result;
   }
   

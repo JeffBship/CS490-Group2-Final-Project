@@ -6,12 +6,16 @@
 package p2p_fileshare;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 /**
  *
  * @author Jeff Blankenship and Adrian Ward-Manthey
  * This class will allow contain functionality to allow the user to inform and update
  * It will also allow the user to 
+ * 
+ * USE IP.isReachable() to check and see if we can reach the IP before establishing a TCP connection
  */
 public class Peer {
     
@@ -19,7 +23,7 @@ public class Peer {
   
     //modify to allow user to designate directory
     //NEEDS TO BE TESTED
-    public ArrayList<Song> getDirectory(){
+    public ArrayList<Song> getDirectory() throws UnknownHostException{
       //perhaps this functionality should be handled in another method????
       int i = 0;
       File f = null;
@@ -43,7 +47,7 @@ public class Peer {
       for(File file : listOfFiles)
        if(file.isFile() && file.getName().endsWith(".mp3"))
            //we will use the lowercase name of the song with no white space as the key
-            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), "Size", "IP" ));
+            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), file.length(), InetAddress.getLocalHost()));
       return SongL;
     }
     

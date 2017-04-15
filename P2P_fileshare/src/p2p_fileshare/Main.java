@@ -6,6 +6,7 @@
 package p2p_fileshare;
 import java.util.*;
 import java.io.*;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -17,7 +18,7 @@ import java.io.*;
  */
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws UnknownHostException{
       Server MainServer = new Server();
       ArrayList<Song> song = new ArrayList<>();
       Peer p1 = new Peer();
@@ -30,9 +31,9 @@ public class Main {
       MainServer.processSongArray(song, MainServer.getTable() );
       System.out.println("SERVER printServerDirectory Method");
       MainServer.printServerDirectory(MainServer.getTable());
-      
-      //Process Query Not Working Yet
       MainServer.processQuery(MainServer.getTable());
+      //Process Query Not Working Yet
+     // MainServer.processQuery(MainServer.getTable());
        //SO FAR SO GOOD!!!! NEED TO USE METHODS FROM RDT AND PACKET TO ACTUALLY SEND
        //ArrayList over UDP
       /*

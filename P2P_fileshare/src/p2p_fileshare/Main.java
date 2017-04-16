@@ -16,7 +16,7 @@ import java.net.UnknownHostException;
  * C:\Users\Surface Book\Desktop\Youtube Videos
  * C:\Users\Surface Book\Desktop
  */
-
+//THIS CLASS WILL BE USED TO TEST PEER TRANSMIT
 public class Main {
     public static void main(String[] args) throws UnknownHostException{
       Server MainServer = new Server();
@@ -32,6 +32,7 @@ public class Main {
       System.out.println("SERVER printServerDirectory Method");
       MainServer.printServerDirectory(MainServer.getTable());
       MainServer.processQuery(MainServer.getTable());
+      
       //Process Query Not Working Yet
      // MainServer.processQuery(MainServer.getTable());
        //SO FAR SO GOOD!!!! NEED TO USE METHODS FROM RDT AND PACKET TO ACTUALLY SEND

@@ -28,7 +28,7 @@ class RDT {
   static double devRTT;
   
   
-
+//Will modify to send arraylist<song> instead
   public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
     ArrayList<Packet> packetList = new ArrayList<>();
     

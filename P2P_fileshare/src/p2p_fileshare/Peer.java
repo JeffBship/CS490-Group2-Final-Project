@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class Peer {
     
-    
+    File folder = null;
   
     //modify to allow user to designate directory
     //NEEDS TO BE TESTED
@@ -27,6 +27,7 @@ public class Peer {
       //perhaps this functionality should be handled in another method????
       int i = 0;
       File f = null;
+      /*
       String directory = "";
       while(i==0){
         Scanner kbd = new Scanner(System.in);
@@ -39,27 +40,35 @@ public class Peer {
             System.out.println("Please enter a valid directory");          
         }
       }
-      //File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
-      File folder = new File(directory);
+     */
+      File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
+      //folder = new File(directory);
       File[] listOfFiles = folder.listFiles();
       ArrayList<Song> SongL = new ArrayList<>();
       int j=0;
       for(File file : listOfFiles)
        if(file.isFile() && file.getName().endsWith(".mp3"))
            //we will use the lowercase name of the song with no white space as the key
-            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), file.length(), InetAddress.getLocalHost()));
+            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), file.length(), InetAddress.getLocalHost().getHostAddress()));
       return SongL;
     }
     
     
     //NEEDS TO BE TESTED
+    //Will return string for transmission
     public void printDirectory(ArrayList<Song> SongL){
+        String list = "";
         if(SongL.isEmpty())
           System.out.println("No files ending with .mp3 were found in designated directory");
         else {
-        for(Song s : SongL )
+         for(Song s : SongL ){
            System.out.println(s.getAll());
+           list+=s.getAll() + "\n";
+         }
         }
+        System.out.println("HERES ARRAYLIST FOR TRANSMIT METHOD");
+        System.out.print(list);
+        
     }
     
 }

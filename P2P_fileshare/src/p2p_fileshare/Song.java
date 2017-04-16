@@ -5,26 +5,27 @@
  */
 package p2p_fileshare;
 
-import java.net.InetAddress;
+
 
 public class Song {
+  Integer SNum;
   String filename;
   Long filesize;
-  InetAddress peer;
-  Integer SNum;
+  String peer;
+  
   
   public Song(){
+    this.SNum = 0;
     this.filename = "";
     this.filesize = 0L;
     this.peer = null;
-    this.SNum = 0;
   }
   
-  public Song(Integer SongNumber, String filenameParam, Long filesizeParam, InetAddress peerParam){
+  public Song(Integer SongNumber, String filenameParam, Long filesizeParam, String peerParam){
+    this.SNum = SongNumber;
     this.filename = filenameParam; 
     this.filesize = filesizeParam;
-    this.peer = peerParam;
-    this.SNum = SongNumber;
+    this.peer = peerParam; 
   }
   
   public String getName(){
@@ -39,12 +40,12 @@ public class Song {
     return this.SNum;
   }
   
-  public InetAddress getIP(){
+  public String getIP(){
      return this.peer;
   }
   
   public String getAll(){
-   String result = " " + this.SNum + " " + this.filename + " " + this.filesize + " bytes " + " " + this.peer;
+   String result = " " + this.SNum + "\t" + this.filename + "\t" + this.filesize + "bytes " + "\t" + this.peer;
    return result;
   }
   
@@ -58,8 +59,6 @@ public class Song {
   public static void main(String[] args) {
     System.out.println("song class compiled and ran successfully.");
   }
-  
-  
-     
+ 
   
 }

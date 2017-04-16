@@ -22,6 +22,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import static p2p_fileshare.UDPSender.makePacket;
 
+//COULD USE THIS CLASS TO ACT AS SERVER
+
 class RDTack {
 
     static double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./

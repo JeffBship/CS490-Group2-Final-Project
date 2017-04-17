@@ -10,8 +10,12 @@
  */
 package p2p_fileshare;
 
+import java.io.File;
+
 
 public class Globals {
+  
+  public static       File FOLDER = new File("c:\\");
   
   public static final boolean SLOWMODE = false;
   
@@ -116,6 +120,7 @@ public class Globals {
       "X                                                               \n"
       ;
 */
+
       
   
 }

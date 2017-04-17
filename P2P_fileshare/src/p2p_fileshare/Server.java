@@ -33,6 +33,7 @@ public class Server {
   //This function works properly
   //Will need to modify it so that when server receives a string it can parse it 
   //then place data into hashtable 
+  /*
   public void processSongArray(ArrayList<Song> songs,Hashtable<String, Song> dTab){
       //This class will take an array from a peer and add it into the hashtable
       for(Song s : songs)
@@ -42,6 +43,24 @@ public class Server {
       
       
   }
+  */
+ /*Modified version of processSongArray...once the string songList from peer 
+   is transmitted, this method will parse through the string, build the song object
+   and place it in the hashtable.
+ */
+  public void processSongArray(String songList, Hashtable<String, Song> dTab){
+    char[] list = songList.toCharArray();
+    ArrayList<Character> parse = new ArrayList<>();
+    String name = "";
+    //ArrayList<Character> name = new ArrayList<>();
+    //ArrayList<Character> size = new ArrayList<>();
+    //ArrayList<Character> IP = new ArrayList<>();
+    for(char c: list){
+      
+    }
+    System.out.println(name);
+  }
+  
   
   //This Function works properly
   public void printServerDirectory(Hashtable<String, Song> sTable){
@@ -56,8 +75,7 @@ public class Server {
   //This function will take user input as key, hash it, then will return list of songs along with IP addresses 
   //might need 2 functions....one to process query, another to use requested IP address by user
   //Perhaps this should be in the Peer class?????
-  //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSES
-  //TEST FOR COLLISIONS WHEN MULTIRHREADING 
+  //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSE
   //Argument will now just be a string- RETURN ARRAYLIST<SONG>
   public void processQuery(Hashtable<String, Song> sTable) {
     String IP = "";
@@ -68,6 +86,7 @@ public class Server {
     q = q.toLowerCase().replace(" ", "");
     System.out.println("Q is " + q);
     
+    //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
     Song key;
     while(songNames.hasMoreElements()){

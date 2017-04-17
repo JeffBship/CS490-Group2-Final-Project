@@ -20,14 +20,21 @@ import java.net.UnknownHostException;
 public class Main {
     public static void main(String[] args) throws UnknownHostException{
       Server MainServer = new Server();
-      ArrayList<Song> song = new ArrayList<>();
+      //ArrayList<Song> song = new ArrayList<>();
+      String songList = "";
       Peer p1 = new Peer();
-      song = p1.getDirectory();
+      songList = p1.getDirectory();
+      //song = p1.getDirectory();
       System.out.println("PEER printDirectory Method");
-      p1.printDirectory(song);
+      System.out.print(songList);
+      System.out.println("SERVER SHIT");
+      MainServer.processSongArray(songList, MainServer.getTable());
+      //p1.printDirectory(song);
       //method to send this directory to server 
       //below is just a test to make sure that the server properly processes the arraylist and places
       //the values into a hashtable
+      /*
+      
       MainServer.processSongArray(song, MainServer.getTable() );
       System.out.println("SERVER printServerDirectory Method");
       MainServer.printServerDirectory(MainServer.getTable());

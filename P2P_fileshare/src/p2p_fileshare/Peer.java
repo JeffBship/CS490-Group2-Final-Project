@@ -23,6 +23,7 @@ public class Peer {
   
     //modify to allow user to designate directory
     //NEEDS TO BE TESTED
+    /*
     public ArrayList<Song> getDirectory() throws UnknownHostException{
       //perhaps this functionality should be handled in another method????
       int i = 0;
@@ -40,9 +41,10 @@ public class Peer {
             System.out.println("Please enter a valid directory");          
         }
       }
-     */
+     
       File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
       //folder = new File(directory);
+      //BUILD A STRING FOR TRANSMIT
       File[] listOfFiles = folder.listFiles();
       ArrayList<Song> SongL = new ArrayList<>();
       int j=0;
@@ -52,10 +54,23 @@ public class Peer {
             SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), file.length(), InetAddress.getLocalHost().getHostAddress()));
       return SongL;
     }
+    */
+    //This method will return a string for transmit...server will handle string parsing
+    public String getDirectory() throws UnknownHostException{
+      String songList= "";
+      File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
+      File[] listOfFiles = folder.listFiles();
+      int j=0;
+      for(File file : listOfFiles)
+       if(file.isFile() && file.getName().endsWith(".mp3"))
+           songList+= file.getName().toLowerCase().replace(" ", "") + " " + file.length() + " "+ InetAddress.getLocalHost().getHostAddress() + "\n"; 
+      return songList;
     
-    
+    }
     //NEEDS TO BE TESTED
     //Will return string for transmission
+    //Move this to String processing to getDirectory Method
+    /*
     public void printDirectory(ArrayList<Song> SongL){
         String list = "";
         if(SongL.isEmpty())
@@ -70,5 +85,7 @@ public class Peer {
         System.out.print(list);
         
     }
+*/
+    
     
 }

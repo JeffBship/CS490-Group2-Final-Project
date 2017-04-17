@@ -8,7 +8,6 @@ package p2p_fileshare;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
 /**
  *
  * @author Jeff Blankenship and Adrian Ward-Manthey
@@ -57,6 +56,7 @@ public class Peer {
     */
     
     //This method will return a string for transmit...server will handle string parsing
+    //NOTE: change so that user can choose directory
     public String getDirectory() throws UnknownHostException{
       String songList= "";
       File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
@@ -64,7 +64,7 @@ public class Peer {
       int j=0;
       for(File file : listOfFiles)
        if(file.isFile() && file.getName().endsWith(".mp3"))
-           songList+= file.getName().toLowerCase().replace(" ", "") + " " + file.length() + " "+ InetAddress.getLocalHost().getHostAddress() + "\n"; 
+           songList+= file.getName() + "\t" + file.length() + "\t" + InetAddress.getLocalHost().getHostAddress() + "\n"; 
       return songList;
     
     }

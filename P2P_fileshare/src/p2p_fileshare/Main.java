@@ -32,6 +32,7 @@ public class Main {
       MainServer.processSongArray(songList, MainServer.getTable());
       System.out.println("HASH TABLE PRINT");
       MainServer.printServerDirectory(MainServer.getTable());
+      MainServer.processQuery(MainServer.getTable());
       //p1.printDirectory(song);
       //method to send this directory to server 
       //below is just a test to make sure that the server properly processes the arraylist and places

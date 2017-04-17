@@ -52,15 +52,14 @@ public class Server {
   public void processSongArray(String songList, Hashtable<String, Song> dTab){
     //parse into char works!!!!
     char[] list = songList.toCharArray();
+    /*
     System.out.println("CHAR ARRAY");
     for(char f: list)
         System.out.print(f);
-    
-    
+    */
     //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();
-    //use temp to read up to delimeter
-    //ArrayList<Character> temp = new ArrayList<>();
+   
     String temp;
     String name;
     String size;
@@ -68,33 +67,25 @@ public class Server {
     char c;
     for(int i = 0; i<list.length; i++){
       c = list[i];
-      if(!(c=='\n')){ 
+      if(!(c=='\n')) 
         parse.add(c);
-      System.out.print(c + " ");
-      }
       else {
-        System.out.println("HERE IS PARSE");
-        System.out.println(parse.toString());
         //This builds a string out of parse
         StringBuilder build = new StringBuilder(parse.size());
         for(Character ch: parse)
             build.append(ch);
         temp = build.toString();
-        String[] splits = temp.split(" ");
-        System.out.println("THIS IS THE SPLITS");
-        System.out.print(Arrays.toString(splits));
+        //perhaps split on \t???
+        String[] splits = temp.split("\t");
         name = splits[0];
-        System.out.println(name);
         size = splits[1];
-        System.out.println(size);
         IP = splits[2];
-        System.out.println(IP);
         dTab.put(name + " " + IP,new Song(++sNum, name, size, IP ));
         parse.clear();
       }
       
-      // LET ME PUSH
-      
+     
+     
     } 
     
   }
@@ -115,6 +106,8 @@ public class Server {
   //Perhaps this should be in the Peer class?????
   //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSE
   //Argument will now just be a string- RETURN ARRAYLIST<SONG>
+  //This method is simply here to make sure that the hashtable is searchable
+  //we likely won't use this in the final build 
   public void processQuery(Hashtable<String, Song> sTable) {
     String IP = "";
     System.out.print("Please enter file name that you would like to query: ");
@@ -129,7 +122,7 @@ public class Server {
     Song key;
     while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
-          if(key.getName().contains(q))
+          if(key.getName().toLowerCase().replace(" ","").contains(q))
             System.out.println(key.getAll());
       }
     /*

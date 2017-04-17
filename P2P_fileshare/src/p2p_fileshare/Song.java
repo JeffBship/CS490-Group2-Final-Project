@@ -10,18 +10,18 @@ package p2p_fileshare;
 public class Song {
   Integer SNum;
   String filename;
-  Long filesize;
+  String filesize;
   String peer;
   
   
   public Song(){
     this.SNum = 0;
     this.filename = "";
-    this.filesize = 0L;
+    this.filesize = "";
     this.peer = null;
   }
   
-  public Song(Integer SongNumber, String filenameParam, Long filesizeParam, String peerParam){
+  public Song(Integer SongNumber, String filenameParam, String filesizeParam, String peerParam){
     this.SNum = SongNumber;
     this.filename = filenameParam; 
     this.filesize = filesizeParam;
@@ -32,7 +32,7 @@ public class Song {
      return this.filename;
   }
   
-  public Long getFilesize(){
+  public String getFilesize(){
       return this.filesize;
   }
   

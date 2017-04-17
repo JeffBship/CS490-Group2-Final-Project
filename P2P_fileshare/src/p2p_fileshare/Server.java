@@ -21,6 +21,7 @@ public class Server {
   //Main method just for testing purposes 
   //Server will need to get IP address of local machine so that it can connect with peers
     Hashtable<String, Song> dTab;
+    int sNum = 0;
     public Server(){
        dTab = new Hashtable<>();
       
@@ -49,16 +50,53 @@ public class Server {
    and place it in the hashtable.
  */
   public void processSongArray(String songList, Hashtable<String, Song> dTab){
+    //parse into char works!!!!
     char[] list = songList.toCharArray();
+    System.out.println("CHAR ARRAY");
+    for(char f: list)
+        System.out.print(f);
+    
+    
+    //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();
-    String name = "";
-    //ArrayList<Character> name = new ArrayList<>();
-    //ArrayList<Character> size = new ArrayList<>();
-    //ArrayList<Character> IP = new ArrayList<>();
-    for(char c: list){
+    //use temp to read up to delimeter
+    //ArrayList<Character> temp = new ArrayList<>();
+    String temp;
+    String name;
+    String size;
+    String IP;
+    char c;
+    for(int i = 0; i<list.length; i++){
+      c = list[i];
+      if(!(c=='\n')){ 
+        parse.add(c);
+      System.out.print(c + " ");
+      }
+      else {
+        System.out.println("HERE IS PARSE");
+        System.out.println(parse.toString());
+        //This builds a string out of parse
+        StringBuilder build = new StringBuilder(parse.size());
+        for(Character ch: parse)
+            build.append(ch);
+        temp = build.toString();
+        String[] splits = temp.split(" ");
+        System.out.println("THIS IS THE SPLITS");
+        System.out.print(Arrays.toString(splits));
+        name = splits[0];
+        System.out.println(name);
+        size = splits[1];
+        System.out.println(size);
+        IP = splits[2];
+        System.out.println(IP);
+        dTab.put(name + " " + IP,new Song(++sNum, name, size, IP ));
+        parse.clear();
+      }
       
-    }
-    System.out.println(name);
+      // LET ME PUSH
+      
+    } 
+    
   }
   
   

@@ -43,7 +43,7 @@ public class Peer {
     //NOTE: change so that user can choose directory
     public String getDirectory() throws UnknownHostException{
       String songList= "";
-      File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
+      folder = new File("C:\\Users\\jb5604\\Documents\\NetBeansProjects\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
       File[] listOfFiles = folder.listFiles();
       int j=0;
       for(File file : listOfFiles)

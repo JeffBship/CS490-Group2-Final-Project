@@ -1,4 +1,34 @@
-/*
+/**
+ * Peer gets file list
+ *  Peer make songList -Adrian
+ *      HTTPreq from songList -Jeff
+ *          RDTtransmit HTTreq to server -Done
+ *              Server  extracts songList from HTTPreq -Jeff
+ *                      add songs to Dtab -Adrian
+ *                      builds HTTP response from Dtab
+ *                      RDTtransmit HTTPres back to Peer
+ *              Peer extracts songList -Jeff
+ *          Peer clears and builds new dTab from songList -Adrian
+ *      Peer display dTab -Adrian
+ *  Peer waits for more user input
+ * 
+ * TCP stuff -Adrian
+ * Peer gets query
+ *  user select song to request
+ *      Peer creates HTTPreq for that song
+ *          Peer RDTtransmits the HHTPreq
+ *          Peer2   receives HTTPreq
+ *                  checks for file in local directory
+ *                  sends file via TCP to Peer1 -ADRIAN
+ *                  build   HTTPresponse
+ *          Peer2 RDT transmit HTTPresponse
+ *      Peer1   receive response
+ *              extract data from response
+ *              display results
+ *      close connection
+ * wait for further user input
+ * 
+ * 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.

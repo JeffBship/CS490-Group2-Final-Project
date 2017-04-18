@@ -97,7 +97,7 @@ public class Server {
     q = query.nextLine();
     q = q.toLowerCase().replace(" ", "");
     System.out.println("Q is " + q);
-    
+   
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
     Song key;
@@ -106,6 +106,7 @@ public class Server {
           if(key.getName().toLowerCase().replace(" ","").contains(q))
             System.out.println(key.getAll());
       }
+    
     /*
       //if((sTable.get(q).getName()).equals(""))
       if(!sTable.containsKey(q)) 

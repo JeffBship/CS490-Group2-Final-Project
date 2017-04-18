@@ -23,12 +23,45 @@ Status Code:Phrase  (One character phrases are used to conserve message space.)
  */
 package p2p_fileshare;
 
+import java.util.Scanner;
+
 
 /**
  *
- * @author Dad
+ * @author Jeff and Adrian
  */
 public class HTTPrequest {
+     String requestCode;
+     String IPAddress;
+     String filename;
+     String Version;
+     
+     
+   public HTTPrequest(){
+      requestCode = "";
+      IPAddress = "";
+      filename = "";
+      Version = "";
+   }
+   
+   public HTTPrequest(String Code, String IP, String fName, String V){
+      requestCode = Code;
+      IPAddress = IP;
+      filename = fName;
+      Version = V;
+   }
+   
+   public String makeHTTPRequest(){
+     return requestCode + " " + IPAddress + " " + Version + "\n" + filename + "\n";
+   }
+   
+   
+  //can use method from Server.java to handle string parsing on Server side
+  //use RDT.transmit for actual transmission
+  public void informAndUpdate(){
+     
+  
+  }
   
   
 }

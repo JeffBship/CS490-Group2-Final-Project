@@ -18,10 +18,10 @@ package p2p_fileshare;
 */
 import java.util.*;
 public class Server {
-  //Main method just for testing purposes 
   //Server will need to get IP address of local machine so that it can connect with peers
     Hashtable<String, Song> dTab;
     int sNum = 0;
+    
     public Server(){
        dTab = new Hashtable<>();
       
@@ -30,26 +30,12 @@ public class Server {
     public Hashtable<String, Song> getTable(){
         return dTab;
     }
-
-  //This function works properly
-  //Will need to modify it so that when server receives a string it can parse it 
-  //then place data into hashtable 
-  /*
-  public void processSongArray(ArrayList<Song> songs,Hashtable<String, Song> dTab){
-      //This class will take an array from a peer and add it into the hashtable
-      for(Song s : songs)
-        dTab.put(s.getName() + " " + s.getIP(),s);
-      Song test = new Song(100, "01-hellsbells.mp3" , 0L, "255.111.1.50");
-      dTab.put(test.getName() + " " + test.getIP(),test);
-      
-      
-  }
-  */
  /*Modified version of processSongArray...once the string songList from peer 
    is transmitted, this method will parse through the string, build the song object
    and place it in the hashtable.
+    NEEDS TO HANDLE DELETING ENTRIES WHEN PEER LEAVES!!!!
  */
-  public void processSongArray(String songList, Hashtable<String, Song> dTab){
+  public void processSongString(String songList, Hashtable<String, Song> dTab){
     //parse into char works!!!!
     char[] list = songList.toCharArray();
     /*
@@ -75,7 +61,7 @@ public class Server {
         for(Character ch: parse)
             build.append(ch);
         temp = build.toString();
-        //perhaps split on \t???
+        //uses \t as delimeter for string parsing
         String[] splits = temp.split("\t");
         name = splits[0];
         size = splits[1];
@@ -83,11 +69,7 @@ public class Server {
         dTab.put(name + " " + IP,new Song(++sNum, name, size, IP ));
         parse.clear();
       }
-      
-     
-     
     } 
-    
   }
   
   
@@ -105,11 +87,10 @@ public class Server {
   //might need 2 functions....one to process query, another to use requested IP address by user
   //Perhaps this should be in the Peer class?????
   //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSE
-  //Argument will now just be a string- RETURN ARRAYLIST<SONG>
-  //This method is simply here to make sure that the hashtable is searchable
-  //we likely won't use this in the final build 
   public void processQuery(Hashtable<String, Song> sTable) {
-    String IP = "";
+    //Scanner not closed to allow for Peer to continue using scanner
+    // query.close();
+    String IP;
     System.out.print("Please enter file name that you would like to query: ");
     String q;
     Scanner query = new Scanner(System.in);
@@ -134,11 +115,19 @@ public class Server {
     */
   }
   
+  //These can be written AFTER testing RDT code between client and server
+  
   /*This method will work in conjunction with the TCP.java class.
     User will type in IP address and TCP.java will handle the connection
   */
   public void processRequest(){
     
+  }
+  
+  
+  //This method will delete all entries associated with a User from the hashtable
+  public void processPeerExit(){
+  
   }
   
   

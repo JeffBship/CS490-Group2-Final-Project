@@ -21,15 +21,25 @@ public class Main {
     public static void main(String[] args) throws UnknownHostException{
       Server MainServer = new Server();
       //ArrayList<Song> song = new ArrayList<>();
-      String songList;
+      //String songList;
+      
       Peer p1 = new Peer();
-      songList = p1.getDirectory();
-      //song = p1.getDirectory();
+      p1.userInteraction(MainServer);
+      System.out.println("MAIN CLASS SERVER CHECK");
+      MainServer.printServerDirectory(MainServer.getTable());
+      
+      
+      //songList = p1.getDirectory();
+      
+      
+      
+      /*DONT DELETE THESE COMMENTED LINES THEY WILL BE USEFUL FOR TESTING LATER*/
+      /*
       System.out.println("PEER printDirectory Method");
       System.out.print(songList);
       System.out.println("String test");
       System.out.println(songList);
-      MainServer.processSongArray(songList, MainServer.getTable());
+      MainServer.processSongString(songList, MainServer.getTable());
       System.out.println("HASH TABLE PRINT");
       MainServer.printServerDirectory(MainServer.getTable());
       MainServer.processQuery(MainServer.getTable());

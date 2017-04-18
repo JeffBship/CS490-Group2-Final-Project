@@ -8,6 +8,7 @@ package p2p_fileshare;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 /**
  *
  * @author Jeff Blankenship and Adrian Ward-Manthey
@@ -19,12 +20,8 @@ import java.net.UnknownHostException;
 public class Peer {
     
     File folder = null;
-  
-    //modify to allow user to designate directory
-    //NEEDS TO BE TESTED
-    /*
-    public ArrayList<Song> getDirectory() throws UnknownHostException{
-      //perhaps this functionality should be handled in another method????
+    
+    /*CODE FOR ALLOWING USER TO INPUT FILE DIRECTORY
       int i = 0;
       File f = null;
       /*
@@ -39,19 +36,6 @@ public class Peer {
         else{
             System.out.println("Please enter a valid directory");          
         }
-      }
-     
-      File folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
-      //folder = new File(directory);
-      //BUILD A STRING FOR TRANSMIT
-      File[] listOfFiles = folder.listFiles();
-      ArrayList<Song> SongL = new ArrayList<>();
-      int j=0;
-      for(File file : listOfFiles)
-       if(file.isFile() && file.getName().endsWith(".mp3"))
-           //we will use the lowercase name of the song with no white space as the key
-            SongL.add(new Song(++j, file.getName().toLowerCase().replace(" ", ""), file.length(), InetAddress.getLocalHost().getHostAddress()));
-      return SongL;
     }
     */
     
@@ -68,25 +52,40 @@ public class Peer {
       return songList;
     
     }
-    //NEEDS TO BE TESTED
-    //Will return string for transmission
-    //Move this to String processing to getDirectory Method
-    /*
-    public void printDirectory(ArrayList<Song> SongL){
-        String list = "";
-        if(SongL.isEmpty())
-          System.out.println("No files ending with .mp3 were found in designated directory");
-        else {
-         for(Song s : SongL ){
-           System.out.println(s.getAll());
-           list+=s.getAll() + "\n";
-         }
-        }
-        System.out.println("HERES ARRAYLIST FOR TRANSMIT METHOD");
-        System.out.print(list);
-        
-    }
-*/
     
+    //This Method will handle the bulk of userInteraction with the Server
+    public void userInteraction(Server serv) throws UnknownHostException{
+    Scanner in = new Scanner(System.in);
+    String input = "I";
+    String temp;
+    System.out.println("Welcome to the network!!!!");
+    System.out.println("I: Inform and Update");
+    System.out.println("Q: Query for content");
+    System.out.println("R: Request Conent");
+    System.out.println("E: Exit Network");
+    while(!input.equals("E")){
+      System.out.print("Enter operation: ");
+      input = in.nextLine().toUpperCase();
+        if(input.equals("I")){
+           System.out.println("Informing Server...");
+           temp = getDirectory();
+           serv.processSongString(temp, serv.getTable());
+           System.out.println(temp);
+           System.out.println("This is HASHTABLE");
+           serv.printServerDirectory(serv.getTable());
+        }
+        else if(input.equals("Q")){
+            serv.processQuery(serv.getTable());
+        }
+        else if(input.equals("R")){
+           System.out.println("Handling Request-Not Yet But Eventually");
+        }
+        else
+            System.out.println("Please Enter a valid input:");
+    
+      }
+    System.out.println("Exiting Network and Deleting Corresponding Entries in Server");
+    in.close();
+  } 
     
 }

@@ -15,17 +15,17 @@ public class Song {
   
   
   public Song(){
-    this.SNum = 0;
-    this.filename = "";
-    this.filesize = "";
-    this.peer = null;
+    SNum = 0;
+    filename = "";
+    filesize = "";
+    peer = "";
   }
   
   public Song(Integer SongNumber, String filenameParam, String filesizeParam, String peerParam){
-    this.SNum = SongNumber;
-    this.filename = filenameParam; 
-    this.filesize = filesizeParam;
-    this.peer = peerParam; 
+    SNum = SongNumber;
+    filename = filenameParam; 
+    filesize = filesizeParam;
+    peer = peerParam; 
   }
   
   public String getName(){
@@ -48,8 +48,6 @@ public class Song {
    String result = " " + this.SNum + "\t" + this.filename + "\t" + this.filesize + "bytes " + "\t" + this.peer;
    return result;
   }
-  
-  
   
   public String getKey(){
     String key = this.filename + " " + this.peer;

@@ -35,6 +35,9 @@ public class Globals {
   public static final String JEFF_PC_IP = "192.168.1.46";
   public static final String JEFF_LAPTOP_IP = "192.168.1.118";
   public static final String ADRIAN_LAPTOP_IP = "192.168.1.96";
+  public static final String ADRIAN_LAB = "192.168.2.48";
+  public static final String JEFF_LAB = "192.168.2.49";
+  
   
   
   

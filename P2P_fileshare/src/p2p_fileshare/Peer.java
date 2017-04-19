@@ -8,6 +8,7 @@ package p2p_fileshare;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 import java.util.Scanner;
 /**
  *
@@ -20,6 +21,7 @@ import java.util.Scanner;
 public class Peer {
     
     File folder = null;
+    Hashtable<String, Song> Ltab = new Hashtable<>();
     
     /*CODE FOR ALLOWING USER TO INPUT FILE DIRECTORY
       int i = 0;
@@ -43,7 +45,7 @@ public class Peer {
     //NOTE: change so that user can choose directory
     public String getDirectory() throws UnknownHostException{
       String songList= "";
-      folder = new File("C:\\Users\\jb5604\\Documents\\NetBeansProjects\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
+      folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
       File[] listOfFiles = folder.listFiles();
       int j=0;
       for(File file : listOfFiles)
@@ -52,6 +54,18 @@ public class Peer {
       return songList;
     
     }
+    
+    //Add Hashtable to peer...modify to search table in peer instance later
+    //Returns User Query as a string to be returned for transmit to Server
+    public String makeQuery(){
+         System.out.print("Please enter file name that you would like to query: ");
+         String q;
+         Scanner query = new Scanner(System.in);
+         q = query.nextLine();
+         q = q.toLowerCase().replace(" ", "");
+         return q;
+    }
+    
     
     //This Method will handle the bulk of userInteraction with the Server
     public void userInteraction(Server serv) throws UnknownHostException{
@@ -69,20 +83,27 @@ public class Peer {
         if(input.equals("I")){
            System.out.println("Informing Server...");
            temp = getDirectory();
-           serv.processSongString(temp, serv.getTable());
+           //serv.processSongString(temp, serv.getTable());
            System.out.println(temp);
-           System.out.println("This is HASHTABLE");
-           serv.printServerDirectory(serv.getTable());
+           Song.processSongString(temp,Ltab );
+           Song.processSongString(temp, serv.getTable());
+           //System.out.println(temp);
+           System.out.println("This is HASHTABLE in Server");
+           Song.printDirectory(serv.getTable());
+           System.out.println("This is HASHTABLE in Peer");
+           Song.printDirectory(Ltab);
+           
         }
         else if(input.equals("Q")){
-            serv.processQuery(serv.getTable());
+            String query = makeQuery();
+            //RDT transmit query 
+            serv.processQuery(serv.getTable(), query);
         }
         else if(input.equals("R")){
            System.out.println("Handling Request-Not Yet But Eventually");
         }
         else
             System.out.println("Please Enter a valid input:");
-    
       }
     System.out.println("Exiting Network and Deleting Corresponding Entries in Server");
     in.close();

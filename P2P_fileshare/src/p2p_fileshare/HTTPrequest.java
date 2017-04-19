@@ -35,6 +35,7 @@ public class HTTPrequest {
      String IPAddress;
      String filename;
      String Version;
+     String data;
      
      
    public HTTPrequest(){
@@ -42,13 +43,15 @@ public class HTTPrequest {
       IPAddress = "";
       filename = "";
       Version = "";
+      data ="";
    }
    
-   public HTTPrequest(String Code, String IP, String fName, String V){
+   public HTTPrequest(String Code, String IP, String fName, String V, String d){
       requestCode = Code;
       IPAddress = IP;
       filename = fName;
       Version = V;
+      data = d;
    }
    
    public String makeHTTPRequest(){

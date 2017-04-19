@@ -56,10 +56,27 @@ public class Main {
       Peer p1 = new Peer();
       p1.userInteraction(MainServer);
       System.out.println("MAIN CLASS SERVER CHECK");
-      MainServer.printServerDirectory(MainServer.getTable());
-      
-      
-      //songList = p1.getDirectory();
+      Song.printDirectory(MainServer.getTable());
+     
+    /*Use this to sest TCPClient and TCPServer   
+    TCPServer serverThread = null;
+    TCPClient clientThread = null;
+    try {
+      // Start server
+      serverThread = new TCPServer("Server", 49000);
+      serverThread.start();
+
+      // Create client
+      byte[] targetAdddress = {127, 0, 0, 1};
+      TCPClient client1 = new TCPClient("CLIENT1", 49000);
+      TCPClient client2 = new TCPClient("CLIENT2", 49000);
+      client1.start();
+      client2.start();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    ///////////////////////////////////  
       
       
       

@@ -27,8 +27,8 @@ import static p2p_fileshare.UDPSender.makePacket;
 class RDTack {
 
     static double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
-    static long   ACKtime = 4000;         //base  time wait before ack (msec)
-    static long   ACKdev = 200;          //amount of variability in time before ack (msec)
+    static long   ACKtime = 2;         //base  time wait before ack (msec)
+    static long   ACKdev = 1;          //amount of variability in time before ack (msec)
 
     public static void main(String[] args)
             throws UnknownHostException, SocketException, IOException, InterruptedException {
@@ -99,7 +99,8 @@ class RDTack {
             ACKseq = newPacket.getSequence();
             DatagramSocket ACKSocket = new DatagramSocket();
             Packet ackPacket = new Packet("XX", "XX", ACKseq, "XX", "ACK");
-            InetAddress ackIPinet = InetAddress.getByName(newPacket.getIPAddress());
+            //InetAddress ackIPinet = InetAddress.getByName(newPacket.getIPAddress());
+            InetAddress ackIPinet = InetAddress.getByName("10.13.238.25");
             DatagramPacket ACKpacket = makePacket(ackPacket.asString(), ackIPinet, Globals.ACK_PORT);
             
             if (drop) {

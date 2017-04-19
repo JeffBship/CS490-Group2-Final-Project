@@ -5,6 +5,10 @@
  */
 package p2p_fileshare;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 
 
 public class Song {
@@ -52,6 +56,54 @@ public class Song {
   public String getKey(){
     String key = this.filename + " " + this.peer;
     return key;
+  }
+
+  //!!!!!add in functionality to erase entries no longer in directory!!!!!
+  public static void processSongString(String songList, Hashtable<String, Song> dTab){
+    //parse into char works!!!!
+    char[] list = songList.toCharArray();
+    Integer snum = 0;
+    System.out.println("CHAR ARRAY");
+    for(char f: list)
+        System.out.print(f);
+    
+    //use parse to read up to newline character
+    ArrayList<Character> parse = new ArrayList<>();
+   
+    String temp;
+    String name;
+    String size;
+    String IP;
+    char c;
+    for(int i = 0; i<list.length; i++){
+      c = list[i];
+      if(!(c=='\n')) 
+        parse.add(c);
+      else {
+        //This builds a string out of parse
+        StringBuilder build = new StringBuilder(parse.size());
+        for(Character ch: parse)
+            build.append(ch);
+        temp = build.toString();
+        //uses \t as delimeter for string parsing
+        String[] splits = temp.split("\t");
+        name = splits[0];
+        size = splits[1];
+        IP = splits[2];
+        dTab.put(name + " " + IP,new Song(++snum, name, size, IP ));
+        parse.clear();
+      }
+    } 
+    
+  }
+ 
+ public static void printDirectory(Hashtable<String, Song> sTable){
+      Enumeration songNames = sTable.keys();
+      String key;
+      while(songNames.hasMoreElements()){
+          key = (String) songNames.nextElement();
+          System.out.println(sTable.get(key).getAll());
+      }
   }
  
   public static void main(String[] args) {

@@ -35,6 +35,7 @@ public class Server {
    and place it in the hashtable.
     NEEDS TO HANDLE DELETING ENTRIES WHEN PEER LEAVES!!!!
  */
+    /*
   public void processSongString(String songList, Hashtable<String, Song> dTab){
     //parse into char works!!!!
     char[] list = songList.toCharArray();
@@ -42,7 +43,7 @@ public class Server {
     System.out.println("CHAR ARRAY");
     for(char f: list)
         System.out.print(f);
-    */
+    
     //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();
    
@@ -71,9 +72,9 @@ public class Server {
       }
     } 
   }
-  
-  
+ */
   //This Function works properly
+    /*
   public void printServerDirectory(Hashtable<String, Song> sTable){
       Enumeration songNames = sTable.keys();
       String key;
@@ -82,28 +83,29 @@ public class Server {
           System.out.println(sTable.get(key).getAll());
       }
   }
-  
+  */
   //This function will take user input as key, hash it, then will return list of songs along with IP addresses 
   //might need 2 functions....one to process query, another to use requested IP address by user
   //Perhaps this should be in the Peer class?????
   //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSE
-  public void processQuery(Hashtable<String, Song> sTable) {
+  public void processQuery(Hashtable<String, Song> sTable, String query) {
     //Scanner not closed to allow for Peer to continue using scanner
     // query.close();
     String IP;
+    /*
     System.out.print("Please enter file name that you would like to query: ");
     String q;
     Scanner query = new Scanner(System.in);
     q = query.nextLine();
     q = q.toLowerCase().replace(" ", "");
     System.out.println("Q is " + q);
-   
+   */
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
     Song key;
     while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
-          if(key.getName().toLowerCase().replace(" ","").contains(q))
+          if(key.getName().toLowerCase().replace(" ","").contains(query))
             System.out.println(key.getAll());
       }
     
@@ -122,12 +124,12 @@ public class Server {
     User will type in IP address and TCP.java will handle the connection
   */
   public void processRequest(){
-    
+  
   }
   
   
   //This method will delete all entries associated with a User from the hashtable
-  public void processPeerExit(){
+  public void processPeerExit(String goodbye){
   
   }
   

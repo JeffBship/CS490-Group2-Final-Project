@@ -46,6 +46,10 @@ public class HTTP {
     public String toString(){
        return this.body;
     }
+    
+    public String asString(){
+       return this.body;
+    }
 
   public String getPayload(){
     //Code Sp Phrase Sp IPaddress Sp Version nl Payload 

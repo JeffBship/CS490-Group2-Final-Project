@@ -39,7 +39,7 @@ public class HTTP {
   
   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
     //Code Sp Phrase Sp IP address Sp Version nl Payload 
-    this.body = code +" "+ phrase +" "+  IPaddress +" "+  version +"\n"+  payload;  
+    this.body = code.toUpperCase() +" "+ phrase +" "+  IPaddress +" "+  version +"\n"+  payload;  
     }
 
     @Override

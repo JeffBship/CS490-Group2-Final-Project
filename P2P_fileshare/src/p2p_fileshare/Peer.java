@@ -83,6 +83,9 @@ public class Peer {
         if(input.equals("I")){
            System.out.println("Informing Server...");
            temp = getDirectory();
+           //HTTP Request
+           //rdt.transmit request
+           //wait for a response
            //serv.processSongString(temp, serv.getTable());
            System.out.println(temp);
            Song.processSongString(temp,Ltab );

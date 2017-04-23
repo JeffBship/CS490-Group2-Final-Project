@@ -34,8 +34,6 @@
  * and open the template in the editor.
  */
 package p2p_fileshare;
-import java.util.*;
-import java.io.*;
 import java.net.UnknownHostException;
 
 /**
@@ -58,7 +56,7 @@ public class Main {
       System.out.println("MAIN CLASS SERVER CHECK");
       Song.printDirectory(MainServer.getTable());
      
-    /*Use this to sest TCPClient and TCPServer   
+    /*Use this to test TCPClient and TCPServer   
     TCPServer serverThread = null;
     TCPClient clientThread = null;
     try {

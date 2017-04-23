@@ -66,7 +66,6 @@ public class Song {
     System.out.println("CHAR ARRAY");
     for(char f: list)
         System.out.print(f);
-    
     //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();
    
@@ -94,7 +93,6 @@ public class Song {
         parse.clear();
       }
     } 
-    
   }
  
  public static void printDirectory(Hashtable<String, Song> sTable){
@@ -105,6 +103,7 @@ public class Song {
           System.out.println(sTable.get(key).getAll());
       }
   }
+ 
  
   public static void main(String[] args) {
     System.out.println("song class compiled and ran successfully.");

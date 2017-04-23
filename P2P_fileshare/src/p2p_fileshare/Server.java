@@ -16,6 +16,8 @@ package p2p_fileshare;
    NEED TO IMPLEMENT MULTITHREADING????
    Use InetAddress.getByName(String host) to convert 
 */
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.*;
 public class Server {
   //Server will need to get IP address of local machine so that it can connect with peers
@@ -131,6 +133,16 @@ public class Server {
   //This method will delete all entries associated with a User from the hashtable
   public void processPeerExit(String goodbye){
   
+  }
+  
+//##############################################################################  
+  
+//##############################################################################  
+  public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException{
+    
+    
+    
+    
   }
   
   

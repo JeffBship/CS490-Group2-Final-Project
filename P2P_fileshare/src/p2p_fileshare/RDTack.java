@@ -100,7 +100,7 @@ class RDTack {
             DatagramSocket ACKSocket = new DatagramSocket();
             Packet ackPacket = new Packet("XX", "XX", ACKseq, "XX", "ACK");
             //InetAddress ackIPinet = InetAddress.getByName(newPacket.getIPAddress());
-            InetAddress ackIPinet = InetAddress.getByName("10.13.238.25");
+            InetAddress ackIPinet = InetAddress.getByName("192.168.1.46");
             DatagramPacket ACKpacket = makePacket(ackPacket.asString(), ackIPinet, Globals.ACK_PORT);
             
             if (drop) {

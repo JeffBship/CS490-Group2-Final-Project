@@ -59,6 +59,8 @@ public class Song {
   }
 
   //!!!!!add in functionality to erase entries no longer in directory!!!!!
+  
+  //###  Might need to change this to return a hashtable instead of using global variables.
   public static void processSongString(String songList, Hashtable<String, Song> dTab){
     //parse into char works!!!!
     char[] list = songList.toCharArray();
@@ -103,6 +105,18 @@ public class Song {
           System.out.println(sTable.get(key).getAll());
       }
   }
+ 
+ /*
+  public static String makeString(Hashtable<String, Song> sTable){
+      Enumeration songNames = sTable.keys();
+      String key, result;
+      while(songNames.hasMoreElements()){
+          key = (String) songNames.nextElement();
+          System.out.println(sTable.get(key).getAll());
+      }
+      
+  }
+*/
  
  
   public static void main(String[] args) {

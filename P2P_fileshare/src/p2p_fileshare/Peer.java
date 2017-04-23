@@ -76,10 +76,11 @@ public class Peer {
     //Add Hashtable to peer...modify to search table in peer instance later
     //Returns User Query as a string to be returned for transmit to Server
     
-    public void informAndUpdate(Server serv) throws UnknownHostException{
+    public void informAndUpdate(Server serv) throws UnknownHostException, IOException, InterruptedException{
       System.out.println("Informing Server...");
       String temp = getDirectory();
-      //HTTP Request
+      //HTTP Request  transmit the "temp" variable!!!
+      RDT.transmit( Globals.JEFF_PC_IP, Globals.MSG_PORT, temp);
       //rdt.transmit request
       //wait for a response
       //serv.processSongString(temp, serv.getTable());
@@ -107,7 +108,7 @@ public class Peer {
     
     
     //This Method will handle the bulk of userInteraction with the Server
-    public void userInteraction(Server serv) throws UnknownHostException{
+    public void userInteraction(Server serv) throws UnknownHostException, IOException, InterruptedException{
     Scanner in = new Scanner(System.in);
     String input = "I";
     String temp;
@@ -115,7 +116,7 @@ public class Peer {
     System.out.println("S: Select folder");
     System.out.println("I: Inform and Update");
     System.out.println("Q: Query for content");
-    System.out.println("R: Request Conent");
+    System.out.println("R: Request Content");
     System.out.println("E: Exit Network");
     while(!input.equals("E")){
       System.out.print("Enter operation: ");
@@ -123,23 +124,6 @@ public class Peer {
       
         if(input.equals("I")){
           informAndUpdate(serv);
-          /*
-           System.out.println("Informing Server...");
-           temp = getDirectory();
-           //HTTP Request
-           //rdt.transmit request
-           //wait for a response
-           //serv.processSongString(temp, serv.getTable());
-           System.out.println(temp);
-           Song.processSongString(temp,Ltab );
-           Song.processSongString(temp, serv.getTable());
-           //System.out.println(temp);
-           System.out.println("This is HASHTABLE in Server");
-           Song.printDirectory(serv.getTable());
-           System.out.println("This is HASHTABLE in Peer");
-           Song.printDirectory(Ltab);
-          */
-           
         }
         else if(input.equals("Q")){
             String query = makeQuery();
@@ -151,12 +135,7 @@ public class Peer {
         }
         else if(input.equals("S")){
           chooseFolder();
-        }
-        
-        
-        
-        
-        else
+        } else
             System.out.println("Please Enter a valid input:");
       }
     System.out.println("Exiting Network and Deleting Corresponding Entries in Server");

@@ -34,6 +34,7 @@
  * and open the template in the editor.
  */
 package p2p_fileshare;
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 /**
@@ -46,7 +47,7 @@ import java.net.UnknownHostException;
  */
 //THIS CLASS WILL BE USED TO TEST PEER TRANSMIT
 public class Main {
-    public static void main(String[] args) throws UnknownHostException{
+    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException{
       Server MainServer = new Server();
       //ArrayList<Song> song = new ArrayList<>();
       //String songList;

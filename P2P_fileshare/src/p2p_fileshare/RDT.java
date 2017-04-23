@@ -171,8 +171,6 @@ class RDT {
         datagramSocket.send(outgoingPacket);
     }
 
-
-
   public static void main(String[] args) {
     System.out.println("RDT_Sender class compiled and ran successfully.");
   }

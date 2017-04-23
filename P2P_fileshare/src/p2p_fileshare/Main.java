@@ -48,7 +48,7 @@ import java.net.UnknownHostException;
 //THIS CLASS WILL BE USED TO TEST PEER TRANSMIT
 public class Main {
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException{
-      Server MainServer = new Server();
+      Hash MainServer = new Hash();
       //ArrayList<Song> song = new ArrayList<>();
       //String songList;
       

@@ -107,33 +107,68 @@ public class Peer {
     //Returns User Query as a string to be returned for transmit to Server
     
     public void informAndUpdate(Hash serv) throws UnknownHostException, IOException, InterruptedException{
-      System.out.println("Informing Server...");
-      String temp = getDirectory();
-      //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
-      String code = "I";    // I for inform and update
-      String phrase = "I";  // I for inform and update (yes it's the same.  The response are the ones that are different than the code.
-      String IPaddress = "the CentralServer IP";
-      String version = "1"; // because we only have one version!
-      String payload = getDirectory();  //this is 
-      HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
-      
-      
-      
-      //HTTP Request  transmit the "temp" variable!!!
-      // RDT.transmit( Globals.JEFF_PC_IP, Globals.MSG_PORT, temp);
-      //rdt.transmit request
-      //wait for a response
-      //serv.processSongString(temp, serv.getTable());
-      System.out.println(temp);
-      Song.processSongString(temp,Ltab );
-      Song.processSongString(temp, serv.getTable());
-      //System.out.println(temp);
-      System.out.println("This is HASHTABLE in Server");
-      Song.printDirectory(serv.getTable());
-      System.out.println("This is HASHTABLE in Peer");
-      Song.printDirectory(Ltab);
-      
+      if (centralServerIP.equals("") || (folder==null) ) {
+        System.out.println("Please set Central Server IP and sharing folder first.");
+      }else{
+        System.out.println("Informing Server...");
+        String temp = getDirectory();
+        //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+        String code = "I";    // I for inform and update
+        String phrase = "I";  // I for inform and update (yes it's the same.  The response are the ones that are different than the code.
+        InetAddress LocalIP = InetAddress.getLocalHost(); 
+        String IPaddress = LocalIP.getHostAddress();
+        String version = "1"; // because we only have one version!
+        String payload = getDirectory();  //
+        HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
+        RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
+
+        //rdt.transmit request
+        //wait for a response
+        //serv.processSongString(temp, serv.getTable());
+        
+        System.out.println(temp);
+        Song.processSongString(temp,Ltab );
+        Song.processSongString(temp, serv.getTable());
+        //System.out.println(temp);
+        //System.out.println("This is HASHTABLE in Server");
+        //Song.printDirectory(serv.getTable());
+        System.out.println("This is HASHTABLE in Peer");
+        Song.printDirectory(Ltab);
+        } //end else
     }
+    
+    
+    public void exit() throws UnknownHostException, IOException, InterruptedException{
+      if (centralServerIP.equals("") || (folder==null) ) {
+        System.out.println("Please set Central Server IP and sharing folder first.");
+      }else{
+        System.out.println("Informing Server...");
+        String temp = getDirectory();
+        //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+        String code = "E";    // E for exit
+        String phrase = "E";  // E for exit (repeated for emphasis, of course)
+        InetAddress LocalIP = InetAddress.getLocalHost(); 
+        String IPaddress = LocalIP.getHostAddress();
+        String version = "1"; // because we only have one version!
+        String payload = getDirectory();  //
+        HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
+        RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
+
+        //rdt.transmit request
+        //wait for a response
+        //serv.processSongString(temp, serv.getTable());
+        
+        //System.out.println(temp);
+        //Song.processSongString(temp,Ltab );
+        //Song.processSongString(temp, serv.getTable());
+        //System.out.println(temp);
+        //System.out.println("This is HASHTABLE in Server");
+        //Song.printDirectory(serv.getTable());
+        System.out.println("Central Server has been notified to remove files.  Have a peachy day.");
+        //Song.printDirectory(Ltab);
+        } //end else
+    }
+    
     
     
     
@@ -151,16 +186,17 @@ public class Peer {
     public void userInteraction(Hash serv) throws UnknownHostException, IOException, InterruptedException{
     Scanner in = new Scanner(System.in);
     String input = "I";
-    String temp;
-    System.out.println("Welcome to the network!!!!");
-    System.out.println("S: Set Central Server IP");
-    System.out.println("F: Select folder");
-    System.out.println("I: Inform and Update");
-    System.out.println("Q: Query for content");
-    System.out.println("R: Request Content");
-    System.out.println("E: Exit Network");
+    
     while(!input.equals("E")){
-      System.out.print("Enter operation: ");
+      String temp;
+      System.out.println("\nWelcome to the network!!!!");
+      System.out.println("S: Set Central Server IP");
+      System.out.println("F: Select sharing folder");
+      System.out.println("I: Inform and Update");
+      System.out.println("Q: Query for content");
+      System.out.println("R: Request Content");
+      System.out.println("E: Exit Network");
+      System.out.print("Enter desired operation: ");
       input = in.nextLine().toUpperCase();
       
         if(input.equals("I")){
@@ -179,7 +215,10 @@ public class Peer {
         } 
         else if(input.equals("S")){
           setIP();
-        } else
+        }
+        else if(input.equals("E")){
+          exit();
+        }else
             System.out.println("Please Enter a valid input:");
       }
     System.out.println("Exiting Network and Deleting Corresponding Entries in Server");

@@ -19,12 +19,12 @@ package p2p_fileshare;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
-public class Server {
+public class Hash {
   //Server will need to get IP address of local machine so that it can connect with peers
     Hashtable<String, Song> dTab;
     int sNum = 0;
     
-    public Server(){
+    public Hash(){
        dTab = new Hashtable<>();
       
     }
@@ -138,12 +138,7 @@ public class Server {
 //##############################################################################  
   
 //##############################################################################  
-  public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException{
-    
-    
-    
-    
-  }
+  
   
   
 }

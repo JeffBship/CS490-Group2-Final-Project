@@ -20,7 +20,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import static p2p_fileshare.UDPSender.makePacket;
 
 //COULD USE THIS CLASS TO ACT AS SERVER
 
@@ -41,7 +40,7 @@ class RDTack {
         ArrayList<Packet> packetList = new ArrayList<>();
 
         long delay = 0;
-    //INITIAL SEQ'S ARE IMPOSSIBLE, TO ENSURE FIRST PACKET WON'T BE A FALSE REPEAT.
+        //INITIAL SEQ'S ARE IMPOSSIBLE, TO ENSURE FIRST PACKET WON'T BE A FALSE REPEAT.
         //ALSO, THIS LETS US CHECK FOR REPEATED FIN PACKETS.
         String ACKseq = "9";
         String lastSeq = "9";

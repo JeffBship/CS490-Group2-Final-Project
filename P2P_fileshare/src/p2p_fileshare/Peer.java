@@ -26,6 +26,24 @@ public class Peer {
     public static String centralServerIP = "";
     Hashtable<String, Song> Ltab = new Hashtable<>();
   
+    
+    //
+    //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
+    //
+    public static void TCPtransmit (String filename, String IPaddress){
+      
+    }
+    
+    
+    // In here we need to find out if the file is available on this peer,
+    // so we can return a 404 error if not.
+    public static boolean haveFile (String filename){
+      boolean result = false;
+      
+      return result;
+    }
+    
+    
     // There's not real logging in, it mostly just checks for a response from the entered IP, using
     // the HTTP req/res system for a proof of concept.
     public static void setIP() throws IOException, InterruptedException{
@@ -55,24 +73,18 @@ public class Peer {
           centralServerIP = "";
           System.out.print("Login failed, that IP is not working.");
       }
-      
-      
     }
     
     public static void chooseFolder(){
-          // JFileChooser chooser = new JFileChooser();
-              //FileNameExtensionFilter filter = new FileNameExtensionFilter(
-              //    "mp3 files", "mp3");
-              //chooser.setFileFilter(filter);
-          chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          int returnVal = chooser.showOpenDialog(null);
-          //chooser.setCurrentDirectory(new java.io.File("."));
-          if(returnVal == JFileChooser.APPROVE_OPTION) {
-            //folder = chooser.getSelectedFile().getName());
-            folder =  chooser.getSelectedFile();
-            System.out.println("Selected folder: " + folder.getName() );
-            // folder = chooser.getSelectedFile().getName());
-          }
+      chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      int returnVal = chooser.showOpenDialog(null);
+      //chooser.setCurrentDirectory(new java.io.File("."));
+      if(returnVal == JFileChooser.APPROVE_OPTION) {
+        //folder = chooser.getSelectedFile().getName());
+        folder =  chooser.getSelectedFile();
+        System.out.println("Selected folder: " + folder.getName() );
+        // folder = chooser.getSelectedFile().getName());
+      }
     }
     
     public static String getDirectory() throws UnknownHostException{
@@ -105,7 +117,7 @@ public class Peer {
         System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(Globals.ACK_PORT);
         System.out.println("in informAndUpDate.  received HTTP response as follows: \n" +  informResponse.display() );
-        } //end else
+      } //end else
     }
     
     public static void exit() throws UnknownHostException, IOException, InterruptedException{

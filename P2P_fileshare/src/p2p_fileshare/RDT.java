@@ -34,6 +34,13 @@ class RDT {
   public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
     System.out.println("In Transmit,  to IP " + transmitIP + " to Port " + transmitPort);
     
+    int responsePort;
+    if (transmitPort == Globals.MSG_PORT){
+      responsePort = Globals.ACK_PORT;
+    } else {
+      responsePort = Globals.MSG_PORT;
+    }
+    
     ArrayList<Packet> packetList = new ArrayList<>();
     
     //This block creates header data to use in the packets
@@ -101,10 +108,19 @@ class RDT {
                                Packet rdt_sendPacket) throws IOException, InterruptedException{
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
-    int port = Globals.ACK_PORT;
+    //int port = Globals.ACK_PORT;
     //InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
     
-    DatagramSocket ACKSocket = new DatagramSocket(Globals.ACK_PORT);
+    
+    
+    int rdt_listenPort;
+    if (rdt_sendPort==Globals.ACK_PORT){
+      rdt_listenPort = Globals.MSG_PORT;
+    }else{
+      rdt_listenPort = Globals.ACK_PORT;
+    }
+    DatagramSocket ACKSocket = new DatagramSocket(rdt_listenPort);
+    
     boolean finished = false;
     while (!finished){
       try {

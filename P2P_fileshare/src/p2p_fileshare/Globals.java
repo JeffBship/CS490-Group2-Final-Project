@@ -25,8 +25,8 @@ public class Globals {
   
   public static final boolean SLOWMODE = false;
   
-  public static final int MSG_PORT = 55000;
-  public static final int ACK_PORT = 55001;
+  public static final int MSG_PORT = 2000;
+  public static final int ACK_PORT = 2001;
   
   //These are the variables to timeout calculations
   public static final double INIT_EST_RTT = 100.0;

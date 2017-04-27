@@ -55,10 +55,10 @@ public class Main {
       //ArrayList<Song> song = new ArrayList<>();
       //String songList;
       
-      Peer p1 = new Peer();
-      p1.userInteraction(MainServer);
-      System.out.println("MAIN CLASS SERVER CHECK");
-      Song.printDirectory(MainServer.getTable());
+      //Peer p1 = new Peer();
+      //p1.userInteraction(MainServer);
+      //System.out.println("MAIN CLASS SERVER CHECK");
+      //Song.printDirectory(MainServer.getTable());
      
     /*Use this to test TCPClient and TCPServer   
     TCPServer serverThread = null;

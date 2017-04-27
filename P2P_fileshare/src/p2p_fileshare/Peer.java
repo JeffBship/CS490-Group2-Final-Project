@@ -43,10 +43,12 @@ public class Peer {
       HTTP login = new HTTP(code, phrase, IPaddress, version, payload);
       
       RDT.transmit( tryIP, Globals.MSG_PORT, login.asString());
+      HTTP loginResponse = RDT.listen(Globals.ACK_PORT);
+      System.out.println("in login.  received HTTP response as follows: \n" +  loginResponse.display() );
       
-      HTTP response = new HTTP("200","O","someIP","1","some payload");
+      //HTTP response = new HTTP("200","O","someIP","1","some payload");
       //RDT.listen (needs to be coded)...  get the HTTP response and if check to 200:Okay
-      if ( response.getCode().equals("200") ) {
+      if ( loginResponse.getCode().equals("200") ) {
         System.out.println("Login succes, IP is working.");
         centralServerIP = tryIP;
         } else {
@@ -101,6 +103,8 @@ public class Peer {
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
         System.out.println("Transmitted \n " + inform.getPayload());
+        HTTP informResponse = RDT.listen(Globals.ACK_PORT);
+        System.out.println("in informAndUpDate.  received HTTP response as follows: \n" +  informResponse.display() );
         } //end else
     }
     

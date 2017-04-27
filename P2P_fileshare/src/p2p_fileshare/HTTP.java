@@ -17,7 +17,7 @@ Response Code:Phrase  (One character phrases are used to conserve message space.
 200: O.  Okay. The request was completed.  
 400: B.  Bad Request error.  Parsing failed to create a usable message.
 404: F.  File not found.  Peer does not hold the requested file.
-505: H. HTTP Version not supported. 
+505: H.  HTTP Version not supported. 
 * 
 * 
  * 
@@ -30,7 +30,7 @@ package p2p_fileshare;
 public class HTTP {
   String body;
   
-  private static String requestCodes = "L I Q D";
+  private static String requestCodes = "L I Q D E";
   private static String responseCodes = "200 400 404 505";
      
   public HTTP(){
@@ -42,7 +42,6 @@ public class HTTP {
     //Code Sp Phrase Sp IP address Sp Version nl Payload 
     this.body = code.toUpperCase() +" "+ phrase +" "+  IPaddress +" "+  version +"\n"+  payload;  
     }
-  
   
   //This constructor make an HTTP from one long string.
   public HTTP(String message){
@@ -132,7 +131,18 @@ public class HTTP {
     return responseCodes.contains(this.getCode());
     }
 
-
+  public String display(){
+    
+    String result = "";
+    
+    result += "Code:      " + this.getCode()      + "\n";
+    result += "Phrase:    " + this.getPhrase()    + "\n";
+    result += "IPaddress: " + this.getIPaddress() + "\n";
+    result += "Version:   " + this.getVersion()   + "\n";
+    result += "Payload: \n" + this.getPayload()   + "\n";
+    return result;
+  }
+  
   public static void main(String[] args){
     System.out.println("testing HTTP methods");
     
@@ -146,11 +156,5 @@ public class HTTP {
     System.out.println( "toString method:  " + test.toString()      );
     System.out.println( "isRequest: " + test.isRequest() );
     System.out.println( "isResponse: " + test.isResponse() );
-    
-    
-    
-    
   }
-  
-  
 }

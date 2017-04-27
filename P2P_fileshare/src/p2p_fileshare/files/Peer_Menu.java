@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package p2p_fileshare;
+package p2p_fileshare.files;
 
 import java.util.Scanner;
+import p2p_fileshare.Globals;
 
 /**
  *

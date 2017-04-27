@@ -18,7 +18,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import static p2p_fileshare.UDPSender.makePacket;
+import static p2p_fileshare.files.UDPSender.makePacket;
 
 class RDT {
   

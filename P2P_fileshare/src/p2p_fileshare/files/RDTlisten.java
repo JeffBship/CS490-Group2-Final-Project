@@ -1,7 +1,7 @@
 /*
  * 
  */
-package p2p_fileshare;
+package p2p_fileshare.files;
 
 
 public class RDTlisten extends Thread {

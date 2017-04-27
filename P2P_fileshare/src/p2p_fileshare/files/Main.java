@@ -33,9 +33,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package p2p_fileshare;
+package p2p_fileshare.files;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import p2p_fileshare.Hash;
+import p2p_fileshare.Peer;
+import p2p_fileshare.Song;
 
 /**
  *

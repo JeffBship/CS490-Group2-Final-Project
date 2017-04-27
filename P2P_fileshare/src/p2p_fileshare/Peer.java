@@ -21,14 +21,14 @@ import javax.swing.JFileChooser;
  */
 public class Peer {
     
-    public JFileChooser chooser = new JFileChooser();
-    public File folder = null;
-    public String centralServerIP = "";
+    public static JFileChooser chooser = new JFileChooser();
+    public static File folder = null;
+    public static String centralServerIP = "";
     Hashtable<String, Song> Ltab = new Hashtable<>();
   
     // There's not real logging in, it mostly just checks for a response from the entered IP, using
     // the HTTP req/res system for a proof of concept.
-    public void setIP() throws IOException, InterruptedException{
+    public static void setIP() throws IOException, InterruptedException{
       System.out.print("Enter the IP to look for the Server: ");
       Scanner scan = new Scanner(System.in);
       String tryIP = scan.nextLine();
@@ -57,7 +57,7 @@ public class Peer {
       
     }
     
-    public void chooseFolder(){
+    public static void chooseFolder(){
           // JFileChooser chooser = new JFileChooser();
               //FileNameExtensionFilter filter = new FileNameExtensionFilter(
               //    "mp3 files", "mp3");
@@ -73,7 +73,7 @@ public class Peer {
           }
     }
     
-    public String getDirectory() throws UnknownHostException{
+    public static String getDirectory() throws UnknownHostException{
       String songList= "";
       File[] listOfFiles = folder.listFiles();
       int j=0;
@@ -86,7 +86,7 @@ public class Peer {
     //Add Hashtable to peer...modify to search table in peer instance later
     //Returns User Query as a string to be returned for transmit to Server
     
-    public void informAndUpdate(Hash serv) throws UnknownHostException, IOException, InterruptedException{
+    public static void informAndUpdate() throws UnknownHostException, IOException, InterruptedException{
       if (centralServerIP.equals("") || (folder==null) ) {
         System.out.println("Please set Central Server IP and sharing folder first.");
       }else{
@@ -101,11 +101,11 @@ public class Peer {
         String version = "1"; // because we only have one version!
         String payload = getDirectory();  //
         //CLEAR OUT LOCAL TABLE
-        Ltab.clear();
+        //Ltab.clear();
         
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
-        Song.processSongString(payload, Ltab);
+        //Song.processSongString(payload, Ltab);
 
         //rdt.transmit request
         //wait for a response
@@ -113,18 +113,18 @@ public class Peer {
         //serv.processSongString(temp, serv.getTable());
         
         System.out.println(temp);
-        Song.processSongString(temp,Ltab );
-        Song.processSongString(temp, serv.getTable());
+        //Song.processSongString(temp,Ltab );
+        //Song.processSongString(temp, serv.getTable());
         //System.out.println(temp);
         //System.out.println("This is HASHTABLE in Server");
         //Song.printDirectory(serv.getTable());
-        System.out.println("This is HASHTABLE in Peer");
-        Song.printDirectory(Ltab);
+        //System.out.println("This is HASHTABLE in Peer");
+        //Song.printDirectory(Ltab);
         } //end else
     }
     
     
-    public void exit() throws UnknownHostException, IOException, InterruptedException{
+    public static void exit() throws UnknownHostException, IOException, InterruptedException{
       if (centralServerIP.equals("") || (folder==null) ) {
         System.out.println("Please set Central Server IP and sharing folder first.");
       }else{
@@ -158,7 +158,7 @@ public class Peer {
     
     
     
-    public String makeQuery(){
+    public static String makeQuery(){
          System.out.print("Please enter file name that you would like to query: ");
          String q;
          Scanner query = new Scanner(System.in);
@@ -169,7 +169,7 @@ public class Peer {
     
     
     //This Method will handle the bulk of userInteraction with the Server
-    public void userInteraction(Hash serv) throws UnknownHostException, IOException, InterruptedException{
+    public static void main(String[] args) throws IOException, UnknownHostException, InterruptedException{
     Scanner in = new Scanner(System.in);
     String input = "I";
     
@@ -186,12 +186,12 @@ public class Peer {
       input = in.nextLine().toUpperCase();
       
         if(input.equals("I")){
-          informAndUpdate(serv);
+          informAndUpdate();
         }
         else if(input.equals("Q")){
             String query = makeQuery();
             //RDT transmit query 
-            serv.processQuery(serv.getTable(), query);
+            //serv.processQuery(serv.getTable(), query);
         }
         else if(input.equals("R")){
            System.out.println("Handling Request-Not Yet But Eventually");

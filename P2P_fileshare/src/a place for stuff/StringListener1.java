@@ -9,6 +9,7 @@
 
 package p2p_fileshare;
 
+import p2p_fileshare.files.Timer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;

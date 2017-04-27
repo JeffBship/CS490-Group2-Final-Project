@@ -9,13 +9,14 @@
 
 
 
-package p2p_fileshare;
+package p2p_fileshare.files;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import p2p_fileshare.Globals;
 
 public class UDPSender {
     

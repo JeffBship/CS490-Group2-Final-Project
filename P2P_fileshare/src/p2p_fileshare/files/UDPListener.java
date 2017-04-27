@@ -6,13 +6,15 @@
  * This is some test code to send and receive 128 byte strings via sockets.
  */
 
-package p2p_fileshare;
+package p2p_fileshare.files;
 
+import p2p_fileshare.files.Timer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
+import p2p_fileshare.Globals;
 
 public class UDPListener {
 

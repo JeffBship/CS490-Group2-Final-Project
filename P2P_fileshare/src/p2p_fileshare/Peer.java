@@ -91,38 +91,18 @@ public class Peer {
         System.out.println("Please set Central Server IP and sharing folder first.");
       }else{
         System.out.println("Informing Server...");
-        //DO WE NEED THIS TEMP???
-        String temp = getDirectory();
-        //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+        //Build the HTTP request   
         String code = "I";    // I for inform and update
         String phrase = "I";  // I for inform and update (yes it's the same.  The response are the ones that are different than the code.
         InetAddress LocalIP = InetAddress.getLocalHost(); 
         String IPaddress = LocalIP.getHostAddress();
         String version = "1"; // because we only have one version!
         String payload = getDirectory();  //
-        //CLEAR OUT LOCAL TABLE
-        //Ltab.clear();
-        
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
-        //Song.processSongString(payload, Ltab);
-
-        //rdt.transmit request
-        //wait for a response
-        //after response use song to Song.processSongString(response, Mtab) to add the string to hashtable
-        //serv.processSongString(temp, serv.getTable());
-        
-        System.out.println(temp);
-        //Song.processSongString(temp,Ltab );
-        //Song.processSongString(temp, serv.getTable());
-        //System.out.println(temp);
-        //System.out.println("This is HASHTABLE in Server");
-        //Song.printDirectory(serv.getTable());
-        //System.out.println("This is HASHTABLE in Peer");
-        //Song.printDirectory(Ltab);
+        System.out.println("Transmitted \n " + inform.getPayload());
         } //end else
     }
-    
     
     public static void exit() throws UnknownHostException, IOException, InterruptedException{
       if (centralServerIP.equals("") || (folder==null) ) {
@@ -139,24 +119,9 @@ public class Peer {
         String payload = getDirectory();  //
         HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
-
-        //rdt.transmit request
-        //wait for a response
-        //serv.processSongString(temp, serv.getTable());
-        
-        //System.out.println(temp);
-        //Song.processSongString(temp,Ltab );
-        //Song.processSongString(temp, serv.getTable());
-        //System.out.println(temp);
-        //System.out.println("This is HASHTABLE in Server");
-        //Song.printDirectory(serv.getTable());
         System.out.println("Central Server has been notified to remove files.  Have a peachy day.");
-        //Song.printDirectory(Ltab);
         } //end else
     }
-    
-    
-    
     
     public static String makeQuery(){
          System.out.print("Please enter file name that you would like to query: ");

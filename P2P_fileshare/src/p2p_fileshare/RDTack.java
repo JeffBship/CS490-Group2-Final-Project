@@ -35,6 +35,8 @@ class RDTack {
         System.out.println("Percentage of packets to ack: " + ACKpercent);
         System.out.println("Average msec to ACK is: " + ACKtime + " +/- " + ACKdev);
         System.out.println("You can change those values in the code if you want.");
+        InetAddress LocalIP = InetAddress.getLocalHost(); 
+        System.out.println("Local IP is: " + LocalIP.getHostAddress());
         System.out.println("\n \n THIS IS AN INFINITE LOOP, MANUAL KILL WHEN DONE.");
 
         ArrayList<Packet> packetList = new ArrayList<>();

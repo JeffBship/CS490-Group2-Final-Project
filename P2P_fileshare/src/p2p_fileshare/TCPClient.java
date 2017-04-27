@@ -30,7 +30,10 @@ public class TCPClient extends Thread {
       String modifiedSentence;
       BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
       System.out.println("CLIENT opening socket");
-      clientSocket = new Socket("localhost", serverPort);
+      //byte[] targetAdddress = {10, 8, 89, (byte)206};
+      //clientSocket = new Socket("localhost", serverPort);
+      
+      clientSocket = new Socket("10.8.89.206", serverPort);
       System.out.println("CLIENT connected to server");
       DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
       BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

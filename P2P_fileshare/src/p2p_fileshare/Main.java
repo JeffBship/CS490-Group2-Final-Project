@@ -11,19 +11,21 @@ package p2p_fileshare;
 public class Main {
 
   public static void main(String[] args) {
-    TCPServer serverThread = null;
+    //TCPServer serverThread = null;
     TCPClient clientThread = null;
     try {
       // Start server
-      serverThread = new TCPServer("Server", 49000);
-      serverThread.start();
+      //serverThread = new TCPServer("Server", 49000);
+      //serverThread.start();
 
       // Create client
-      byte[] targetAdddress = {127, 0, 0, 1};
+      //Jeff in Student Center Local IP is: 10.8.73.85
+      //byte[] targetAdddress = {10, 8, 89, (byte)206};
       TCPClient client1 = new TCPClient("CLIENT1", 49000);
-      TCPClient client2 = new TCPClient("CLIENT2", 49000);
+      //TCPClient client2 = new TCPClient("CLIENT2", 49000);
       client1.start();
-      client2.start();
+     
+      //client2.start();
     } catch (Exception e) {
       e.printStackTrace();
     }

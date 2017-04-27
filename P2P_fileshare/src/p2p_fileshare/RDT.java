@@ -32,6 +32,8 @@ class RDT {
   
   
   public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
+    System.out.println("In Transmit,  to IP " + transmitIP + " to Port " + transmitPort);
+    
     ArrayList<Packet> packetList = new ArrayList<>();
     
     //This block creates header data to use in the packets
@@ -79,7 +81,7 @@ class RDT {
     newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining, "FIN");
     packetList.add(newPacket); //adds newPacket to the end of the list.
     
-    System.out.println("In Transmit,  to IP " + transmitIP);
+    
     int totalPackets = packetList.size()-1;
     for (int i=0;i<packetList.size();i++){
       System.out.println("------------------------ NEXT PACKET----------------------------");
@@ -193,7 +195,9 @@ class RDT {
       responsePort = Globals.ACK_PORT;
     }
     HTTP result = new HTTP();
-    System.out.println("###############Inside RDT.listen######################");
+    System.out.println("####Inside RDT.listen#######");
+    System.out.println("listen port is: " + listenPort);
+    System.out.println("response port is " + responsePort);
     ArrayList<Packet> packetList = new ArrayList<>();
     //INITIAL SEQ'S ARE IMPOSSIBLE, TO ENSURE FIRST PACKET WON'T BE A FALSE REPEAT.
     //ALSO, THIS LETS US CHECK FOR REPEATED FIN PACKETS.
@@ -217,8 +221,6 @@ class RDT {
         goodPacket = true;
         if (newPacket.isSYN()) {
             System.out.println("SYN packet received, resetting sequence.");
-            lastSeq = newPacket.getSequence();
-//Need to actually reset the sequence here            
         } else if (newPacket.getSequence().equals(lastSeq)) {
             goodPacket = false;
             System.out.println("Duplicate sequence received.");

@@ -85,7 +85,7 @@ public class Hash {
     while(keys.hasMoreElements()){
       key =(String) keys.nextElement();
       temp = dTab.get(key);
-      songs+= temp.getName() + "\t" + temp.getFilesize() + "\t" + temp.getIP() + "\n";
+      songs+= temp.getName() + "\t\t" + temp.getFilesize() + "\t\t" + temp.getIP() + "\n";
     }
     return songs;
   }

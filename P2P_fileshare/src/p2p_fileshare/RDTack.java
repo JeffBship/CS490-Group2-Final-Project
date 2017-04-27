@@ -122,16 +122,31 @@ class RDTack {
                     message += data;
                 }
                 //There's a FIN on the end, so toss that too.
+                lastSeq = "9"; //set an impossible sequence so the receiver will know it's done
                 packetList.remove(0);
-                lastSeq = "9";
+                //now message is the complete HTTP message as a string.
+                HTTP http = new HTTP(message);
                 System.out.println("Complete Message received.");
+                if ( http.getCode().equals("I") ) {System.out.println("It's an inform/update, call that method here.");}
                 System.out.println("------------------------------------------------");
-                System.out.println(message);
+                if (http.isRequest() ) { System.out.println("Received an HTTP request.");}
+                if (http.isResponse()) { System.out.println("Received an HTTP response.");}
+                System.out.println( "Code:      " + http.getCode()       );
+                System.out.println( "Phrase:    " + http.getPhrase()     );
+                System.out.println( "IPaddress: " + http.getIPaddress()  );
+                System.out.println( "Version:   " + http.getVersion()    );
+                System.out.println( "Payload:   " + http.getPayload()    );
+                //System.out.println(message);
                 System.out.println("------------------------------------------------");
+                
             }
         }
     }
 
+    public void processHTTP(){
+      
+    }
+    
     private static DatagramPacket makePacket(String msg, InetAddress destination, int port)
             throws UnknownHostException {
         byte[] data = msg.getBytes();

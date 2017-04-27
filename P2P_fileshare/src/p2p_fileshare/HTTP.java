@@ -37,9 +37,16 @@ public class HTTP {
     body = "";
     }
   
+  //This constructor makes an HTTP from separate content elements
   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
     //Code Sp Phrase Sp IP address Sp Version nl Payload 
     this.body = code.toUpperCase() +" "+ phrase +" "+  IPaddress +" "+  version +"\n"+  payload;  
+    }
+  
+  
+  //This constructor make an HTTP from one long string.
+  public HTTP(String message){
+    this.body = message;  
     }
 
     @Override

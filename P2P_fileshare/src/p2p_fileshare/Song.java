@@ -65,12 +65,15 @@ public class Song {
     //parse into char works!!!!
     char[] list = songList.toCharArray();
     Integer snum = 0;
+    /*
     System.out.println("CHAR ARRAY");
     for(char f: list)
         System.out.print(f);
+    */
+    
     //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();
-   
+    
     String temp;
     String name;
     String size;

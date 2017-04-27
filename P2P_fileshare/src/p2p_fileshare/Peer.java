@@ -25,25 +25,6 @@ public class Peer {
     public File folder = null;
     public String centralServerIP = "";
     Hashtable<String, Song> Ltab = new Hashtable<>();
-    
-    /*CODE FOR ALLOWING USER TO INPUT FILE DIRECTORY
-      int i = 0;
-      File f = null;
-      /*
-      String directory = "";
-      while(i==0){
-        Scanner kbd = new Scanner(System.in);
-        System.out.print("Please enter desired file path: ");
-        directory = kbd.nextLine();
-        f = new File(directory);
-        if (f.isDirectory())
-            i=1;     
-        else{
-            System.out.println("Please enter a valid directory");          
-        }
-    }
-    */
-    
   
     // There's not real logging in, it mostly just checks for a response from the entered IP, using
     // the HTTP req/res system for a proof of concept.
@@ -94,7 +75,6 @@ public class Peer {
     
     public String getDirectory() throws UnknownHostException{
       String songList= "";
-      //folder = new File("C:\\Users\\Surface Book\\Desktop\\CCSU\\Spring 2017\\CS 490 Networking\\CS490-Group2-Final-Project\\P2P_fileshare\\src\\p2p_fileshare\\files");
       File[] listOfFiles = folder.listFiles();
       int j=0;
       for(File file : listOfFiles)
@@ -111,6 +91,7 @@ public class Peer {
         System.out.println("Please set Central Server IP and sharing folder first.");
       }else{
         System.out.println("Informing Server...");
+        //DO WE NEED THIS TEMP???
         String temp = getDirectory();
         //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
         String code = "I";    // I for inform and update
@@ -119,11 +100,16 @@ public class Peer {
         String IPaddress = LocalIP.getHostAddress();
         String version = "1"; // because we only have one version!
         String payload = getDirectory();  //
+        //CLEAR OUT LOCAL TABLE
+        Ltab.clear();
+        
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
+        Song.processSongString(payload, Ltab);
 
         //rdt.transmit request
         //wait for a response
+        //after response use song to Song.processSongString(response, Mtab) to add the string to hashtable
         //serv.processSongString(temp, serv.getTable());
         
         System.out.println(temp);

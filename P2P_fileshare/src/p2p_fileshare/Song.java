@@ -106,19 +106,7 @@ public class Song {
       }
   }
  
- /*
-  public static String makeString(Hashtable<String, Song> sTable){
-      Enumeration songNames = sTable.keys();
-      String key, result;
-      while(songNames.hasMoreElements()){
-          key = (String) songNames.nextElement();
-          System.out.println(sTable.get(key).getAll());
-      }
-      
-  }
-*/
- 
- 
+
   public static void main(String[] args) {
     System.out.println("song class compiled and ran successfully.");
   }

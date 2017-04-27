@@ -32,76 +32,12 @@ public class Hash {
     public Hashtable<String, Song> getTable(){
         return dTab;
     }
- /*Modified version of processSongArray...once the string songList from peer 
-   is transmitted, this method will parse through the string, build the song object
-   and place it in the hashtable.
-    NEEDS TO HANDLE DELETING ENTRIES WHEN PEER LEAVES!!!!
- */
-    /*
-  public void processSongString(String songList, Hashtable<String, Song> dTab){
-    //parse into char works!!!!
-    char[] list = songList.toCharArray();
-    /*
-    System.out.println("CHAR ARRAY");
-    for(char f: list)
-        System.out.print(f);
-    
-    //use parse to read up to newline character
-    ArrayList<Character> parse = new ArrayList<>();
-   
-    String temp;
-    String name;
-    String size;
-    String IP;
-    char c;
-    for(int i = 0; i<list.length; i++){
-      c = list[i];
-      if(!(c=='\n')) 
-        parse.add(c);
-      else {
-        //This builds a string out of parse
-        StringBuilder build = new StringBuilder(parse.size());
-        for(Character ch: parse)
-            build.append(ch);
-        temp = build.toString();
-        //uses \t as delimeter for string parsing
-        String[] splits = temp.split("\t");
-        name = splits[0];
-        size = splits[1];
-        IP = splits[2];
-        dTab.put(name + " " + IP,new Song(++sNum, name, size, IP ));
-        parse.clear();
-      }
-    } 
-  }
- */
-  //This Function works properly
-    /*
-  public void printServerDirectory(Hashtable<String, Song> sTable){
-      Enumeration songNames = sTable.keys();
-      String key;
-      while(songNames.hasMoreElements()){
-          key = (String) songNames.nextElement();
-          System.out.println(sTable.get(key).getAll());
-      }
-  }
-  */
-  //This function will take user input as key, hash it, then will return list of songs along with IP addresses 
-  //might need 2 functions....one to process query, another to use requested IP address by user
-  //Perhaps this should be in the Peer class?????
-  //THIS FUNCTION WILL TEMPORARILY JUST PRINT OUT THE RESULTING QUERY FOR TESTING PURPOSE
+ 
+  //Modify to return query as a string!!!!
   public void processQuery(Hashtable<String, Song> sTable, String query) {
     //Scanner not closed to allow for Peer to continue using scanner
     // query.close();
     String IP;
-    /*
-    System.out.print("Please enter file name that you would like to query: ");
-    String q;
-    Scanner query = new Scanner(System.in);
-    q = query.nextLine();
-    q = q.toLowerCase().replace(" ", "");
-    System.out.println("Q is " + q);
-   */
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
     Song key;
@@ -110,14 +46,7 @@ public class Hash {
           if(key.getName().toLowerCase().replace(" ","").contains(query))
             System.out.println(key.getAll());
       }
-    
-    /*
-      //if((sTable.get(q).getName()).equals(""))
-      if(!sTable.containsKey(q)) 
-           System.out.println("Query empty");        
-      else
-        System.out.println(sTable.get(q).getAll());
-    */
+   
   }
   
   //These can be written AFTER testing RDT code between client and server
@@ -125,20 +54,41 @@ public class Hash {
   /*This method will work in conjunction with the TCP.java class.
     User will type in IP address and TCP.java will handle the connection
   */
-  public void processRequest(){
+  
+  //Check whether or not all the IPS are reachable
+  public void checkIPs(){
+  
   
   }
   
-  
-  //This method will delete all entries associated with a User from the hashtable
-  public void processPeerExit(String goodbye){
-  
+  //MUST BE TESTED 
+  //This method deletes all entries in hashtable associated with PeerIP
+  //Can be used to in Inform and Update and Exit methods in Peer.java
+  public void clearAssociatedElements(String PeerIP){
+    Enumeration enumK = dTab.elements();
+    Song key = null;
+    while(enumK.hasMoreElements()){
+      key = (Song) enumK.nextElement();
+      if(key.getIP().equals(PeerIP))
+          dTab.remove(key.getKey());
+    }
+
   }
   
-//##############################################################################  
-  
-//##############################################################################  
-  
+  //MUST BE TESTED 
+  //Makes String from Server Hashtable to send to peer
+    public String makeDirectoryString(){
+    String songs = "";
+    Enumeration keys = dTab.keys();
+    String key = "";
+    Song temp = null;
+    while(keys.hasMoreElements()){
+      key =(String) keys.nextElement();
+      temp = dTab.get(key);
+      songs+= temp.getName() + "\t" + temp.getFilesize() + "\t" + temp.getIP() + "\n";
+    }
+    return songs;
+  }
   
   
 }

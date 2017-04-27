@@ -24,6 +24,7 @@ public class Globals {
   public static       File FOLDER = new File("c:\\");
   
   public static final boolean SLOWMODE = false;
+  public static final boolean SHOWALL = true;
   
   public static final int MSG_PORT = 2000;
   public static final int ACK_PORT = 2001;

@@ -32,7 +32,7 @@ class RDT {
   
   
   public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
-    System.out.println("In Transmit,  to IP " + transmitIP + " to Port " + transmitPort);
+    if (Globals.SHOWALL) { System.out.println("In Transmit,  to IP " + transmitIP + " to Port " + transmitPort); }
     
     int responsePort;
     if (transmitPort == Globals.MSG_PORT){
@@ -58,7 +58,7 @@ class RDT {
     timout = Globals.INIT_TIMEOUT;
     devRTT = Globals.INIT_DEV_RTT;
     
-    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 95.0 ) +2 ; 
+    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 95.0 ) +2 ; //+2 for the SYN and FIN
     // SYN packet isn't a handshake, it tells the receiver to start sequence count over
     // so if a previous message was dropped it can't jinx the sequence.
     sequence = "0";
@@ -67,7 +67,8 @@ class RDT {
     packetsRemainingInt--;
     sequence = "1";
     //Build the packetList by taking 95 byte chunks of the message
-    while (packetsRemainingInt>0){
+    while (packetsRemainingInt>1){
+      System.out.println("in packetsRemaining loop, : " + packetsRemainingInt);
       packetsRemaining = Integer.toString(packetsRemainingInt);
       int endIndex = 94;
       String newPacketData;
@@ -91,10 +92,16 @@ class RDT {
     
     int totalPackets = packetList.size()-1;
     for (int i=0;i<packetList.size();i++){
-      System.out.println("------------------------ NEXT PACKET----------------------------");
-      String currentSeq = packetList.get(i).getSequence();
-      System.out.println("Sending Packet " + i + " of " +  totalPackets + " with sequence number " + currentSeq);  
       rdt_send(transmitIP, transmitPort, packetList.get(i));
+      String currentSeq = packetList.get(i).getSequence();
+      if (Globals.SHOWALL) {
+        System.out.println("------------------------ NEXT PACKET----------------------------");
+        System.out.println("Sending Packet " + i + " of " +  totalPackets + " with sequence number " + currentSeq); 
+        System.out.println("Packet data is: " + packetList.get(i).getData());
+      }
+      
+      
+      
       //System.out.println("getpeerID           : " + packetList.get(i).getpeerID() );
       //System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
       //System.out.println("getSequence         : " + packetList.get(i).getSequence() );
@@ -132,7 +139,7 @@ class RDT {
           
         //  SEND THE CURRENT PACKET
           DatagramSocket MSGSocket = new DatagramSocket();
-          System.out.print("Sent to udt, ");
+          if (Globals.SHOWALL) System.out.print("Sent to udt, ");
           long startTime = System.currentTimeMillis();  // - Start Timer
           //System.out.println("startTime " + startTime % 10000);
           udt_send(MSGSocket, rdt_sendIP, rdt_sendPort, rdt_sendPacket); 
@@ -142,7 +149,7 @@ class RDT {
           
           DatagramPacket DGACKpacket = new DatagramPacket(new byte[128], 128);
           ACKSocket.setSoTimeout( (int)timout );
-          System.out.println(" timeout = "+ (long)timout);
+          if (Globals.SHOWALL) System.out.println(" timeout = "+ (long)timout);
           ACKSocket.receive(DGACKpacket);
           
           //  UPDATE EstimatedRTT, and Timeout   
@@ -154,19 +161,19 @@ class RDT {
           devRTT = (long) ((1-Globals.BETA)*devRTT + Globals.BETA * abs(sampleRTT- estimatedRTT ));
           timout = estimatedRTT + 4*devRTT;
           //System.out.println("Packet received on ACKSocket.");
-          System.out.println("SampleRTT: " + sampleRTT + " New timeout: " + (long)timout);
+          if (Globals.SHOWALL) System.out.println("SampleRTT: " + sampleRTT + " New timeout: " + (long)timout);
         // CHECK SEQUENCE NUMBER OF ACK
         // - if ACK of correct sequence # , finished
           Packet response = Packet.extractFromDatagram(DGACKpacket);
           if ( response.isACK(sequence)  ){
-            System.out.println("ACK received with sequence number " + response.getSequence() );
+            if (Globals.SHOWALL) System.out.println("ACK received with sequence number " + response.getSequence() );
             finished=true;
           } else {
-            System.out.println("Received bad Ack, sequence " + response.getSequence() + ", resending.");
+            if (Globals.SHOWALL) System.out.println("Received bad Ack, sequence " + response.getSequence() + ", resending.");
           }
         } catch (SocketTimeoutException e) {
           timout *= 2;  // After a timeout, double the timer  USING A SMALLER NUMBER DURING TESTING
-          System.out.println("Timeout occurred, resending.");
+          if (Globals.SHOWALL) System.out.println("Timeout occurred, resending.");
           }
     }
     ACKSocket.close();
@@ -211,9 +218,9 @@ class RDT {
       responsePort = Globals.ACK_PORT;
     }
     HTTP result = new HTTP();
-    System.out.println("####Inside RDT.listen#######");
-    System.out.println("listen port is: " + listenPort);
-    System.out.println("response port is " + responsePort);
+    if (Globals.SHOWALL) System.out.println("####Inside RDT.listen#######");
+    if (Globals.SHOWALL) System.out.println("listen port is: " + listenPort);
+    if (Globals.SHOWALL) System.out.println("response port is " + responsePort);
     ArrayList<Packet> packetList = new ArrayList<>();
     //INITIAL SEQ'S ARE IMPOSSIBLE, TO ENSURE FIRST PACKET WON'T BE A FALSE REPEAT.
     //ALSO, THIS LETS US CHECK FOR REPEATED FIN PACKETS.
@@ -232,33 +239,36 @@ class RDT {
         MSGSocket.receive(MSGpacket);
         MSGSocket.close();
         Packet newPacket = Packet.extractFromDatagram(MSGpacket);
-        System.out.println("Seq " + newPacket.getSequence() + " received...");
+        if (Globals.SHOWALL) {
+          System.out.println("------------------------------------------");
+          System.out.println("Seq " + newPacket.getSequence() + " received...");
+        }
         //CHECK FOR GOOD PACKET, ADD FAULTS
         goodPacket = true;
         if (newPacket.isSYN()) {
-            System.out.println("SYN packet received, resetting sequence.");
+            if (Globals.SHOWALL) System.out.println("SYN packet received, resetting sequence.");
         } else if (newPacket.getSequence().equals(lastSeq)) {
             goodPacket = false;
-            System.out.println("Duplicate sequence received.");
+            if (Globals.SHOWALL) System.out.println("Duplicate sequence received.");
         } else {
-            System.out.println("New sequence received.");
+            if (Globals.SHOWALL) System.out.println("New sequence received.");
         }
         if (newPacket.isFIN()) {
-            System.out.println("FIN received.");
+            if (Globals.SHOWALL) System.out.println("FIN received.");
             if (packetList.isEmpty()) goodPacket = false;
         }
 
         if (Math.random() > ACKpercent / 100.0) {
             goodPacket = false;
             drop = true;
-            System.out.println("ACKpercent --> Simulating dropped packet ");
+            if (Globals.SHOWALL) System.out.println("ACKpercent --> Simulating dropped packet ");
         }
 
         //IF GOODPACKET, ADD TO PACKETLIST
         if (goodPacket) {
-          System.out.println("Adding packet to packetList.");
+          if (Globals.SHOWALL) System.out.println("Adding packet to packetList.");
           packetList.add(newPacket);
-          //System.out.println("getData: " + newPacket.getData() );
+          //if (Globals.SHOWALL) System.out.println("getData: " + newPacket.getData() );
           lastSeq = newPacket.getSequence();
         } 
         //DELAY BY THE Ack Time +/- ACKdev
@@ -276,22 +286,22 @@ class RDT {
         DatagramPacket ACKpacket = makePacket(ackPacket.asString(), ACKip, responsePort);
 
         if (drop) {
-            System.out.println("drop, no ACK.");
+            if (Globals.SHOWALL) System.out.println("drop, no ACK.");
             drop = false;
         } else {
             ACKSocket.send(ACKpacket);
-            System.out.println(" and  ACK'd, delay: " + delay + "  ");
+            if (Globals.SHOWALL) System.out.println(" and  ACK'd, delay: " + delay + "  ");
             lastSeq = newPacket.getSequence();
         }
 
-        //PRINT THE MESSAGE IF THE PACKET IS THE LAST
+        //process THE MESSAGE IF THE PACKET IS THE LAST
         if (newPacket.isFIN() && !packetList.isEmpty()) {
             String message = "";
             //Toss the SYN off the front
             packetList.remove(0);
-            while (packetList.size() > 2) {
+            while (packetList.size() > 1) { // 1 because the last packet is the FIN
                 String data = packetList.remove(0).getData();
-                //System.out.println("Adding:  " + data);
+                //if (Globals.SHOWALL) System.out.println("Adding:  " + data);
                 message += data;
             }
             //There's a FIN on the end, so toss that too.

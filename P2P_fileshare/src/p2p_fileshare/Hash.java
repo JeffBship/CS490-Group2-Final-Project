@@ -14,19 +14,29 @@ package p2p_fileshare;
 /*
    Java HashTables uses separate chaining to deal with collisions
    NEED TO IMPLEMENT MULTITHREADING????
-   Use InetAddress.getByName(String host) to convert 
 */
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
+
 public class Hash {
-  //Server will need to get IP address of local machine so that it can connect with peers
+  
     Hashtable<String, Song> dTab;
     int sNum = 0;
     
     public Hash(){
        dTab = new Hashtable<>();
-      
+    }
+    
+//CAN WE DO THIS???    
+    public Hash(Hashtable<String, Song> newTab){
+       dTab = newTab;
+    }
+    
+    public Hash copy (Hash original){
+      Hash result = new Hash();
+      result.dTab = original.dTab;
+      return result;
     }
     
     public Hashtable<String, Song> getTable(){
@@ -49,11 +59,6 @@ public class Hash {
    
   }
   
-  //These can be written AFTER testing RDT code between client and server
-  
-  /*This method will work in conjunction with the TCP.java class.
-    User will type in IP address and TCP.java will handle the connection
-  */
   
   //Check whether or not all the IPS are reachable
   public void checkIPs(){

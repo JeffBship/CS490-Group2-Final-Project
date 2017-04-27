@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 
-
 public class Song {
   Integer SNum;
   String filename;
@@ -61,7 +60,8 @@ public class Song {
   //!!!!!add in functionality to erase entries no longer in directory!!!!!
   
   //###  Might need to change this to return a hashtable instead of using global variables.
-  public static void processSongString(String songList, Hashtable<String, Song> dTab){
+  public static Hash processSongString(String songList, Hashtable<String, Song> dTab){
+    Hash result = new Hash(dTab);
     //parse into char works!!!!
     char[] list = songList.toCharArray();
     Integer snum = 0;
@@ -97,7 +97,9 @@ public class Song {
         dTab.put(name + " " + IP,new Song(++snum, name, size, IP ));
         parse.clear();
       }
+      //now dTab is a hashtable of the songList
     } 
+    return result;
   }
  
  public static void printDirectory(Hashtable<String, Song> sTable){

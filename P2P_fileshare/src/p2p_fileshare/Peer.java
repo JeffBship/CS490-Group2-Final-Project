@@ -24,8 +24,6 @@ public class Peer {
     public static JFileChooser chooser = new JFileChooser();
     public static File folder = null;
     public static String centralServerIP = "";
-    Hashtable<String, Song> Ltab = new Hashtable<>();
-  
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -44,8 +42,8 @@ public class Peer {
     }
     
     
-    // There's not real logging in, it mostly just checks for a response from the entered IP, using
-    // the HTTP req/res system for a proof of concept.
+    // There's no real logging in, it mostly just checks for a response from the entered IP, using
+    // the HTTP req/res system for a proof of server existence.
     public static void setIP() throws IOException, InterruptedException{
       System.out.print("Enter the IP to look for the Server: ");
       Scanner scan = new Scanner(System.in);
@@ -114,15 +112,15 @@ public class Peer {
         String payload = getDirectory();  //
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
-        System.out.println("Transmitted \n " + inform.getPayload());
+        if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(Globals.ACK_PORT);
-        System.out.println("in informAndUpDate.  received HTTP response as follows: \n" +  informResponse.display() );
+        System.out.println("Inform and UpDate response is:\n" +  informResponse.display() );
       } //end else
     }
     
     public static void exit() throws UnknownHostException, IOException, InterruptedException{
       if (centralServerIP.equals("") || (folder==null) ) {
-        System.out.println("Please set Central Server IP and sharing folder first.");
+        System.out.println("You can't exit if you haven't logged in and set a folder.");
       }else{
         System.out.println("Informing Server...");
         String temp = getDirectory();
@@ -135,8 +133,13 @@ public class Peer {
         String payload = getDirectory();  //
         HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
-        System.out.println("Central Server has been notified to remove files.  Have a peachy day.");
-        } //end else
+        HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
+        if ( exitResponse.getCode().equals("200") ) {
+          System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
+          } else {
+          System.out.print("Exit failed.");
+          } 
+      }
     }
     
     public static String makeQuery(){
@@ -157,7 +160,7 @@ public class Peer {
     while(!input.equals("E")){
       String temp;
       System.out.println("\nWelcome to the network!!!!");
-      System.out.println("S: Set Central Server IP");
+      System.out.println("S: Set Central Server IP and Log in");
       System.out.println("F: Select sharing folder");
       System.out.println("I: Inform and Update");
       System.out.println("Q: Query for content");

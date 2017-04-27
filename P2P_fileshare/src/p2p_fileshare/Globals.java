@@ -14,7 +14,13 @@ import java.io.File;
 
 
 public class Globals {
-  
+    
+  //These are for testing and determine the amount of delay and variability
+  //in response time, as well as chance of a dropped packet
+  public static final double ACKpercent = 90.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
+  public static final long   ACKtime = 2;         //base  time wait before ack (msec)
+  public static final long   ACKdev = 1;          //amount of variability in time before ack (msec)
+
   public static       File FOLDER = new File("c:\\");
   
   public static final boolean SLOWMODE = false;
@@ -22,6 +28,7 @@ public class Globals {
   public static final int MSG_PORT = 55000;
   public static final int ACK_PORT = 55001;
   
+  //These are the variables to timeout calculations
   public static final double INIT_EST_RTT = 100.0;
   public static final double INIT_DEV_RTT = INIT_EST_RTT / 4.0;
   public static       double INIT_TIMEOUT = 4.0 * INIT_EST_RTT;

@@ -9,31 +9,90 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import static p2p_fileshare.Peer.centralServerIP;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Dad
  */
-public class CentralServer {
+class Listener extends Thread {
+  @Override
+  public void run(){
+  System.out.println("Listener thread is running.");
+  while (true){
+    HTTP received;
+    try {
+      received = RDT.listen( Globals.MSG_PORT  );
+    } catch (SocketException ex) {
+    } catch (IOException ex) {
+    } catch (InterruptedException ex) {
+    }
+    requestHandler reqHandler = new requestHandler(received);
+    //requestHandler.start();
+    }
+  }
+}
+
+class requestHandler extends Thread {
+    private HTTP rcvd;    
+    
+    public requestHandler(HTTP received){
+      this.rcvd = received;
+    }
+    
+    public void run(){
+    }
+  }
+
+public class CentralServerThreads {
   public static InetAddress LocalIP; 
+  public static boolean keepListening = true;
   Hash directory = new Hash();
   
+
   public static void main(String[] args) 
   throws UnknownHostException, IOException, SocketException, InterruptedException{
+    
     System.out.println("Running server.");
     LocalIP = InetAddress.getLocalHost(); 
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     System.out.println("now on an infinite loop of RDT.listen");
     
-    while (true){
-      HTTP received = RDT.listen( Globals.MSG_PORT  );
-      requestHandler(received);
+    Listener listen = new Listener();
+    listen.start();
+    
+  }
+}  
+    
+    
+   /* 
+    
+    //while (true){
+    //  HTTP received = RDT.listen( Globals.MSG_PORT  );
+    //  requestHandler reqHandler = new requestHandler(received);
+    //  requestHandler.start();
+    //}
+  
+  } //end main
+  
+  //THIS PART BECOMES A THREAD AT SOME POINT
+  static class requestHandler extends Thread {
+    //private HTTP rcvd;    
+    
+    public requestHandler(HTTP received){
+      this.rcvd = received;
+    }
+    
+    public void run(){
+      
     }
   }
   
-  //THIS PART BECOMES A THREAD AT SOME POINT
-  private static void requestHandler(HTTP received) throws IOException, InterruptedException{
+
+  
+  /*
+  {      //throws IOException, InterruptedException{
     HTTP response = new HTTP();
     System.out.println("HTTP received as follows: \n");
     System.out.println(received.display());
@@ -71,14 +130,16 @@ public class CentralServer {
                 break;
                 
       }
-    RDT.transmit( received.getIPaddress(), Globals.ACK_PORT, response.asString() );
-    //Request Codes/Phrase:
-    //L: L Log in attempt.   
-    //I: I  Inform and update
-    //Q: Q query for content  
-    //D: D directory query 
+    try {
+      RDT.transmit( received.getIPaddress(), Globals.ACK_PORT, response.asString() );
+    } catch (IOException ex) { 
+      System.out.println("IOException in request Handler");
+    } catch (InterruptedException ex) {
+      System.out.println("InterruptedException in request Handler");
+    }
     
   }
+
   
   public static void updateDirectory(HTTP received){
     //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
@@ -87,3 +148,5 @@ public class CentralServer {
   }
 
 }
+
+*/

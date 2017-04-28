@@ -14,6 +14,7 @@ import java.net.*;
 public class TCPClient extends Thread {
 
   private int serverPort;
+  
 
   public TCPClient(String name, int serverPort) {
     super(name);
@@ -57,8 +58,8 @@ public class TCPClient extends Thread {
       }
       */
       
-      clientSocket.close();
-      System.out.println(this.getName() + " closed connection to server");
+      //lientSocket.close();
+      //System.out.println(this.getName() + " closed connection to server");
     } catch (Exception e) {
       e.printStackTrace();
       try {

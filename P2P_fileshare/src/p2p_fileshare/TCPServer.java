@@ -14,7 +14,10 @@ import java.nio.file.Files;
 public class TCPServer extends Thread {
 
   private int port;
-
+  public FileInputStream inStream=null;
+  public BufferedInputStream buff = null;
+  public OutputStream out = null;
+  
   public TCPServer(String name, int port) {
     super(name);
     this.port = port;
@@ -24,7 +27,7 @@ public class TCPServer extends Thread {
    * Start the thread to begin listening
    */
   @Override
-  public void run() {
+  public void run()   {
     ServerSocket serverSocket = null;
     try {
       //String clientSentence;
@@ -36,9 +39,25 @@ public class TCPServer extends Thread {
         System.out.println("SERVER accepted connection (single threaded so others wait)");
         
         //NEED TO SOMEHOW GET FILE NAME FROM THE QUERY
-        byte[] array = Files.readAllBytes(new File("C:\\Users\\Desktop\\Music\\Silver.mp3").toPath());
         
         
+        // This is regarding the server state of the connection
+        //while (clientConnectionSocket.isConnected() && !clientConnectionSocket.isClosed()) {
+            //byte[] array = Files.readAllBytes(new File("C:\\Users\\Surface Book\\Desktop\\Music\\Silver.mp3").toPath());
+        File fSend = (new File("C:\\Users\\Surface Book\\Desktop\\Music\\Break.mp4"));
+        byte[] array = new byte[(int)fSend.length()];
+        inStream = new FileInputStream(fSend);
+        buff = new BufferedInputStream (inStream);
+        buff.read(array, 0, array.length);
+        out = clientConnectionSocket.getOutputStream();
+        System.out.println("Send file... ");
+        out.write(array, 0, array.length);
+        out.flush();
+        
+     //   }
+        System.out.println("FINISHED");
+        
+        /*
         // This is regarding the server state of the connection
         while (clientConnectionSocket.isConnected() && !clientConnectionSocket.isClosed()) {
           BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientConnectionSocket.getInputStream()));
@@ -50,13 +69,20 @@ public class TCPServer extends Thread {
             //capitalizedSentence = clientSentence.toUpperCase() + '\n';
            // System.out.println("SERVER responding: " + capitalizedSentence);
            System.out.println("SERVER responding: \n");
-            outToClient.write(array);         
+           int len;
+           int n = 0;
+           while (-1 != (n = bis.read(array)))  {
+              outToClient.write(array, 0, n);
+           }
+            //outToClient.write(array);      
+            System.out.println("Just Sent the Byte Array");
             
           } else {
             clientConnectionSocket.close();
             System.out.println("SERVER client connection closed");
           }
         }
+        */
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -68,5 +94,7 @@ public class TCPServer extends Thread {
         }
       }
     }
+ 
+    //FINALLY????
   }
 }

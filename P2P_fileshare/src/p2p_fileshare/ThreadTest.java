@@ -13,9 +13,9 @@ class Listenertest extends Thread {
   }
 }
 
-
 public class ThreadTest {
   public static void main(String[] args) {
     Listenertest listen = new Listenertest();
+    listen.start();
   }
 }

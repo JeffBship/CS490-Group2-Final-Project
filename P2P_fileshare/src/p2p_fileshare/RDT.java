@@ -288,12 +288,13 @@ class RDT {
             packetList.remove(0);
             while (packetList.size() > 1) { // 1 because the last packet is the FIN
                 String data = packetList.remove(0).getData();
-                //if (Globals.SHOWALL) System.out.println("Adding:  " + data);
+                if (Globals.SHOWALL) System.out.println("Adding:  " + data + "from packet to HTTP message");
                 message += data;
             }
             //There's a FIN on the end, so toss that too.
-            lastSeq = "9"; //set an impossible sequence so the receiver will know it's done
             packetList.remove(0);
+            lastSeq = "9"; //set an impossible sequence so the receiver will know it's done
+            
             //now message is the complete HTTP message as a string.
             result = new HTTP(message);
             finished = true;

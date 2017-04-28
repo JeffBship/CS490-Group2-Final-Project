@@ -50,7 +50,7 @@ public class CentralServer {
                 System.out.println("processing Q");
                 String result = directory.processQuery(directory.getTable(), received.getPayload());
                 if (result.equals("")) {
-                    response = new HTTP("400","B",LocalIP.getHostAddress(),"1","query is empty");
+                    response = new HTTP("404","F",LocalIP.getHostAddress(),"1","query is empty");
                 } else {
                     response = new HTTP("200","O",LocalIP.getHostAddress(),"1",result);
                 }

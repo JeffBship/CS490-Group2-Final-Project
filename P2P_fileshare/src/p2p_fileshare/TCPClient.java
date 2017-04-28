@@ -1,7 +1,8 @@
-package edu.ccsu.networking.tcp;
-
+package p2p_fileshare;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Simple client connects sends a sentence periodically and outputs the
@@ -13,6 +14,7 @@ import java.net.*;
 public class TCPClient extends Thread {
 
   private int serverPort;
+  
 
   public TCPClient(String name, int serverPort) {
     super(name);
@@ -26,37 +28,52 @@ public class TCPClient extends Thread {
   public void run() {
     Socket clientSocket = null;
     FileOutputStream oStream = null;
+    BufferedOutputStream buff = null;
+    int bytesRead;
+    int current = 0;
     try {
       //LATER ON GET THIS DESTINATION FROM PEER Folder itself
-      File fDestination = new File("C:\\Users\\Desktop");
+      File fDestination = new File("C:\\Users\\JeffBship\\Test");
       oStream = new FileOutputStream(fDestination);
-      String sentence;
-      String modifiedSentence;
+      //Receive File
+      byte[] array = new byte[3000000];
+      System.out.println("CLIENT opening socket");
+      clientSocket = new Socket("192.168.2.32", serverPort);
+      System.out.println("CLIENT connected to server");
+      InputStream in = clientSocket.getInputStream();
+     //wrapping oStream inside of buff is faster
+      oStream = new FileOutputStream(fDestination);
+      buff = new BufferedOutputStream(oStream);
+      bytesRead = in.read(array, 0, array.length);
+      current = bytesRead;
+      
+      do{
+        bytesRead = in.read(array, 0, array.length-current);
+        if(bytesRead >=0) 
+          current +=bytesRead;
+      } while(bytesRead>-1);
+      
+      buff.write(array, 0, current);
+      buff.flush();
+      System.out.println("File Received");
+      
+       /*
       BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
       System.out.println("CLIENT opening socket");
-      clientSocket = new Socket("192.168.2.7", serverPort);
+      clientSocket = new Socket("192.168.2.32", serverPort);
       System.out.println("CLIENT connected to server");
       
       //DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
       BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       int songBytes = inFromServer.read();
       oStream.write(songBytes);
-      oStream.close();
+      System.out.println("Received file!");
               
       
-      /*
-      for (int i = 0; i < 4; i++) {
-        sentence = "Mixed case sentence " + i;
-        System.out.println(this.getName() + ": sending '" + sentence + "'");
-        outToServer.writeBytes(sentence + '\n');
-        modifiedSentence = inFromServer.readLine();
-
-        System.out.println(this.getName() + " received from server: " + modifiedSentence);
-        Thread.sleep(1500);
-      }
       */
-      
+      //Thread.sleep(180000);
       clientSocket.close();
+      oStream.close();
       System.out.println(this.getName() + " closed connection to server");
     } catch (Exception e) {
       e.printStackTrace();
@@ -67,6 +84,7 @@ public class TCPClient extends Thread {
       } catch (Exception cse) {
         // ignore exception here
       }
-    }
+      
+    }  
   }
 }

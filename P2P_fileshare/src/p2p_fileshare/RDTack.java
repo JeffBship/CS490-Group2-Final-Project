@@ -118,7 +118,7 @@ class RDTack {
                 String message = "";
                 //Toss the SYN off the front
                 packetList.remove(0);
-                while (packetList.size() > 2) {
+                while (packetList.size() > 1) {
                     String data = packetList.remove(0).getData();
                     //System.out.println("Adding:  " + data);
                     message += data;
@@ -128,7 +128,7 @@ class RDTack {
                 packetList.remove(0);
                 //now message is the complete HTTP message as a string.
                 HTTP http = new HTTP(message);
-                System.out.println("Complete Message received.");
+                System.out.println("Complete Message received." + message);
                 if ( http.getCode().equals("I") ) {System.out.println("It's an inform/update, call that method here.");}
                 System.out.println("------------------------------------------------");
                 if (http.isRequest() ) { System.out.println("Received an HTTP request.");}

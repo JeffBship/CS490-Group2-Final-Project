@@ -68,7 +68,7 @@ class RDT {
     sequence = "1";
     //Build the packetList by taking 95 byte chunks of the message
     while (packetsRemainingInt>1){
-      System.out.println("in packetsRemaining loop, : " + packetsRemainingInt);
+      if (Globals.SHOWALL) System.out.println("in packetsRemaining loop, : " + packetsRemainingInt);
       packetsRemaining = Integer.toString(packetsRemainingInt);
       int endIndex = 94;
       String newPacketData;
@@ -99,15 +99,6 @@ class RDT {
         System.out.println("Sending Packet " + i + " of " +  totalPackets + " with sequence number " + currentSeq); 
         System.out.println("Packet data is: " + packetList.get(i).getData());
       }
-      
-      
-      
-      //System.out.println("getpeerID           : " + packetList.get(i).getpeerID() );
-      //System.out.println("getIPAddress        : " + packetList.get(i).getIPAddress() );
-      //System.out.println("getSequence         : " + packetList.get(i).getSequence() );
-      //System.out.println("getPacketsRemaining : " + packetList.get(i).getPacketsRemaining() );
-      //System.out.println("getData             : " + packetList.get(i).getData() );
-      //System.out.println( packetList.get(i).asString()    );
     }
   }
   
@@ -115,11 +106,6 @@ class RDT {
                                Packet rdt_sendPacket) throws IOException, InterruptedException{
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
-    //int port = Globals.ACK_PORT;
-    //InetAddress IP = InetAddress.getByName(Globals.JEFF_PC_IP); // jeff pc local ip
-    
-    
-    
     int rdt_listenPort;
     if (rdt_sendPort==Globals.ACK_PORT){
       rdt_listenPort = Globals.MSG_PORT;
@@ -161,13 +147,14 @@ class RDT {
           devRTT = (long) ((1-Globals.BETA)*devRTT + Globals.BETA * abs(sampleRTT- estimatedRTT ));
           timout = estimatedRTT + 4*devRTT;
           //System.out.println("Packet received on ACKSocket.");
-          if (Globals.SHOWALL) System.out.println("SampleRTT: " + sampleRTT + " New timeout: " + (long)timout);
+          if (Globals.SHOWALL)  System.out.println("SampleRTT: " + sampleRTT + " New timeout: " + (long)timout);
         // CHECK SEQUENCE NUMBER OF ACK
         // - if ACK of correct sequence # , finished
           Packet response = Packet.extractFromDatagram(DGACKpacket);
           if ( response.isACK(sequence)  ){
-            if (Globals.SHOWALL) System.out.println("ACK received with sequence number " + response.getSequence() );
+            
             finished=true;
+            if (Globals.SHOWALL){System.out.println("ACK received with sequence number " + response.getSequence() );}
           } else {
             if (Globals.SHOWALL) System.out.println("Received bad Ack, sequence " + response.getSequence() + ", resending.");
           }

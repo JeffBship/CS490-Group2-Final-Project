@@ -11,6 +11,7 @@ L: L Log in attempt.
 I: I  Inform and update
 Q: Q query for content  
 D: D directory query     <do we need this?  can't we just use inform/update?>
+R: R request for file
 // <why did this turn blue? maybe a good way to have comments stand out! >
 E: E Exit
 Response 

@@ -118,8 +118,45 @@ public class Peer {
       } //end else
     }
     
-    public static void exit() throws UnknownHostException, IOException, InterruptedException{
-      if (centralServerIP.equals("") || (folder==null) ) {
+    public static void requestContent() 
+    throws UnknownHostException, IOException, InterruptedException{
+      Scanner scan = new Scanner(System.in);
+      System.out.println("\nRequest Content.");
+      System.out.println("Enter the name of the request file: ");
+      String fileName = scan.nextLine();
+      System.out.println("Enter the IP to request it from: ");
+      String fileIP = scan.nextLine();
+      //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+      String code = "R";    // R for request for file
+      String phrase = "R";  // R for request for file (repeated for emphasis, of course)
+      InetAddress LocalIP = InetAddress.getLocalHost(); 
+      String IPaddress = LocalIP.getHostAddress();
+      String version = "1"; // because we only have one version!
+      String payload = fileName;  //
+      HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
+      RDT.transmit( fileIP, Globals.MSG_PORT, request.asString() );
+      HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
+      if ( exitResponse.getCode().equals("200") ) {
+        System.out.println("Look in your folder.  Enjoy your new file.");
+        } else if ( exitResponse.getCode().equals("404") ) {
+        System.out.println("Requested file was not found on the IP.");
+        } else {
+        System.out.print("Request failed.  Unknown problem, perhaps bad IP. (detection of bad IP not implemented yet).");
+        } 
+    }
+    
+    public static String makeQuery(){
+         System.out.print("Please enter file name that you would like to query: ");
+         String q;
+         Scanner query = new Scanner(System.in);
+         q = query.nextLine();
+         q = q.toLowerCase().replace(" ", "");
+         return q;
+    }
+    
+    public static void exit() 
+    throws UnknownHostException, IOException, InterruptedException{
+      if (centralServerIP.equals("") ) {
         System.out.println("You can't exit if you haven't logged in and set a folder.");
       }else{
         System.out.println("Informing Server...");
@@ -140,15 +177,7 @@ public class Peer {
           System.out.print("Exit failed.");
           } 
       }
-    }
-    
-    public static String makeQuery(){
-         System.out.print("Please enter file name that you would like to query: ");
-         String q;
-         Scanner query = new Scanner(System.in);
-         q = query.nextLine();
-         q = q.toLowerCase().replace(" ", "");
-         return q;
+      
     }
     
     
@@ -178,7 +207,7 @@ public class Peer {
             //serv.processQuery(serv.getTable(), query);
         }
         else if(input.equals("R")){
-           System.out.println("Handling Request-Not Yet But Eventually");
+           requestContent();
         }
         else if(input.equals("F")){
           chooseFolder();

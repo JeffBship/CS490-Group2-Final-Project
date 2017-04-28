@@ -1,4 +1,5 @@
-package p2p_fileshare;
+package edu.ccsu.networking.tcp;
+
 import java.io.*;
 import java.net.*;
 
@@ -8,7 +9,6 @@ import java.net.*;
  * Networking: A Top Down Approach book by Kurose and Ross
  *
  * @author Chad Williams
- * Adrian and Jeff will modify later
  */
 public class TCPClient extends Thread {
 
@@ -25,18 +25,26 @@ public class TCPClient extends Thread {
   @Override
   public void run() {
     Socket clientSocket = null;
+    FileOutputStream oStream = null;
     try {
+      //LATER ON GET THIS DESTINATION FROM PEER Folder itself
+      File fDestination = new File("C:\\Users\\Desktop");
+      oStream = new FileOutputStream(fDestination);
       String sentence;
       String modifiedSentence;
       BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
       System.out.println("CLIENT opening socket");
-      //byte[] targetAdddress = {10, 8, 89, (byte)206};
-      //clientSocket = new Socket("localhost", serverPort);
-      
-      clientSocket = new Socket("10.8.89.206", serverPort);
+      clientSocket = new Socket("192.168.2.7", serverPort);
       System.out.println("CLIENT connected to server");
-      DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+      
+      //DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
       BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+      int songBytes = inFromServer.read();
+      oStream.write(songBytes);
+      oStream.close();
+              
+      
+      /*
       for (int i = 0; i < 4; i++) {
         sentence = "Mixed case sentence " + i;
         System.out.println(this.getName() + ": sending '" + sentence + "'");
@@ -46,6 +54,8 @@ public class TCPClient extends Thread {
         System.out.println(this.getName() + " received from server: " + modifiedSentence);
         Thread.sleep(1500);
       }
+      */
+      
       clientSocket.close();
       System.out.println(this.getName() + " closed connection to server");
     } catch (Exception e) {

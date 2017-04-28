@@ -71,6 +71,7 @@ public class Peer {
           centralServerIP = "";
           System.out.print("Login failed, that IP is not working.");
       }
+      
     }
     
     public static void chooseFolder(){

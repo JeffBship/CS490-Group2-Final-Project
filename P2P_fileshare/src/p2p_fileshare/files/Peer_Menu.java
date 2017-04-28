@@ -62,7 +62,7 @@ public static void setFolder(){
 }
 
 public static void informAndUpdate() {
-  System.out.println("Sending list of files in " + Globals.FOLDER + " to server");
+  //System.out.println("Sending list of files in " + Globals.FOLDER + " to server");
   System.out.println("The following files are available for sharing:");
   
 // get list of files in directory

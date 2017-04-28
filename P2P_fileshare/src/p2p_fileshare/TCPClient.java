@@ -35,12 +35,18 @@ public class TCPClient extends Thread {
       
       //UPDATE DAMMIT
       //LATER ON GET THIS DESTINATION FROM PEER Folder itself
-      File fDestination = new File("C:\\Users\\JeffBship\\Test");
+      
+     
+     File fDestination = new File("C:\\Users\\Surface Book\\Desktop");
+   
+      if (!fDestination.canRead()) {
+           fDestination.setReadable(true);
+      }
       oStream = new FileOutputStream(fDestination);
       //Receive File
       byte[] array = new byte[3000000];
       System.out.println("CLIENT opening socket");
-      clientSocket = new Socket("192.168.2.32", serverPort);
+      clientSocket = new Socket("192.168.2.7", serverPort);
       System.out.println("CLIENT connected to server");
       InputStream in = clientSocket.getInputStream();
      //wrapping oStream inside of buff is faster

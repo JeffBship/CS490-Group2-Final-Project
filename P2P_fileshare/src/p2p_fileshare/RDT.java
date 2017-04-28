@@ -280,6 +280,7 @@ class RDT {
             if (Globals.SHOWALL) System.out.println(" and  ACK'd, delay: " + delay + "  ");
             lastSeq = newPacket.getSequence();
         }
+        ACKSocket.close();
 
         //process THE MESSAGE IF THE PACKET IS THE LAST
         if (newPacket.isFIN() && !packetList.isEmpty()) {

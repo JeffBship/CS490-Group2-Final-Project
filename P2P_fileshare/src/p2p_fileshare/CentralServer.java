@@ -42,12 +42,12 @@ public class CentralServer {
     
     @Override
     public void run(){
-    HTTP received = CentralServer.received;
+    HTTP rcvd = CentralServer.received;
     HTTP response = new HTTP();
     String myIP = CentralServer.LocalIP.getHostAddress();
     System.out.println("Inside request Handler, new thread, with HTTP received as follows: \n");
-    System.out.println(received.display());
-    switch (received.getCode()) {
+    System.out.println(rcvd.display());
+    switch (rcvd.getCode()) {
       case "L": // LOGIN request, which is really just checking for a server on the IP used.
                 System.out.println("processing L");
                 response = new HTTP("200","O",myIP,"1","Okay doesn't need a payload.");
@@ -55,12 +55,12 @@ public class CentralServer {
       case "I": // INFORM/UPDATE
                 System.out.println("processing I");
                 System.out.println("Need to add the files to the hash table");
-                updateDirectory(received);
+                updateDirectory(rcvd);
                 response = new HTTP("201","D",myIP,"1",CentralServer.directory.makeDirectoryString());
                 break;
       case "Q": // QUERY FOR CONTENT.  Bad request.  Query for content should go to other peers.
                 System.out.println("processing Q");
-                String result = CentralServer.directory.processQuery(CentralServer.directory.getTable(), received.getPayload());
+                String result = CentralServer.directory.processQuery(CentralServer.directory.getTable(), rcvd.getPayload());
                 if (result.equals("")) {
                     response = new HTTP("404","F",myIP,"1","query is empty");
                 } else {
@@ -77,7 +77,7 @@ public class CentralServer {
                 break; 
       case "E": // EXIT from the network
                 // Put code here to delete the peers files from the directory.
-                CentralServer.directory.clearAssociatedElements(received.getIPaddress() )  ;
+                CentralServer.directory.clearAssociatedElements(rcvd.getIPaddress() )  ;
                 System.out.println("this is the server's hash table");
                 Song.printDirectory(CentralServer.directory.getTable());
                 System.out.println("processing E");
@@ -89,7 +89,8 @@ public class CentralServer {
                 break;
       }
       try {
-        RDT.transmit( received.getIPaddress(), Globals.ACK_PORT, response.asString() );
+        System.out.println("in request handler, about to transmit");
+        RDT.transmit( rcvd.getIPaddress(), Globals.ACK_PORT, response.asString() );
       } catch (IOException ex) {
         Logger.getLogger(requestHandler.class.getName()).log(Level.SEVERE, null, ex);
       } catch (InterruptedException ex) {

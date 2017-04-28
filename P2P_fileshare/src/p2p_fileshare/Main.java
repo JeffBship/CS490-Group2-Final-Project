@@ -18,6 +18,7 @@ public class Main {
 
   public static void main(String[] args) throws FileNotFoundException, IOException {
     //TEST FILE READER CAPABILITY
+/*    
 String name = "newfile";
 File inFile = new File("C:\\Users\\Dad\\Desktop\\Music\\" + name + ".mp3");
 
@@ -31,7 +32,8 @@ while ((len = inStream.read(buffer)) != -1) {
 }
 inStream.close();
 outStream.close();
-    /*  
+    */
+    
     TCPServer serverThread = null;
     //TCPClient clientThread = null;
     try {
@@ -50,7 +52,7 @@ outStream.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
-*/
+
   }
 
 }

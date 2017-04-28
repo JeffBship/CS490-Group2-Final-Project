@@ -32,6 +32,8 @@ public class TCPClient extends Thread {
     int bytesRead;
     int current = 0;
     try {
+      
+      //UPDATE DAMMIT
       //LATER ON GET THIS DESTINATION FROM PEER Folder itself
       File fDestination = new File("C:\\Users\\JeffBship\\Test");
       oStream = new FileOutputStream(fDestination);

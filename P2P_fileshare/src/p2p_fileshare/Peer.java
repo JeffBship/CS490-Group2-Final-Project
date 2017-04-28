@@ -114,7 +114,7 @@ public class Peer {
         RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(Globals.ACK_PORT);
-        System.out.println("Inform and UpDate response is:\n" +  informResponse.display() );
+        System.out.println("The current files available are:\n" +  informResponse.getPayload() );
       } //end else
     }
     
@@ -151,6 +151,9 @@ public class Peer {
          Scanner query = new Scanner(System.in);
          q = query.nextLine();
          q = q.toLowerCase().replace(" ", "");
+         
+         
+         
          return q;
     }
     
@@ -160,14 +163,14 @@ public class Peer {
         System.out.println("You can't exit if you haven't logged in and set a folder.");
       }else{
         System.out.println("Informing Server...");
-        String temp = getDirectory();
+        //String temp = getDirectory();
         //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
         String code = "E";    // E for exit
         String phrase = "E";  // E for exit (repeated for emphasis, of course)
         InetAddress LocalIP = InetAddress.getLocalHost(); 
         String IPaddress = LocalIP.getHostAddress();
         String version = "1"; // because we only have one version!
-        String payload = getDirectory();  //
+        String payload = "";  // sending an empty payload says I have no files to share anymore
         HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
         RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
         HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
@@ -204,10 +207,19 @@ public class Peer {
           informAndUpdate();
         }
         else if(input.equals("Q")){
-            String query = makeQuery();
-            //RDT transmit query 
-            //serv.processQuery(serv.getTable(), query);
+            String payload = makeQuery();
+            String code = "Q";    // E for exit
+            String phrase = "Q";  // E for exit (repeated for emphasis, of course)
+            InetAddress LocalIP = InetAddress.getLocalHost(); 
+            String IPaddress = LocalIP.getHostAddress();
+            String version = "1"; // because we only have one version!
+            HTTP query = new HTTP(code, phrase, IPaddress, version, payload);
+            RDT.transmit( centralServerIP, Globals.MSG_PORT, query.asString() );
+            HTTP queryResponse = RDT.listen(Globals.ACK_PORT);
+            System.out.println("query results:\n" +  queryResponse.display() );
+            
         }
+        
         else if(input.equals("R")){
            requestContent();
         }

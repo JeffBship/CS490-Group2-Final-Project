@@ -9,15 +9,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 import static p2p_fileshare.Peer.centralServerIP;
 
-/**
- *
- * @author Dad
- */
 public class CentralServer {
   public static InetAddress LocalIP; 
-  Hash directory = new Hash();
+   static Hash directory = new Hash();
+  
   
   public static void main(String[] args) 
   throws UnknownHostException, IOException, SocketException, InterruptedException{
@@ -46,11 +44,21 @@ public class CentralServer {
                 System.out.println("processing I");
                 System.out.println("Need to add the files to the hash table");
                 updateDirectory(received);
-                response = new HTTP("201","D",LocalIP.getHostAddress(),"1","SERVER DIRECTORY AS STRING GOES HERE");
+                response = new HTTP("201","D",LocalIP.getHostAddress(),"1",directory.makeDirectoryString());
                 break;
       case "Q": // QUERY FOR CONTENT.  Bad request.  Query for content should go to other peers.
                 System.out.println("processing Q");
-                response = new HTTP("400","B",LocalIP.getHostAddress(),"1","Query a peer, not the server");
+                String result = directory.processQuery(directory.getTable(), received.getPayload());
+                if (result.equals("")) {
+                    response = new HTTP("400","B",LocalIP.getHostAddress(),"1","query is empty");
+                } else {
+                    response = new HTTP("200","O",LocalIP.getHostAddress(),"1",result);
+                }
+                    
+                   
+                
+                
+                
                 break;
       case "D": // DIRECTORY QUERY.  <do we really need this?  can't the user just inform/update?>
                 // if we used it, put code here to search and respond with either 200:O or 404:F
@@ -62,6 +70,9 @@ public class CentralServer {
                 break; 
       case "E": // EXIT from the network
                 // Put code here to delete the peers files from the directory.
+                directory.clearAssociatedElements(received.getIPaddress() )  ;
+                System.out.println("this is the server's hash table");
+                Song.printDirectory(directory.getTable());
                 System.out.println("processing E");
                 response = new HTTP("200","O",LocalIP.getHostAddress(),"1","Exit complete");
                 break;
@@ -80,7 +91,13 @@ public class CentralServer {
     
   }
   
-  public static void updateDirectory(HTTP received){
+  public  static void updateDirectory(HTTP received){
+    directory.clearAssociatedElements(received.getIPaddress() )  ;
+    Song.processSongString(received.getPayload(), directory.getTable());
+    System.out.println("this is the server's hash table");
+    Song.printDirectory(directory.getTable());
+    System.out.println();
+    
     //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
     //  ADD SONGS IN received.getPayload()
     System.out.println("Inside updateDirectory method");

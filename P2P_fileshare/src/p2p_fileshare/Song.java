@@ -60,8 +60,8 @@ public class Song {
   //!!!!!add in functionality to erase entries no longer in directory!!!!!
   
   //###  Might need to change this to return a hashtable instead of using global variables.
-  public static Hash processSongString(String songList, Hashtable<String, Song> dTab){
-    Hash result = new Hash(dTab);
+  public static void processSongString(String songList, Hashtable<String, Song> dTab){
+    //Hash result = new Hash(dTab);
     //parse into char works!!!!
     char[] list = songList.toCharArray();
     Integer snum = 0;
@@ -79,27 +79,29 @@ public class Song {
     String size;
     String IP;
     char c;
-    for(int i = 0; i<list.length; i++){
-      c = list[i];
-      if(!(c=='\n')) 
-        parse.add(c);
-      else {
-        //This builds a string out of parse
-        StringBuilder build = new StringBuilder(parse.size());
-        for(Character ch: parse)
-            build.append(ch);
-        temp = build.toString();
-        //uses \t as delimeter for string parsing
-        String[] splits = temp.split("\t");
-        name = splits[0];
-        size = splits[1];
-        IP = splits[2];
-        dTab.put(name + " " + IP,new Song(++snum, name, size, IP ));
-        parse.clear();
-      }
-      //now dTab is a hashtable of the songList
-    } 
-    return result;
+    if (list!=null){
+        for(int i = 0; i<list.length; i++){
+          c = list[i];
+          if(!(c=='\n')) 
+            parse.add(c);
+          else {
+            //This builds a string out of parse
+            StringBuilder build = new StringBuilder(parse.size());
+            for(Character ch: parse)
+                build.append(ch);
+            temp = build.toString();
+            //uses \t as delimeter for string parsing
+            String[] splits = temp.split("\t");
+            name = splits[0];
+            size = splits[1];
+            IP = splits[2];
+            dTab.put(name + " " + IP,new Song(++snum, name, size, IP ));
+            parse.clear();
+          }
+          //now dTab is a hashtable of the songList
+        } 
+    }
+    //return result;
   }
  
  public static void printDirectory(Hashtable<String, Song> sTable){

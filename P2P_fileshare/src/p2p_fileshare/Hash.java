@@ -44,9 +44,10 @@ public class Hash {
     }
  
   //Modify to return query as a string!!!!
-  public void processQuery(Hashtable<String, Song> sTable, String query) {
+  public String processQuery(Hashtable<String, Song> sTable, String query) {
     //Scanner not closed to allow for Peer to continue using scanner
     // query.close();
+    String q = "";
     String IP;
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
@@ -54,9 +55,9 @@ public class Hash {
     while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
           if(key.getName().toLowerCase().replace(" ","").contains(query))
-            System.out.println(key.getAll());
+           q += key.getName() + "\t" + key.getFilesize() + "\t" + key.getIP() + "\n";
       }
-   
+    return q;
   }
   
   

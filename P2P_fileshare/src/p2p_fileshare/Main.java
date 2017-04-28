@@ -18,9 +18,10 @@ public class Main {
 
   public static void main(String[] args) throws FileNotFoundException, IOException {
     //TEST FILE READER CAPABILITY
-    
-File inFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\Nier.mp4");
-File outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\NewNier.mp4");
+String name = "newfile";
+File inFile = new File("C:\\Users\\Dad\\Desktop\\Music\\" + name + ".mp3");
+
+File outFile = new File("C:\\Users\\Dad\\Desktop\\Music\\morenew.mp3");
 FileInputStream inStream = new FileInputStream(inFile);
 FileOutputStream outStream = new FileOutputStream(outFile);
 byte[] buffer = new byte[(int)inFile.length()];

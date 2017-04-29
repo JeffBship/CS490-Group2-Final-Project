@@ -136,6 +136,7 @@ public class Peer {
       String payload = fileName;  //
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
       RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
+      /*
       HTTP exitResponse = RDT.listen(ackPort);
       if (exitResponse.getCode().equals("404")) {
         System.out.println("The file was not found at the requested IP.");
@@ -143,6 +144,7 @@ public class Peer {
       } else if (exitResponse.getCode().equals("200")) {
         System.out.println("Look in the folder you designated.  Enjoy your new file.");
       }
+      */
     }
     
     public static void query() 
@@ -248,7 +250,8 @@ class peerListener extends Thread {
     while (Peer.keepListening){
       HTTP received = new HTTP();
       try {
-        received = RDT.listen( Globals.P_PORT  );
+        received = RDT.listen(Globals.P_PORT);
+        System.out.println("there was a http received by a peer");
       } catch (SocketException ex) {
       } catch (IOException | InterruptedException ex) {
       }
@@ -286,7 +289,6 @@ class peerRequestHandler extends Thread {
                 boolean hasFile = true;  //need some check to see if the file is on the peer
                 if (targetFile.isFile()) {
                   //###############  Insert TCP send stuff here ###################
-                  
                   System.out.println("In file handling thread.  File is available.  TCP transfer should happen now....");
                   response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");
                 } else {

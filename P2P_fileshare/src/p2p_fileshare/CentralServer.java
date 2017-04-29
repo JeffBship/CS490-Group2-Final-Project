@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import static p2p_fileshare.CentralServer.directory;
+import static p2p_fileshare.CentralServer.updateDirectory;
 
 public class CentralServer {
   public static InetAddress LocalIP; 
-   static Hash directory = new Hash();
-  
+  static Hash directory = new Hash();
   
   public static void main(String[] args) 
   throws UnknownHostException, IOException, SocketException, InterruptedException{
@@ -27,13 +28,43 @@ public class CentralServer {
     while (true){
       HTTP received = RDT.listen( Globals.S_PORT  );
       ackPort = Globals.BASE_PORT + portOffset;  //portOffset for separation from other threads, peers
-      requestHandler(received, ackPort);
       portOffset = (portOffset + 1) % 100;
-    }
+      serverRequestHandler newThread = new serverRequestHandler(received, ackPort);
+      newThread.start();
+      }
   }
   
-  //THIS PART BECOMES A THREAD AT SOME POINT
-  private static void requestHandler(HTTP received, int ackPort) throws IOException, InterruptedException{
+  public  static void updateDirectory(HTTP received){
+    directory.clearAssociatedElements(received.getIPaddress() )  ;
+    Song.processSongString(received.getPayload(), directory.getTable());
+    System.out.println("This is the server's new file list:");
+    Song.printDirectory(directory.getTable());
+    System.out.println();
+    
+    //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
+    //  ADD SONGS IN received.getPayload()
+    System.out.println("Inside updateDirectory method");
+  }
+} //end class CentralServer
+
+class serverRequestHandler extends Thread {
+  
+  HTTP received;
+  int ackPort; 
+  
+  public serverRequestHandler(HTTP received, int ackPort){
+    this.received = received;
+    this.ackPort = ackPort;
+  }
+  
+  @Override
+  @SuppressWarnings("null")
+  public void run() {
+    InetAddress LocalIP = null;  
+    try {
+      LocalIP = InetAddress.getLocalHost();
+    } catch (UnknownHostException ex) {
+    }
     HTTP response = new HTTP();
     System.out.println("HTTP received as follows: \n");
     System.out.println(received.display());
@@ -76,22 +107,10 @@ public class CentralServer {
                 System.out.println("processing Default");
                 response = new HTTP("400","B",LocalIP.getHostAddress(),"1","Unknown code in request.");
                 break;
-                
       }
-    RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
+    try {
+      RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
+    } catch (IOException | InterruptedException ex) {
+    }
   }
-  
-  public  static void updateDirectory(HTTP received){
-    directory.clearAssociatedElements(received.getIPaddress() )  ;
-    Song.processSongString(received.getPayload(), directory.getTable());
-    System.out.println("This is the server's new file list:");
-    Song.printDirectory(directory.getTable());
-    System.out.println();
-    
-    //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
-    //  ADD SONGS IN received.getPayload()
-    System.out.println("Inside updateDirectory method");
-  }
-
-  
 }

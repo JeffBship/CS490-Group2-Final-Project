@@ -7,9 +7,11 @@ package p2p_fileshare;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 /**
  *
@@ -26,6 +28,7 @@ public class Peer {
     public static String centralServerIP = "";
     public static int portOffset;
     public static int ackPort;
+    public static boolean keepListening;
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -192,6 +195,7 @@ public class Peer {
           } else {
           System.out.print("Exit failed.");
           } 
+        keepListening = false; //turn off the listening thread
       }
       
     }
@@ -202,6 +206,7 @@ public class Peer {
     //This Method will handle the bulk of userInteraction with the Server
   public static void main(String[] args) 
   throws IOException, UnknownHostException, InterruptedException{
+    keepListening = true;
     Scanner in = new Scanner(System.in);
     portOffset = 0;
     String input = "";
@@ -240,4 +245,75 @@ public class Peer {
     in.close();
   } 
     
+}
+
+class peerListener extends Thread {
+  
+  public peerListener(){
+    //empty constructor right now.
+  }
+  
+  @Override
+  public void run() {
+    int portOffset = 0;
+    int ackPort;
+    
+    while (Peer.keepListening){
+      HTTP received = new HTTP();
+      try {
+        received = RDT.listen( Globals.P_PORT  );
+      } catch (SocketException ex) {
+      } catch (IOException | InterruptedException ex) {
+      }
+      ackPort = Globals.BASE_PORT + 100 + portOffset;  //portOffset: separate threads, 100: separarate threads
+      portOffset = (portOffset + 1) % 100;
+      peerRequestHandler newThread = new peerRequestHandler(received, ackPort);
+      newThread.start();
+    }
+  }
+}
+
+class peerRequestHandler extends Thread {
+  
+  HTTP received;
+  int ackPort; 
+  
+  public peerRequestHandler(HTTP received, int ackPort){
+    this.received = received;
+    this.ackPort = ackPort;
+  }
+  
+  @Override
+  public void run() {
+    InetAddress LocalIP = null;  
+    try {
+      LocalIP = InetAddress.getLocalHost();
+    } catch (UnknownHostException ex) {
+    }
+    HTTP response = new HTTP();
+    System.out.println("HTTP received by peer: \n");
+    System.out.println(received.display());
+    int responsePort = Integer.parseInt(received.getPhrase() );
+    switch (received.getCode()) {
+      case "R": // REQUEST FOR CONTENT  should have gone to a peer
+                System.out.println("processing R on peer");
+                boolean hasFile = true;  //need some check to see if the file is on the peer
+                if (hasFile) {
+                  //###############  Insert TCP send stuff here ###################
+                  System.out.println("In file handling thread.  TCP transfer should happen now....");
+                  response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");
+                } else {
+                  response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File not found");
+                }
+                break; 
+      default:  // request did not match any of the expected cases.
+                System.out.println("processing Default");
+                response = new HTTP("400","B",LocalIP.getHostAddress(),"1","Peer received bad request.");
+                break;
+      }
+    try {
+      RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
+    } catch (IOException | InterruptedException ex) {
+    }
+  }
 }

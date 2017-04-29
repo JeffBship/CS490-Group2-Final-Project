@@ -128,7 +128,7 @@ public class Peer {
     throws UnknownHostException, IOException, InterruptedException{
       Scanner scan = new Scanner(System.in);
       System.out.println("\nRequest Content.");
-      System.out.println("Enter the name of the request file: ");
+      System.out.println("Enter the name of the requested file: ");
       String fileName = scan.nextLine();
       System.out.println("Enter the IP to request it from: ");
       String fileIP = scan.nextLine();
@@ -140,16 +140,8 @@ public class Peer {
       String version = "1"; // because we only have one version!
       String payload = fileName;  //
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-      RDT.transmit( fileIP, Globals.S_PORT, ackPort, request.asString() );
+      RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
       HTTP exitResponse = RDT.listen(ackPort);
-      switch (exitResponse.getCode()) {
-        case "200": System.out.println("Look in your folder.  Enjoy your new file.");
-                    break;
-        case "404": System.out.println("Requested file was not found on the IP.");
-                    break; 
-        default:    System.out.print("Request failed.  Unknown problem, perhaps bad IP. (detection of bad IP not implemented yet).");
-                    break;
-        }
     }
     
     public static void query() 

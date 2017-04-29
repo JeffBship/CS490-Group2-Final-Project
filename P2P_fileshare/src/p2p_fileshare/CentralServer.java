@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import static p2p_fileshare.CentralServer.directory;
+import static p2p_fileshare.CentralServer.updateDirectory;
 
 public class CentralServer {
   public static InetAddress LocalIP; 
-   static Hash directory = new Hash();
-  
+  static Hash directory = new Hash();
   
   public static void main(String[] args) 
   throws UnknownHostException, IOException, SocketException, InterruptedException{
@@ -27,13 +28,43 @@ public class CentralServer {
     while (true){
       HTTP received = RDT.listen( Globals.S_PORT  );
       ackPort = Globals.BASE_PORT + portOffset;  //portOffset for separation from other threads, peers
-      requestHandler(received, ackPort);
       portOffset = (portOffset + 1) % 100;
-    }
+      serverRequestHandler newThread = new serverRequestHandler(received, ackPort);
+      newThread.start();
+      }
   }
   
-  //THIS PART BECOMES A THREAD AT SOME POINT
-  private static void requestHandler(HTTP received, int ackPort) throws IOException, InterruptedException{
+  public  static void updateDirectory(HTTP received){
+    directory.clearAssociatedElements(received.getIPaddress() )  ;
+    Song.processSongString(received.getPayload(), directory.getTable());
+    System.out.println("This is the server's new file list:");
+    Song.printDirectory(directory.getTable());
+    System.out.println();
+    
+    //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
+    //  ADD SONGS IN received.getPayload()
+    System.out.println("Inside updateDirectory method");
+  }
+} //end class CentralServer
+
+class serverRequestHandler extends Thread {
+  
+  HTTP received;
+  int ackPort; 
+  
+  public serverRequestHandler(HTTP received, int ackPort){
+    this.received = received;
+    this.ackPort = ackPort;
+  }
+  
+  @Override
+  @SuppressWarnings("null")
+  public void run() {
+    InetAddress LocalIP = null;  
+    try {
+      LocalIP = InetAddress.getLocalHost();
+    } catch (UnknownHostException ex) {
+    }
     HTTP response = new HTTP();
     System.out.println("HTTP received as follows: \n");
     System.out.println(received.display());
@@ -44,8 +75,7 @@ public class CentralServer {
                 response = new HTTP("200","O",LocalIP.getHostAddress(),"1","Okay doesn't need a payload.");
                 break;
       case "I": // INFORM/UPDATE
-                System.out.println("processing I");
-                System.out.println("Need to add the files to the hash table");
+                System.out.println("Processing inform/update.");
                 updateDirectory(received);
                 response = new HTTP("201","D",LocalIP.getHostAddress(),"1",directory.makeDirectoryString());
                 break;
@@ -53,7 +83,7 @@ public class CentralServer {
                 System.out.println("processing Q");
                 String result = directory.processQuery(directory.getTable(), received.getPayload());
                 if (result.equals("")) {
-                    response = new HTTP("400","B",LocalIP.getHostAddress(),"1","query is empty");
+                    response = new HTTP("404","B",LocalIP.getHostAddress(),"1","File not found.");
                 } else {
                     response = new HTTP("200","O",LocalIP.getHostAddress(),"1",result);
                 }
@@ -67,33 +97,20 @@ public class CentralServer {
                 response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File must be requested from Peers, not the server.");
                 break; 
       case "E": // EXIT from the network
-                // Put code here to delete the peers files from the directory.
-                directory.clearAssociatedElements(received.getIPaddress() )  ;
-                System.out.println("this is the server's hash table");
+                directory.clearAssociatedElements(received.getIPaddress());
+                System.out.println("This is the server's new file list:");
                 Song.printDirectory(directory.getTable());
-                System.out.println("processing E");
+                System.out.println("\nprocessing E");
                 response = new HTTP("200","O",LocalIP.getHostAddress(),"1","Exit complete");
                 break;
       default:  // request did not match any of the expected cases.
                 System.out.println("processing Default");
                 response = new HTTP("400","B",LocalIP.getHostAddress(),"1","Unknown code in request.");
                 break;
-                
       }
-    RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
+    try {
+      RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
+    } catch (IOException | InterruptedException ex) {
+    }
   }
-  
-  public  static void updateDirectory(HTTP received){
-    directory.clearAssociatedElements(received.getIPaddress() )  ;
-    Song.processSongString(received.getPayload(), directory.getTable());
-    System.out.println("this is the server's hash table");
-    Song.printDirectory(directory.getTable());
-    System.out.println();
-    
-    //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
-    //  ADD SONGS IN received.getPayload()
-    System.out.println("Inside updateDirectory method");
-  }
-
-  
 }

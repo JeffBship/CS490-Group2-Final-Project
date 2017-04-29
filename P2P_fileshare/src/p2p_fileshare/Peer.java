@@ -178,22 +178,20 @@ public class Peer {
         System.out.println("You can't exit if you haven't logged in and set a folder.");
       }else{
         System.out.println("Informing Server...");
-        //String temp = getDirectory();
-        //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
         String code = "E";    // E for exit
-        String phrase = "E";  // E for exit (repeated for emphasis, of course)
+        String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
         InetAddress LocalIP = InetAddress.getLocalHost(); 
         String IPaddress = LocalIP.getHostAddress();
         String version = "1"; // because we only have one version!
         String payload = "";  // sending an empty payload says I have no files to share anymore
         HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-//        RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
-//        HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
-//        if ( exitResponse.getCode().equals("200") ) {
-//          System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
-//          } else {
-//          System.out.print("Exit failed.");
-//          } 
+        RDT.transmit( centralServerIP, Globals.S_PORT, ackPort, request.asString() );
+        HTTP exitResponse = RDT.listen(ackPort);
+        if ( exitResponse.getCode().equals("200") ) {
+          System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
+          } else {
+          System.out.print("Exit failed.");
+          } 
       }
       
     }

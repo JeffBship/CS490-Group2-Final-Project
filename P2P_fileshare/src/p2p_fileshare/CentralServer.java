@@ -44,8 +44,7 @@ public class CentralServer {
                 response = new HTTP("200","O",LocalIP.getHostAddress(),"1","Okay doesn't need a payload.");
                 break;
       case "I": // INFORM/UPDATE
-                System.out.println("processing I");
-                System.out.println("Need to add the files to the hash table");
+                System.out.println("Processing inform/update.");
                 updateDirectory(received);
                 response = new HTTP("201","D",LocalIP.getHostAddress(),"1",directory.makeDirectoryString());
                 break;
@@ -53,7 +52,7 @@ public class CentralServer {
                 System.out.println("processing Q");
                 String result = directory.processQuery(directory.getTable(), received.getPayload());
                 if (result.equals("")) {
-                    response = new HTTP("400","B",LocalIP.getHostAddress(),"1","query is empty");
+                    response = new HTTP("404","B",LocalIP.getHostAddress(),"1","File not found.");
                 } else {
                     response = new HTTP("200","O",LocalIP.getHostAddress(),"1",result);
                 }
@@ -67,11 +66,10 @@ public class CentralServer {
                 response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File must be requested from Peers, not the server.");
                 break; 
       case "E": // EXIT from the network
-                // Put code here to delete the peers files from the directory.
-                directory.clearAssociatedElements(received.getIPaddress() )  ;
-                System.out.println("this is the server's hash table");
+                directory.clearAssociatedElements(received.getIPaddress());
+                System.out.println("This is the server's new file list:");
                 Song.printDirectory(directory.getTable());
-                System.out.println("processing E");
+                System.out.println("\nprocessing E");
                 response = new HTTP("200","O",LocalIP.getHostAddress(),"1","Exit complete");
                 break;
       default:  // request did not match any of the expected cases.
@@ -86,7 +84,7 @@ public class CentralServer {
   public  static void updateDirectory(HTTP received){
     directory.clearAssociatedElements(received.getIPaddress() )  ;
     Song.processSongString(received.getPayload(), directory.getTable());
-    System.out.println("this is the server's hash table");
+    System.out.println("This is the server's new file list:");
     Song.printDirectory(directory.getTable());
     System.out.println();
     

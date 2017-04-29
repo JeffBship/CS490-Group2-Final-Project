@@ -16,10 +16,12 @@ import java.nio.file.Files;
 public class TCPServer extends Thread {
 
   private int port;
+  private File targetFile;
 
-  public TCPServer(String name, int port) {
+  public TCPServer(String name, int port, File targetFile) {
     super(name);
     this.port = port;
+    this.targetFile = targetFile;
   }
 
   /**
@@ -43,9 +45,8 @@ public class TCPServer extends Thread {
         Socket clientConnectionSocket = serverSocket.accept();
         System.out.println("SERVER accepted connection (single threaded so others wait)");
         
-        
-        
-        outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
+        //outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
+        outFile = targetFile;
         
         bSend = new byte[(int) outFile.length()];
         if (Globals.SHOWALL) System.out.println("Array is "+ bSend.length);

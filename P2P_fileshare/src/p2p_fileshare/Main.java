@@ -37,18 +37,18 @@ outStream.close();
     //TCPServer serverThread = null;
     TCPClient clientThread = null;
     
-    try {
+    //try {
       // Start server
       //serverThread = new TCPServer("Server", 49000);
       //serverThread.start();
 
       // Create client
       //String name, String serverIP, int serverPort, int filesize
-      TCPClient client1 = new TCPClient("CLIENT1", "192.168.1.118" ,49000, 6575992);
-      client1.start();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+      //TCPClient client1 = new TCPClient("CLIENT1", "192.168.1.118" ,49000, 6575992);
+      //client1.start();
+    //} catch (Exception e) {
+    //  e.printStackTrace();
+    //}
 
   }
 

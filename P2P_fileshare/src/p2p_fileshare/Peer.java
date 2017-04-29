@@ -207,6 +207,8 @@ public class Peer {
   public static void main(String[] args) 
   throws IOException, UnknownHostException, InterruptedException{
     keepListening = true;
+    peerListener ears = new peerListener();
+    ears.start();
     Scanner in = new Scanner(System.in);
     portOffset = 0;
     String input = "";
@@ -258,6 +260,7 @@ class peerListener extends Thread {
     int portOffset = 0;
     int ackPort;
     
+    System.out.println("peer listener running, using port " + Globals.P_PORT);
     while (Peer.keepListening){
       HTTP received = new HTTP();
       try {
@@ -285,6 +288,7 @@ class peerRequestHandler extends Thread {
   
   @Override
   public void run() {
+    System.out.println("peerRequestHandler running, using port " + ackPort);
     InetAddress LocalIP = null;  
     try {
       LocalIP = InetAddress.getLocalHost();

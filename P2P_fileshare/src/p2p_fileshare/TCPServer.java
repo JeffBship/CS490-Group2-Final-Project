@@ -48,7 +48,7 @@ public class TCPServer extends Thread {
         outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
         
         bSend = new byte[(int) outFile.length()];
-        System.out.println("Array is "+ bSend.length);
+        if (Globals.SHOWALL) System.out.println("Array is "+ bSend.length);
         
         //Should read all bytes from file into bSend
         //bSend = Files.readAllBytes(outFile.toPath());
@@ -66,8 +66,8 @@ public class TCPServer extends Thread {
            out =new DataOutputStream( clientConnectionSocket.getOutputStream());
             // Note if this returns null it means the client closed the connection
           if (out!= null) {
-            System.out.println("SERVER sending file...");
-            System.out.println("Size is" + bSend.length);
+            if (Globals.SHOWALL) System.out.println("SERVER sending file...");
+            if (Globals.SHOWALL) System.out.println("Size is" + bSend.length);
             out.write(bSend, 0, bSend.length);
             out.flush();
             out.close();

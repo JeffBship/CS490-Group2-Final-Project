@@ -43,7 +43,8 @@ outStream.close();
       //serverThread.start();
 
       // Create client
-      TCPClient client1 = new TCPClient("CLIENT1", 49000);
+      //String name, String serverIP, int serverPort, int filesize
+      TCPClient client1 = new TCPClient("CLIENT1", "192.168.1.118" ,49000, 6575992);
       client1.start();
     } catch (Exception e) {
       e.printStackTrace();

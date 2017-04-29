@@ -12,13 +12,21 @@ import java.net.*;
 public class TCPClient extends Thread {
 
   private int serverPort;
+  private int filesize;
+  private String filename;
+  private String serverIP;
   int bytesRead;
   int current = 0;
   FileOutputStream outFile = null;
   BufferedOutputStream buffOut = null;
-  public TCPClient(String name, int serverPort) {
+  
+  
+  public TCPClient(String name, String serverIP, int serverPort, int filesize, String filename) {
     super(name);
     this.serverPort = serverPort;
+    this.serverIP = serverIP;
+    this.filesize = filesize;
+    this.filename = filename;
   }
 
   /**
@@ -28,21 +36,16 @@ public class TCPClient extends Thread {
   public void run() {
     Socket clientSocket = null;
     try {
-      
-      
       System.out.println("CLIENT opening socket");
       //INSERT IP HERE
-      clientSocket = new Socket("192.168.1.118", serverPort);
+      clientSocket = new Socket(serverIP, serverPort);
       System.out.println("CLIENT connected to server");
-      
       //get file
-      
-     
       DataInputStream is = new DataInputStream(clientSocket.getInputStream());
- 
-      byte[] bRecv = new byte[6575992];
+      byte[] bRecv = new byte[filesize];
      // BufferedInputStream is = new BufferedInputStream(in);
-      File f = new File("C:\\Users\\Dad\\Desktop\\490 Music to share\\test3.mp3");
+      File f = new File(Peer.folder,filename);
+      //File f = new File("C:\\Users\\Dad\\Desktop\\490 Music to share\\test3.mp3");
       if(!f.exists())
           f.createNewFile();
       outFile = new FileOutputStream(f);

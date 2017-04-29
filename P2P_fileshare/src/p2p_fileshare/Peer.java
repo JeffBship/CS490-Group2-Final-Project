@@ -125,9 +125,24 @@ public class Peer {
       System.out.println("\nRequest Content.");
       System.out.println("Enter the name of the requested file: ");
       String fileName = scan.nextLine();
+      System.out.println("Enter the exact filesize you saw: ");
+      int filesize = scan.nextInt();
       System.out.println("Enter the IP to request it from: ");
       String fileIP = scan.nextLine();
+      
+      TCPClient clientThread = null;
+      try {
+        // Create client
+        //String name, String serverIP, int serverPort, int filesize
+        TCPClient client1 = new TCPClient("CLIENT1", fileIP ,49000, filesize, fileName);
+        client1.start();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      
       //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+          
+      /*
       String code = "R";    // R for request for file
       String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
       InetAddress LocalIP = InetAddress.getLocalHost(); 
@@ -135,9 +150,10 @@ public class Peer {
       String version = "1"; // because we only have one version!
       String payload = fileName;  //
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-      
-      
       RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
+      */
+      
+      
       /*
       HTTP exitResponse = RDT.listen(ackPort);
       if (exitResponse.getCode().equals("404")) {
@@ -287,7 +303,7 @@ class peerRequestHandler extends Thread {
     switch (received.getCode()) {
       case "R": // REQUEST FOR CONTENT  should have gone to a peer
                 System.out.println("processing R on peer");
-                File targetFile = new File(Peer.folder,received.getPayload());
+                File targetFile = new File(Peer.folder,  received.getPayload());
                 boolean hasFile = true;  //need some check to see if the file is on the peer
                 if (targetFile.isFile()) {
                   

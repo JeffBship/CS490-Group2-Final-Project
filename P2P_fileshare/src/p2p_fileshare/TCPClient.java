@@ -49,22 +49,12 @@ public class TCPClient extends Thread {
       buffOut = new BufferedOutputStream(outFile);
       
       is.readFully(bRecv);
-      /*
-      bytesRead = is.read(bRecv, 0, bRecv.length);
-      System.out.println("Bytes Read is " + bytesRead);
-      current = bytesRead;
-      int total = 0;
-      int available = -1;
-      while((available = is.read(bRecv))>0){
-         buffOut.write(bRecv, 0, available);
-         buffOut.flush();
-      }
-*/
+     
       buffOut.write(bRecv);
       
       is.close();
       buffOut.flush();
-      //buffOut.close();
+      buffOut.close();
       
       System.out.println("Closing Connection");
       clientSocket.close();

@@ -1,4 +1,4 @@
-package tcptest;
+package p2p_fileshare;
 
 import java.io.*;
 import java.net.*;
@@ -11,7 +11,7 @@ import java.nio.file.Files;
  * 
  * This class wile be used to SEND files as a stream of bytes in a dataoutputstream
  * 
- * @author Chad Williams
+ * @author Adrian and Jeff
  */
 public class TCPServer extends Thread {
 

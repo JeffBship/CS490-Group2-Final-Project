@@ -135,6 +135,8 @@ public class Peer {
       String version = "1"; // because we only have one version!
       String payload = fileName;  //
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
+      
+      
       RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
       /*
       HTTP exitResponse = RDT.listen(ackPort);
@@ -288,6 +290,9 @@ class peerRequestHandler extends Thread {
                 File targetFile = new File(Peer.folder,received.getPayload());
                 boolean hasFile = true;  //need some check to see if the file is on the peer
                 if (targetFile.isFile()) {
+                  
+                  
+                  
                   //###############  Insert TCP send stuff here ###################
                   System.out.println("In file handling thread.  File is available.  TCP transfer should happen now....");
                   response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");

@@ -6,7 +6,7 @@
  * This is some test code to send and receive 128 byte strings via sockets.
  */
 
-package p2p_fileshare.files;
+
 
 import p2p_fileshare.files.Timer;
 import java.io.IOException;

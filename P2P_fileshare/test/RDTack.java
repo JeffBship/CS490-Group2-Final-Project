@@ -11,7 +11,7 @@
  * 
  *
  */
-package p2p_fileshare;
+
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -20,6 +20,9 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import p2p_fileshare.Globals;
+import p2p_fileshare.HTTP;
+import p2p_fileshare.Packet;
 
 //COULD USE THIS CLASS TO ACT AS SERVER
 

@@ -24,6 +24,8 @@ public class Peer {
     public static JFileChooser chooser = new JFileChooser();
     public static File folder = null;
     public static String centralServerIP = "";
+    public static int portOffset;
+    public static int ackPort;
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -51,15 +53,15 @@ public class Peer {
       
       //Try login attempt...basically a fancy ping
       String code = "L";    // I for inform and update
-      String phrase = "L";  // I for inform and update (yes it's the same.  The response are the ones that are different than the code.
+      String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
       InetAddress LocalIP = InetAddress.getLocalHost(); 
       String IPaddress = LocalIP.getHostAddress();
       String version = "1"; // because we only have one version!
       String payload = "Payload not used";  //this is just a filler
       HTTP login = new HTTP(code, phrase, IPaddress, version, payload);
       
-      RDT.transmit( tryIP, Globals.MSG_PORT, login.asString());
-      HTTP loginResponse = RDT.listen(Globals.ACK_PORT);
+      RDT.transmit( tryIP, Globals.S_PORT, ackPort,  login.asString());
+      HTTP loginResponse = RDT.listen(ackPort);
       System.out.println("in login.  received HTTP response as follows: \n" +  loginResponse.display() );
       
       //HTTP response = new HTTP("200","O","someIP","1","some payload");
@@ -106,15 +108,15 @@ public class Peer {
         System.out.println("Informing Server...");
         //Build the HTTP request   
         String code = "I";    // I for inform and update
-        String phrase = "I";  // I for inform and update (yes it's the same.  The response are the ones that are different than the code.
+        String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
         InetAddress LocalIP = InetAddress.getLocalHost(); 
         String IPaddress = LocalIP.getHostAddress();
         String version = "1"; // because we only have one version!
         String payload = getDirectory();  //
         HTTP inform = new HTTP(code, phrase, IPaddress, version, payload);
-        RDT.transmit( centralServerIP, Globals.MSG_PORT, inform.asString() );
+        RDT.transmit( centralServerIP, Globals.S_PORT, ackPort, inform.asString() );
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
-        HTTP informResponse = RDT.listen(Globals.ACK_PORT);
+        HTTP informResponse = RDT.listen(ackPort);
         System.out.println("The current files available are:\n" +  informResponse.getPayload() );
       } //end else
     }
@@ -135,15 +137,15 @@ public class Peer {
       String version = "1"; // because we only have one version!
       String payload = fileName;  //
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-      RDT.transmit( fileIP, Globals.MSG_PORT, request.asString() );
-      HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
-      if ( exitResponse.getCode().equals("200") ) {
+//      RDT.transmit( fileIP, Globals.MSG_PORT, request.asString() );
+//      HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
+//      if ( exitResponse.getCode().equals("200") ) {
         System.out.println("Look in your folder.  Enjoy your new file.");
-        } else if ( exitResponse.getCode().equals("404") ) {
-        System.out.println("Requested file was not found on the IP.");
-        } else {
-        System.out.print("Request failed.  Unknown problem, perhaps bad IP. (detection of bad IP not implemented yet).");
-        } 
+//        } else if ( exitResponse.getCode().equals("404") ) {
+//        System.out.println("Requested file was not found on the IP.");
+//        } else {
+//        System.out.print("Request failed.  Unknown problem, perhaps bad IP. (detection of bad IP not implemented yet).");
+//        } 
     }
     
     public static String makeQuery(){
@@ -152,9 +154,6 @@ public class Peer {
          Scanner query = new Scanner(System.in);
          q = query.nextLine();
          q = q.toLowerCase().replace(" ", "");
-         
-         
-         
          return q;
     }
     
@@ -173,13 +172,13 @@ public class Peer {
         String version = "1"; // because we only have one version!
         String payload = "";  // sending an empty payload says I have no files to share anymore
         HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-        RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
-        HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
-        if ( exitResponse.getCode().equals("200") ) {
-          System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
-          } else {
-          System.out.print("Exit failed.");
-          } 
+//        RDT.transmit( centralServerIP, Globals.MSG_PORT, request.asString() );
+//        HTTP exitResponse = RDT.listen(Globals.ACK_PORT);
+//        if ( exitResponse.getCode().equals("200") ) {
+//          System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
+//          } else {
+//          System.out.print("Exit failed.");
+//          } 
       }
       
     }
@@ -188,11 +187,14 @@ public class Peer {
     
     
     //This Method will handle the bulk of userInteraction with the Server
-    public static void main(String[] args) throws IOException, UnknownHostException, InterruptedException{
+  public static void main(String[] args) 
+  throws IOException, UnknownHostException, InterruptedException{
     Scanner in = new Scanner(System.in);
-    String input = "I";
-    
+    portOffset = 0;
+    String input = "";
     while(!input.equals("E")){
+      ackPort = Globals.BASE_PORT + 200 + portOffset;  //portOffset: separate threads, 200: separarate menu from threads
+      portOffset = (portOffset + 1) % 100;
       String temp;
       System.out.println("\nWelcome to the network!!!!");
       System.out.println("S: Set Central Server IP and Log in");
@@ -204,36 +206,38 @@ public class Peer {
       System.out.print("Enter desired operation: ");
       input = in.nextLine().toUpperCase();
       
-        if(input.equals("I")){
+      switch (input) {
+        case "I":
           informAndUpdate();
-        }
-        else if(input.equals("Q")){
-            String payload = makeQuery();
-            String code = "Q";    // E for exit
-            String phrase = "Q";  // E for exit (repeated for emphasis, of course)
-            InetAddress LocalIP = InetAddress.getLocalHost(); 
-            String IPaddress = LocalIP.getHostAddress();
-            String version = "1"; // because we only have one version!
-            HTTP query = new HTTP(code, phrase, IPaddress, version, payload);
-            RDT.transmit( centralServerIP, Globals.MSG_PORT, query.asString() );
-            HTTP queryResponse = RDT.listen(Globals.ACK_PORT);
-            System.out.println("query results:\n" +  queryResponse.display() );
-            
-        }
-        
-        else if(input.equals("R")){
-           requestContent();
-        }
-        else if(input.equals("F")){
+          break;
+        case "Q":
+          String payload = makeQuery();
+          String code = "Q";    // E for exit
+          String phrase = "Q";  // E for exit (repeated for emphasis, of course)
+          InetAddress LocalIP = InetAddress.getLocalHost();
+          String IPaddress = LocalIP.getHostAddress();
+          String version = "1"; // because we only have one version!
+          HTTP query = new HTTP(code, phrase, IPaddress, version, payload);
+          //RDT.transmit( centralServerIP, Globals.MSG_PORT, query.asString() );
+//          HTTP queryResponse = RDT.listen(Globals.ACK_PORT);
+//          System.out.println("query results:\n" +  queryResponse.display() );
+          break;
+        case "R":
+          requestContent();
+          break;
+        case "F":
           chooseFolder();
-        } 
-        else if(input.equals("S")){
+          break;
+        case "S":
           setIP();
-        }
-        else if(input.equals("E")){
+          break;
+        case "E":
           exit();
-        }else
-            System.out.println("Please Enter a valid input:");
+          break;
+        default:
+          System.out.println("Please Enter a valid input:");
+          break;
+      }
       }
     System.out.println("Exiting Network and Deleting Corresponding Entries in Server");
     in.close();

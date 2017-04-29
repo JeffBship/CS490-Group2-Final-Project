@@ -19,17 +19,19 @@ public class Globals {
   //in response time, as well as chance of a dropped packet
   public static final double ACKpercent = 100.0;   //probability of correct ACK (incorrect is simulated dropped packet)./
   public static final long   ACKtime = 50;         //base time wait before ack (msec)
-  public static final long   ACKdev = 10;          //amount of variability in time before ack (msec)
+  public static final long   ACKdev = 5;          //amount of variability in time before ack (msec)
 
   //public static       File FOLDER = new File("c:\\");
   
   public static final boolean SLOWMODE = false;   //this adds a 4000ms delay before sending each packet. No delay to Ack.
   public static final boolean SHOWALL = false;    //set this to true/false to show packet data as sent/received
   
-  public static final int MSG_PORT = 2000;
-  public static final int ACK_PORT = 2001;
-  public static final int TCP_PORT = 2002;
-  public static final int PEER_PORT = 2003;     //need a peer monitoring port for dual instances same machine.
+  public static final int S_PORT = 2000;      //server listens on this port
+  public static final int P_PORT = 2001;      //peers listen on this port
+  public static final int BASE_PORT = 2002;   //threads and menus reference off this  000 server threads 100 peer threads 200 peer menu
+  //public static final int ACK_PORT = 2001;
+  //public static final int TCP_PORT = 2002;
+ 
   
   //These are the variables to timeout calculations
   public static final double INIT_EST_RTT = 100.0;

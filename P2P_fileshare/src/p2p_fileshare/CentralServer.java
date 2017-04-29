@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Hashtable;
-import static p2p_fileshare.Peer.centralServerIP;
 
 public class CentralServer {
   public static InetAddress LocalIP; 
@@ -20,21 +18,26 @@ public class CentralServer {
   public static void main(String[] args) 
   throws UnknownHostException, IOException, SocketException, InterruptedException{
     System.out.println("Running server.");
+    int portOffset = 0;
+    int ackPort;
     LocalIP = InetAddress.getLocalHost(); 
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     System.out.println("now on an infinite loop of RDT.listen");
     
     while (true){
-      HTTP received = RDT.listen( Globals.MSG_PORT  );
-      requestHandler(received);
+      HTTP received = RDT.listen( Globals.S_PORT  );
+      ackPort = Globals.BASE_PORT + portOffset;  //portOffset for separation from other threads, peers
+      requestHandler(received, ackPort);
+      portOffset = (portOffset + 1) % 100;
     }
   }
   
   //THIS PART BECOMES A THREAD AT SOME POINT
-  private static void requestHandler(HTTP received) throws IOException, InterruptedException{
+  private static void requestHandler(HTTP received, int ackPort) throws IOException, InterruptedException{
     HTTP response = new HTTP();
     System.out.println("HTTP received as follows: \n");
     System.out.println(received.display());
+    int responsePort = Integer.parseInt(received.getPhrase() );
     switch (received.getCode()) {
       case "L": // LOGIN request, which is really just checking for a server on the IP used.
                 System.out.println("processing L");
@@ -54,11 +57,6 @@ public class CentralServer {
                 } else {
                     response = new HTTP("200","O",LocalIP.getHostAddress(),"1",result);
                 }
-                    
-                   
-                
-                
-                
                 break;
       case "D": // DIRECTORY QUERY.  <do we really need this?  can't the user just inform/update?>
                 // if we used it, put code here to search and respond with either 200:O or 404:F
@@ -82,13 +80,7 @@ public class CentralServer {
                 break;
                 
       }
-    RDT.transmit( received.getIPaddress(), Globals.ACK_PORT, response.asString() );
-    //Request Codes/Phrase:
-    //L: L Log in attempt.   
-    //I: I  Inform and update
-    //Q: Q query for content  
-    //D: D directory query 
-    
+    RDT.transmit( received.getIPaddress(), responsePort, ackPort, response.asString() );
   }
   
   public  static void updateDirectory(HTTP received){

@@ -20,8 +20,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import static p2p_fileshare.RDTack.ACKpercent;
-import static p2p_fileshare.files.UDPSender.makePacket;
 
 class RDT {
   
@@ -31,20 +29,13 @@ class RDT {
   static double devRTT;
   
   
-  public static void transmit(String transmitIP, int transmitPort, String transmitMessage) throws IOException, InterruptedException{
+  public static void transmit(String transmitIP, int transmitPort, int ackPort, String transmitMessage)
+  throws IOException, InterruptedException{
     if (Globals.SHOWALL) { System.out.println("In Transmit,  to IP " + transmitIP + " to Port " + transmitPort); }
-    
-    int responsePort;
-    if (transmitPort == Globals.MSG_PORT){
-      responsePort = Globals.ACK_PORT;
-    } else {
-      responsePort = Globals.MSG_PORT;
-    }
-    
     ArrayList<Packet> packetList = new ArrayList<>();
-    
     //This block creates header data to use in the packets
-    String LocalPeerID = "1";  //temporary.  need to figure out how to manage this.
+    String LocalPeerID = Integer.toString(ackPort);  
+    //Using PeerID to send the ackPort info..
     InetAddress LocalIP = InetAddress.getLocalHost();
     String LocalIPString = LocalIP.getHostAddress();
     String sequence = "0";
@@ -106,12 +97,14 @@ class RDT {
                                Packet rdt_sendPacket) throws IOException, InterruptedException{
     // - extract sequence from packet
     String sequence = rdt_sendPacket.getSequence();
-    int rdt_listenPort;
+    int rdt_listenPort = Integer.parseInt(rdt_sendPacket.getpeerID());  //ackPort is in PeerID
+    /*
     if (rdt_sendPort==Globals.ACK_PORT){
       rdt_listenPort = Globals.MSG_PORT;
     }else{
       rdt_listenPort = Globals.ACK_PORT;
     }
+    */
     DatagramSocket ACKSocket = new DatagramSocket(rdt_listenPort);
     
     boolean finished = false;
@@ -132,10 +125,10 @@ class RDT {
           MSGSocket.close();
         
         //  LISTEN FOR ACK UNTIL TIMEOUT
-          
+          if (Globals.SHOWALL) System.out.println(" timeout = "+ (long)timout);
           DatagramPacket DGACKpacket = new DatagramPacket(new byte[128], 128);
           ACKSocket.setSoTimeout( (int)timout );
-          if (Globals.SHOWALL) System.out.println(" timeout = "+ (long)timout);
+          
           ACKSocket.receive(DGACKpacket);
           
           //  UPDATE EstimatedRTT, and Timeout   
@@ -161,7 +154,7 @@ class RDT {
         } catch (SocketTimeoutException e) {
           timout *= 2;  // After a timeout, double the timer  USING A SMALLER NUMBER DURING TESTING
           if (Globals.SHOWALL) System.out.println("Timeout occurred, resending.");
-          }
+        } //try {
     }
     ACKSocket.close();
   }
@@ -182,11 +175,23 @@ class RDT {
                                String udtIP, int destinationPort, 
                                Packet packetPar) 
                                throws IOException{
-   
-    
         DatagramPacket outgoingPacket = makePacket(packetPar.asString(), udtIP, destinationPort);
         datagramSocket.send(outgoingPacket);
     }
+  
+  public static DatagramPacket makePacket(String msg, String destination, int port) 
+  throws UnknownHostException{
+    InetAddress IPaddress =  InetAddress.getByName(destination);
+    byte[] data = msg.getBytes();
+    int length = msg.length();
+    if (length>128) length = 128;
+    DatagramPacket madePacket = new DatagramPacket(data,length);
+    madePacket.setAddress(IPaddress);
+    madePacket.setPort(port);
+    return madePacket;
+    }
+  
+  
   /*
   Response Code:Phrase  (One character phrases are used to conserve message space.)
   200: O.  Okay. The request was completed.  
@@ -198,20 +203,22 @@ class RDT {
   
   public static HTTP listen(int listenPort)
   throws UnknownHostException, SocketException, IOException, InterruptedException {
-    int responsePort;
+    int responsePort = 999999999;
+    /*
     if (listenPort==Globals.ACK_PORT){
       responsePort = Globals.MSG_PORT;
     } else {
       responsePort = Globals.ACK_PORT;
     }
+    */
     HTTP result = new HTTP();
     if (Globals.SHOWALL) System.out.println("####Inside RDT.listen#######");
     if (Globals.SHOWALL) System.out.println("listen port is: " + listenPort);
-    if (Globals.SHOWALL) System.out.println("response port is " + responsePort);
+    if (Globals.SHOWALL) System.out.println("response port will be PeerID ");
     ArrayList<Packet> packetList = new ArrayList<>();
     //INITIAL SEQ'S ARE IMPOSSIBLE, TO ENSURE FIRST PACKET WON'T BE A FALSE REPEAT.
     //ALSO, THIS LETS US CHECK FOR REPEATED FIN PACKETS.
-    String ACKseq = "9";
+    String ACKseq = "9";                                          
     String lastSeq = "9";
     String ACKip = "";
     boolean goodPacket = false;
@@ -245,7 +252,7 @@ class RDT {
             if (packetList.isEmpty()) goodPacket = false;
         }
 
-        if (Math.random() > ACKpercent / 100.0) {
+        if (Math.random() > Globals.ACKpercent / 100.0) {
             goodPacket = false;
             drop = true;
             if (Globals.SHOWALL) System.out.println("ACKpercent --> Simulating dropped packet ");
@@ -254,6 +261,7 @@ class RDT {
         //IF GOODPACKET, ADD TO PACKETLIST
         if (goodPacket) {
           if (Globals.SHOWALL) System.out.println("Adding packet to packetList.");
+          responsePort = Integer.parseInt(newPacket.getpeerID() );
           packetList.add(newPacket);
           //if (Globals.SHOWALL) System.out.println("getData: " + newPacket.getData() );
           lastSeq = newPacket.getSequence();

@@ -1,4 +1,4 @@
-package p2p_fileshare;
+package tcptest;
 
 import java.io.*;
 import java.net.*;
@@ -9,7 +9,7 @@ import java.nio.file.Files;
  * echos what is sent capitalized. This is an adaption of the code provided by
  * the Computer Networking: A Top Down Approach book by Kurose and Ross
  * 
- * This class wile be used to SEND files as a stream of bytes in a bufferedoutputstream
+ * This class wile be used to SEND files as a stream of bytes in a dataoutputstream
  * 
  * @author Chad Williams
  */
@@ -30,7 +30,10 @@ public class TCPServer extends Thread {
     File outFile = null;
     FileInputStream fis = null;
     BufferedInputStream buffRead = null;
-    OutputStream out = null;
+    DataOutputStream out = null;
+    //BufferedOutputStream out = null;
+    
+   
     byte[] bSend;    
     try {
       serverSocket = new ServerSocket(this.port);
@@ -42,9 +45,11 @@ public class TCPServer extends Thread {
         
         
         
-        outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\Silver.mp3");
+        outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
         
         bSend = new byte[(int) outFile.length()];
+        System.out.println("Array is "+ bSend.length);
+        
         //Should read all bytes from file into bSend
         //bSend = Files.readAllBytes(outFile.toPath());
         
@@ -52,22 +57,25 @@ public class TCPServer extends Thread {
         fis = new FileInputStream(outFile);
         buffRead = new BufferedInputStream(fis);
         buffRead.read(bSend, 0, bSend.length);
-        
+        buffRead.close();
+        fis.close();
         
         
         // This is regarding the server state of the connection
         while (clientConnectionSocket.isConnected() && !clientConnectionSocket.isClosed()) {
-           out =  clientConnectionSocket.getOutputStream();
+           out =new DataOutputStream( clientConnectionSocket.getOutputStream());
             // Note if this returns null it means the client closed the connection
           if (out!= null) {
             System.out.println("SERVER sending file...");
             System.out.println("Size is" + bSend.length);
             out.write(bSend, 0, bSend.length);
             out.flush();
+            out.close();
             clientConnectionSocket.close();
             System.out.println("Done");
             
           } else {
+            out.close();
             clientConnectionSocket.close();
             System.out.println("SERVER client connection closed");
           }

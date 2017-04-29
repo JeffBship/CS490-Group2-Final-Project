@@ -47,7 +47,7 @@ public class Hash {
   public String processQuery(Hashtable<String, Song> sTable, String query) {
     //Scanner not closed to allow for Peer to continue using scanner
     // query.close();
-    String q = "";
+    String q = " ";
     String IP;
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
@@ -57,7 +57,9 @@ public class Hash {
           if(key.getName().toLowerCase().replace(" ","").contains(query))
            q += key.getName() + "\t" + key.getFilesize() + "\t" + key.getIP() + "\n";
       }
-    return q;
+   if (q.equals(""))
+       q= " ";
+   return q;
   }
   
   

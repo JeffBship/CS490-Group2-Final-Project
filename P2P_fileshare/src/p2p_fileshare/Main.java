@@ -11,7 +11,7 @@ import java.io.IOException;
  * server responds with the sentence capitalized. This is an adaption of the
  * code provided by the Computer Networking: A Top Down Approach book by Kurose
  * and Ross
- *
+ *http://www.rgagnon.com/javadetails/java-0542.html
  * @author Chad Williams
  */
 public class Main {

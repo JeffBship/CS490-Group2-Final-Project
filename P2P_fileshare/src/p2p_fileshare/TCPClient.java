@@ -1,4 +1,4 @@
-package tcptest;
+package p2p_fileshare;
 import java.io.*;
 import java.net.*;
 
@@ -32,7 +32,7 @@ public class TCPClient extends Thread {
       
       System.out.println("CLIENT opening socket");
       //INSERT IP HERE
-      clientSocket = new Socket("192.168.1.96", serverPort);
+      clientSocket = new Socket("192.168.1.118", serverPort);
       System.out.println("CLIENT connected to server");
       
       //get file
@@ -40,9 +40,9 @@ public class TCPClient extends Thread {
      
       DataInputStream is = new DataInputStream(clientSocket.getInputStream());
  
-      byte[] bRecv = new byte[562536351];
+      byte[] bRecv = new byte[6575992];
      // BufferedInputStream is = new BufferedInputStream(in);
-      File f = new File("C:\\Users\\Owner\\Music\\Test\\test3.mp4");
+      File f = new File("C:\\Users\\Dad\\Desktop\\490 Music to share\\test3.mp3");
       if(!f.exists())
           f.createNewFile();
       outFile = new FileOutputStream(f);

@@ -10,8 +10,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 /**
  *
@@ -101,9 +99,6 @@ public class Peer {
       return songList;
     }
     
-    //Add Hashtable to peer...modify to search table in peer instance later
-    //Returns User Query as a string to be returned for transmit to Server
-    
     public static void informAndUpdate() throws UnknownHostException, IOException, InterruptedException{
       if (centralServerIP.equals("") || (folder==null) ) {
         System.out.println("Please set Central Server IP and sharing folder first.");
@@ -142,6 +137,12 @@ public class Peer {
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
       RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
       HTTP exitResponse = RDT.listen(ackPort);
+      if (exitResponse.getCode().equals("404")) {
+        System.out.println("The file was not found at the requested IP.");
+        System.out.println("Be sure of spelling, and include the filetype extension.");
+      } else if (exitResponse.getCode().equals("200")) {
+        System.out.println("Look in the folder you designated.  Enjoy your new file.");
+      }
     }
     
     public static void query() 
@@ -189,13 +190,9 @@ public class Peer {
           } 
         keepListening = false; //turn off the listening thread
       }
-      
     }
     
-    
-    
-    
-    //This Method will handle the bulk of userInteraction with the Server
+  //This Method will handle the bulk of userInteraction with the Server
   public static void main(String[] args) 
   throws IOException, UnknownHostException, InterruptedException{
     keepListening = true;
@@ -217,7 +214,6 @@ public class Peer {
       System.out.println("E: Exit Network");
       System.out.print("Enter desired operation: ");
       input = in.nextLine().toUpperCase();
-      
       switch (input) {
         case "I": informAndUpdate();
                   break;
@@ -238,20 +234,16 @@ public class Peer {
     System.out.println("Exiting Network and Deleting Corresponding Entries in Server");
     in.close();
   } 
-    
 }
 
 class peerListener extends Thread {
-  
   public peerListener(){
     //empty constructor right now.
   }
-  
   @Override
   public void run() {
     int portOffset = 0;
     int ackPort;
-    
     System.out.println("peer listener running, using port " + Globals.P_PORT);
     while (Peer.keepListening){
       HTTP received = new HTTP();
@@ -269,15 +261,12 @@ class peerListener extends Thread {
 }
 
 class peerRequestHandler extends Thread {
-  
-  HTTP received;
-  int ackPort; 
-  
+    HTTP received;
+    int ackPort; 
   public peerRequestHandler(HTTP received, int ackPort){
     this.received = received;
     this.ackPort = ackPort;
   }
-  
   @Override
   public void run() {
     System.out.println("peerRequestHandler running, using port " + ackPort);
@@ -293,13 +282,15 @@ class peerRequestHandler extends Thread {
     switch (received.getCode()) {
       case "R": // REQUEST FOR CONTENT  should have gone to a peer
                 System.out.println("processing R on peer");
+                File targetFile = new File(Peer.folder,received.getPayload());
                 boolean hasFile = true;  //need some check to see if the file is on the peer
-                if (hasFile) {
+                if (targetFile.isFile()) {
                   //###############  Insert TCP send stuff here ###################
-                  System.out.println("In file handling thread.  TCP transfer should happen now....");
+                  
+                  System.out.println("In file handling thread.  File is available.  TCP transfer should happen now....");
                   response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");
                 } else {
-                  response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File not found");
+                  response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File not found.");
                 }
                 break; 
       default:  // request did not match any of the expected cases.

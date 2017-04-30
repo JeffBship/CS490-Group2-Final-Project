@@ -43,8 +43,8 @@ public class Hash {
         return dTab;
     }
  
-  public String processQuery(Hashtable<String, Song> sTable, String query) {
-    String q = " ";
+  public static String processQuery(Hashtable<String, Song> sTable, String query) {
+    String q = "Num \tIPaddress\tsize\tName\n";
     String IP;
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
@@ -53,7 +53,7 @@ public class Hash {
           key = (Song) songNames.nextElement();
           if(( key.getName().toLowerCase().replace(" ","").contains(query))
               || ( key.getIP().contains(query)) )
-           q += key.getName() + "\t" + key.getFilesize() + "\t" + key.getIP() + "\n";
+           q += key.getSNum() + "\t" + key.getIP() + "\t" + key.getFilesize() + "\t" + key.getName() + "\n";
       }
    if (q.equals(""))
        q= " ";

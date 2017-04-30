@@ -10,24 +10,16 @@
  */
 package p2p_fileshare;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import static java.lang.Math.abs;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class RDT  {
   
@@ -279,7 +271,9 @@ class RDT  {
         } 
         //DELAY BY THE Ack Time +/- ACKdev
             delay = (long) (Globals.ACKtime - Globals.ACKdev / 2 + Globals.ACKdev * Math.random());
+System.out.println("Delay for time " + delay);            
             Thread.sleep(delay);
+        
         ACKseq = newPacket.getSequence();
         //SEND THE ACK 
         ACKseq = newPacket.getSequence();

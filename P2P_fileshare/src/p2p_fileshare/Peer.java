@@ -13,9 +13,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
 import javax.swing.JFileChooser;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -221,6 +218,7 @@ public class Peer {
     public static void query() 
     throws UnknownHostException, IOException, InterruptedException{
       String payload = makeQuery();
+          /*
           String code = "Q";    // E for exit
           String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
           InetAddress LocalIP = InetAddress.getLocalHost();
@@ -230,15 +228,33 @@ public class Peer {
           RDT.transmit( centralServerIP, Globals.S_PORT, ackPort, query.asString() );
           HTTP queryResponse = RDT.listen(ackPort);
           System.out.println("query results:\n" +  queryResponse.display() );
+          */
       }
     
     public static String makeQuery(){
+      //public Song getSongFromSNum(Hashtable<String, Song> sTable, int num) 
+      String q; 
+      Scanner scan = new Scanner(System.in);
+      System.out.println("\nRequest Content.");
+      System.out.println("Enter the number of the song you want: ");
+      int num = scan.nextInt(); scan.nextLine();
+      Song songReq = new Song();
+      songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
+        
+      q= songReq.getName();
+      System.out.println( Hash.processQuery(LocalHash.getTable(), q ) );
+      
+      return q;
+      
+      
+      /*
          System.out.print("Please enter file name that you would like to query: ");
          String q;
          Scanner query = new Scanner(System.in);
          q = query.nextLine();
          q = q.toLowerCase().replace(" ", "");
          return q;
+      */
     }
     
     public static void ping(){

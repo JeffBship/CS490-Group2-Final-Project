@@ -54,9 +54,8 @@ public class CentralServer {
     Song.printDirectory(directory.getTable());
     System.out.println();
     
-    //  REMOVE OLD ENTRIES FROM THIS received.getIPaddress()
-    //  ADD SONGS IN received.getPayload()
-    System.out.println("Inside updateDirectory method");
+    
+    //System.out.println("Inside updateDirectory method");
   }
 } //end class CentralServer
 

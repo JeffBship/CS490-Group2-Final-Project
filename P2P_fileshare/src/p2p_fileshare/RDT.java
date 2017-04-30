@@ -52,7 +52,7 @@ class RDT  {
     timout = Globals.INIT_TIMEOUT;
     devRTT = Globals.INIT_DEV_RTT;
     
-    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 94.0 ) +2 ; //+2 for the SYN and FIN
+    packetsRemainingInt = (int) Math.ceil( transmitMessage.length() / 90.0 ) +2 ; //+2 for the SYN and FIN
     // SYN packet isn't a handshake, it tells the receiver to start sequence count over
     // so if a previous message was dropped it can't jinx the sequence.
     sequence = "0";
@@ -64,11 +64,11 @@ class RDT  {
     while (packetsRemainingInt>1){
       if (Globals.SHOWALL) System.out.println("in packetsRemaining loop, : " + packetsRemainingInt);
       packetsRemaining = Integer.toString(packetsRemainingInt);
-      int endIndex = 93;
+      int endIndex = 89;
       String newPacketData;
       if (transmitMessage.length()>95){
-        newPacketData = transmitMessage.substring(0, 93); //first 94 bytes of message
-        transmitMessage = transmitMessage.substring(93); //all after the first 95
+        newPacketData = transmitMessage.substring(0, 89); //first 94 bytes of message
+        transmitMessage = transmitMessage.substring(89); //all after the first 95
         }else{
           newPacketData = transmitMessage;
         }

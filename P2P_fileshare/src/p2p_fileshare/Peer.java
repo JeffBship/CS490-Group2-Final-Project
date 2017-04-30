@@ -34,6 +34,7 @@ public class Peer {
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     static Hash LocalHash = new Hash();
+    //Hashtable<String, Song> LocalHash;
 
     
     //
@@ -127,6 +128,7 @@ public class Peer {
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(ackPort);
         LocalHash = new Hash();  //start over with an empty hash table, fill it with contents from server
+        //LocalHash.getTable().clear();
         Song.processSongString(informResponse.getPayload(), LocalHash.getTable());
         System.out.println("These files are available:");
         
@@ -236,13 +238,16 @@ public class Peer {
       String q; 
       Scanner scan = new Scanner(System.in);
       System.out.println("\nRequest Content.");
-      System.out.println("Enter the number of the song you want: ");
-      int num = scan.nextInt(); scan.nextLine();
+      System.out.print("Enter the number of the song you want: ");
+      String numString = scan.nextLine(); //scan.nextLine();
+      int num = Integer.parseInt(numString);
       Song songReq = new Song();
+      //System.out.println("num is " + num);
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
         
       q= songReq.getName();
-      System.out.println( Hash.processQuery(LocalHash.getTable(), q ) );
+      //System.out.println("q is " + q);
+      System.out.println( Hash.processQuery(  LocalHash.getTable(), q ) );
       
       return q;
       
@@ -259,7 +264,7 @@ public class Peer {
     
     public static void ping(){
       Scanner scan = new Scanner(System.in);
-      System.out.println("Enter the number of any song from the peer you want to ping: ");
+      System.out.print("Enter the number of any song from the peer you want to ping: ");
       int num = scan.nextInt(); scan.nextLine();
       Song songReq = new Song();
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
@@ -302,13 +307,20 @@ public class Peer {
   public static void main(String[] args) 
   throws IOException, UnknownHostException, InterruptedException{
     keepListening = true;
+    
+    //This listens for HTTP requests from other peers
     peerListener peerEars = new peerListener();
     peerEars.start();
+    
+    //This listens for TCP requests so simulate a ping.
     pingServer pingEars = new pingServer();
     pingEars.start();
+    
     Scanner in = new Scanner(System.in);
     portOffset = 0;
     String input = "";
+    
+    
     while(!input.equals("E")){
       ackPort = Globals.BASE_PORT + 200 + portOffset;  //portOffset: separate threads, 200: separarate menu from threads
       portOffset = (portOffset + 1) % 100;
@@ -434,8 +446,10 @@ private static class peerRequestHandler extends Thread {
 
 //This thread is just to accept pings as TCP socket reuests
   private static class pingServer extends Thread {
+    
     public pingServer( ){
     }
+    
     @Override
     public void run() {
       ServerSocket pingSocket = null;

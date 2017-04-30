@@ -15,8 +15,6 @@ package p2p_fileshare;
    Java HashTables uses separate chaining to deal with collisions
    NEED TO IMPLEMENT MULTITHREADING????
 */
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class Hash {
@@ -51,7 +49,7 @@ public class Hash {
     Song key;
     while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
-          if(( key.getName().toLowerCase().replace(" ","").contains(query))
+          if(( key.getName().contains(query))
               || ( key.getIP().contains(query)) )
            q += key.getSNum() + "\t" + key.getIP() + "\t" + key.getFilesize() + "\t" + key.getName() + "\n";
       }

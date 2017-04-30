@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 
 public class Song {
-  Integer SNum;
+  int SNum;
   String filename;
   String filesize;
   String peer;
@@ -24,7 +24,7 @@ public class Song {
     peer = "";
   }
   
-  public Song(Integer SongNumber, String filenameParam, String filesizeParam, String peerParam){
+  public Song(int SongNumber, String filenameParam, String filesizeParam, String peerParam){
     SNum = SongNumber;
     filename = filenameParam; 
     filesize = filesizeParam;
@@ -39,7 +39,7 @@ public class Song {
       return this.filesize;
   }
   
-  public Integer getSNum(){
+  public int getSNum(){
     return this.SNum;
   }
   
@@ -62,7 +62,7 @@ public class Song {
   public static void processSongString(String songList, Hashtable<String, Song> dTab){
     
     char[] list = songList.toCharArray();
-    Integer snum = 0;
+    int snum = 0;
     
     
     //use parse to read up to newline character

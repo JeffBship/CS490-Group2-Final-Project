@@ -62,7 +62,6 @@ public class Hash {
   
   public static Song getSongFromSNum(Hashtable<String, Song> sTable, int num) {
     Song result = null;
-    String IP;
     //DONT CHANGE THIS PART
     Enumeration songNames = sTable.elements();
     Song key;
@@ -74,6 +73,30 @@ public class Hash {
       }
    return result;
   }
+  
+  public static void print(Hashtable<String, Song> sTable) {
+    Enumeration songNames = sTable.elements();
+    Song key;
+    while(songNames.hasMoreElements()){
+          key = (Song) songNames.nextElement();
+          System.out.printf("%2s%15s%15s%45s", key.getSNum(),key.getIP(),key.getFilesize(),key.getName() );
+      }
+  }
+  
+  public static ArrayList<Song> getListFromIP(Hashtable<String, Song> sTable, String ip){
+    ArrayList<Song> result = new ArrayList<>();
+    //DONT CHANGE THIS PART
+    Enumeration songNames = sTable.elements();
+    Song key;
+    while(songNames.hasMoreElements()){
+          key = (Song) songNames.nextElement();
+          if ( key.getIP().equals(ip) ) {
+            result.add(key);
+          }
+      }
+    return result;
+  }
+  
   
   
   //Check whether or not all the IPS are reachable

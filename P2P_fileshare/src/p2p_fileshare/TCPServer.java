@@ -42,9 +42,9 @@ public class TCPServer extends Thread {
      
       //while (true) {
         {
-        System.out.println("SERVER accepting connections");
+        if (Globals.SHOWALL) System.out.println("SERVER accepting connections");
         Socket clientConnectionSocket = serverSocket.accept();
-        System.out.println("SERVER accepted connection (single threaded so others wait)");
+        if (Globals.SHOWALL) System.out.println("SERVER accepted connection (single threaded so others wait)");
         
         //outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
         outFile = targetFile;
@@ -74,12 +74,12 @@ public class TCPServer extends Thread {
             out.flush();
             out.close();
             clientConnectionSocket.close();
-            System.out.println("Done");
+            if (Globals.SHOWALL) System.out.println("Done");
             
           } else {
             out.close();
             clientConnectionSocket.close();
-            System.out.println("SERVER client connection closed");
+            if (Globals.SHOWALL) System.out.println("SERVER client connection closed");
           }
         }
       }

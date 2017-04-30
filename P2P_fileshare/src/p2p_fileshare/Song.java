@@ -99,11 +99,12 @@ public class Song {
   }
  
  public static void printDirectory(Hashtable<String, Song> sTable){
-      Enumeration songNames = sTable.keys();
-      String key;
+      Enumeration songNames = sTable.elements();
+      Song key;
       while(songNames.hasMoreElements()){
-          key = (String) songNames.nextElement();
-          System.out.println(sTable.get(key).getAll());
+          key = (Song) songNames.nextElement();
+          //System.out.println(sTable.get(key).getAll());
+          System.out.printf("%2s%15s%15s%45s", key.getSNum(),key.getIP(),key.getFilesize(),key.getName() + "\n");
       }
   }
  

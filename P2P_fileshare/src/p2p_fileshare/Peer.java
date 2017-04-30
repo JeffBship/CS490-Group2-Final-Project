@@ -31,7 +31,6 @@ public class Peer {
     public static int TCPport;
     public static volatile boolean keepListening;
     public static String localDirectory = "";
-    public static ArrayList localList;
     static Hash LocalHash = new Hash();
     
     //
@@ -121,10 +120,10 @@ public class Peer {
         RDT.transmit( centralServerIP, Globals.S_PORT, ackPort, inform.asString() );
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(ackPort);
-        System.out.println("The current files available are:\n" +  informResponse.getPayload() );
         LocalHash = new Hash();  //start over with an empty hash table, fill it with contents from server
         Song.processSongString(informResponse.getPayload(), LocalHash.getTable());
-        System.out.println("This is the new local LocalHash:");
+        System.out.println("These files are available:");
+        
         Song.printDirectory(LocalHash.getTable());
         System.out.println();
       } 
@@ -143,23 +142,19 @@ public class Peer {
       int num = scan.nextInt(); scan.nextLine();
       Song songReq = new Song();
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
-          
-      /*
-      Scanner scan = new Scanner(System.in);
-      System.out.println("\nRequest Content.");
-      System.out.println("Enter the name of the requested file: ");
-      String fileName = scan.nextLine();
-      System.out.println("Enter the exact filesize you saw: ");
-      int filesize = scan.nextInt();
-      scan.nextLine(); //gotta clear the enter from the buffer
-      System.out.println("Enter the IP to request it from: ");
-      String fileIP = scan.nextLine();
-      */
+        
+      getFile(songReq);
+      
+      
+    }
+    
+    
+  public static void getFile (Song songReq) 
+  throws UnknownHostException, IOException, InterruptedException {
+    
       int filesize = Integer.parseInt(songReq.getFilesize());
       String fileName = songReq.getName();
       String fileIP = songReq.getIP();
-      
-      
       //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
       String code = "R";    // R for request for file
       String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
@@ -186,6 +181,29 @@ public class Peer {
       }
     }
     
+    public static void allfiles() 
+    throws IOException, UnknownHostException, InterruptedException{
+      Scanner scan = new Scanner(System.in);
+      System.out.println("Enter the number of any song from the peer you want all the songs from: ");
+      int num = scan.nextInt(); scan.nextLine();
+      Song songReq = new Song();
+      songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
+      
+      System.out.println("IP wanted is: " + songReq.getIP() );
+      
+      ArrayList<Song> getThese = new ArrayList<>();
+      getThese = Hash.getListFromIP(LocalHash.getTable(), songReq.getIP());
+      System.out.println("size of arraylist is " + getThese.size() );
+      
+      //This is going to be innefficient.  Might want to clean it up later if we have extra time.
+      ackPort = Globals.BASE_PORT + 200 + portOffset;  //portOffset: separate threads, 200: separarate menu from threads
+      portOffset = (portOffset + 1) % 100;
+      
+      while (!getThese.isEmpty()){
+        getFile(getThese.remove(0));
+      }
+    }
+    
     public static void query() 
     throws UnknownHostException, IOException, InterruptedException{
       String payload = makeQuery();
@@ -209,12 +227,7 @@ public class Peer {
          return q;
     }
     
-    public static void allfiles(){
-      Scanner scan = new Scanner(System.in);
-      System.out.println("Enter the IP to request files from: ");
-      String fileIP = scan.nextLine();
-      
-    }
+    
     
     public static void exit() 
     throws UnknownHostException, IOException, InterruptedException{

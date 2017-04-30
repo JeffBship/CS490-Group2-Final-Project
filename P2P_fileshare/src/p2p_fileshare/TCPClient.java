@@ -36,10 +36,10 @@ public class TCPClient extends Thread {
   public void run() {
     Socket clientSocket = null;
     try {
-      System.out.println("CLIENT opening socket");
+      if (Globals.SHOWALL) System.out.println("CLIENT opening socket");
       //INSERT IP HERE
       clientSocket = new Socket(serverIP, serverPort);
-      System.out.println("CLIENT connected to server");
+      if (Globals.SHOWALL) System.out.println("CLIENT connected to server");
       //get file
       DataInputStream is = new DataInputStream(clientSocket.getInputStream());
       byte[] bRecv = new byte[filesize];
@@ -59,9 +59,9 @@ public class TCPClient extends Thread {
       buffOut.flush();
       buffOut.close();
       
-      System.out.println("Closing Connection");
+      if (Globals.SHOWALL) System.out.println("Closing Connection");
       clientSocket.close();
-      System.out.println(this.getName() + " closed connection to server");
+      if (Globals.SHOWALL) System.out.println(this.getName() + " closed connection to server");
     } catch (Exception e) {
       e.printStackTrace();
       try {

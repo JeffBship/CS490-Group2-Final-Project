@@ -28,6 +28,7 @@ public class Peer {
     public static String centralServerIP = "";
     public static int portOffset;
     public static int ackPort;
+    public static int TCPport;
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     public static ArrayList localList;
@@ -173,9 +174,10 @@ public class Peer {
         System.out.println("Be sure of spelling, and include the filetype extension.");
       } else if (exitResponse.getCode().equals("200")) {//If the file is available, start the TCP
         TCPClient clientThread = null;
+        int rcvTCPport = Integer.parseInt(exitResponse.getPayload());
         try {  
           // Create client
-          TCPClient client1 = new TCPClient("CLIENT1", fileIP ,Globals.TCP_PORT, filesize, fileName);
+          TCPClient client1 = new TCPClient("CLIENT1", fileIP ,rcvTCPport, filesize, fileName);
           client1.start();
         } catch (Exception e) {
         }
@@ -304,9 +306,9 @@ private static class peerListener extends Thread {
       } catch (IOException | InterruptedException ex) {
         break;
       }
-      ackPort = Globals.BASE_PORT + 100 + portOffset;  //portOffset: separate threads, 100: separarate threads
+      TCPport = Globals.BASE_PORT + 100 + portOffset;  //portOffset: separate threads, 100: separarate threads
       portOffset = (portOffset + 1) % 100;
-      peerRequestHandler newThread = new peerRequestHandler(received, ackPort);
+      peerRequestHandler newThread = new peerRequestHandler(received, TCPport);
       newThread.start();
       
     }
@@ -344,12 +346,11 @@ private static class peerRequestHandler extends Thread {
                   TCPServer serverThread = null;
                   try {
                     // Start server  TCPServer(String name, int port, String filename) {
-                    serverThread = new TCPServer("Server", Globals.TCP_PORT, targetFile );
+                    serverThread = new TCPServer("Server", TCPport, targetFile );
                     serverThread.start();
                   } catch (Exception e) {
-                    e.printStackTrace();
                   }
-                  response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");
+                  response = new HTTP("200","O",LocalIP.getHostAddress(),"1", Integer.toString(TCPport) );
                 } else {
                   response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File not found.");
                 }

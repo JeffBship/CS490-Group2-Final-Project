@@ -9,6 +9,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 /**
@@ -26,7 +28,10 @@ public class Peer {
     public static String centralServerIP = "";
     public static int portOffset;
     public static int ackPort;
-    public static boolean keepListening;
+    public static volatile boolean keepListening;
+    public static String localDirectory = "";
+    public static ArrayList localList;
+    static Hash LocalHash = new Hash();
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -116,11 +121,28 @@ public class Peer {
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(ackPort);
         System.out.println("The current files available are:\n" +  informResponse.getPayload() );
-      } //end else
+        Song.processSongString(informResponse.getPayload(), LocalHash.getTable());
+        System.out.println("This is the new local LocalHash:");
+        Song.printDirectory(LocalHash.getTable());
+        System.out.println();
+      } 
     }
+    
+    
     
     public static void requestContent() 
     throws UnknownHostException, IOException, InterruptedException{
+      
+      
+      //public Song getSongFromSNum(Hashtable<String, Song> sTable, int num) 
+      Scanner scan = new Scanner(System.in);
+      System.out.println("\nRequest Content.");
+      System.out.println("Enter the number of the song you want: ");
+      int num = scan.nextInt(); scan.nextLine();
+      Song songReq = new Song();
+      songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
+          
+      /*
       Scanner scan = new Scanner(System.in);
       System.out.println("\nRequest Content.");
       System.out.println("Enter the name of the requested file: ");
@@ -130,40 +152,35 @@ public class Peer {
       scan.nextLine(); //gotta clear the enter from the buffer
       System.out.println("Enter the IP to request it from: ");
       String fileIP = scan.nextLine();
-      
+      */
+      int filesize = Integer.parseInt(songReq.getFilesize());
+      String fileName = songReq.getName();
+      String fileIP = songReq.getIP();
       
       
       //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
-          
-      
       String code = "R";    // R for request for file
       String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
       InetAddress LocalIP = InetAddress.getLocalHost(); 
       String IPaddress = LocalIP.getHostAddress();
       String version = "1"; // because we only have one version!
-      String payload = fileName;  //
+      String payload = fileName;
       HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
       RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
-      
-      
-      
-      
       HTTP exitResponse = RDT.listen(ackPort);
       if (exitResponse.getCode().equals("404")) {
         System.out.println("The file was not found at the requested IP.");
         System.out.println("Be sure of spelling, and include the filetype extension.");
-      } else if (exitResponse.getCode().equals("200")) {
+      } else if (exitResponse.getCode().equals("200")) {//If the file is available, start the TCP
         TCPClient clientThread = null;
-        try {
+        try {  
           // Create client
-          //String name, String serverIP, int serverPort, int filesize
-          TCPClient client1 = new TCPClient("CLIENT1", fileIP ,49000, filesize, fileName);
+          TCPClient client1 = new TCPClient("CLIENT1", fileIP ,Globals.TCP_PORT, filesize, fileName);
           client1.start();
         } catch (Exception e) {
         }
         System.out.println("Look in " + folder + ".  Enjoy your new file.");
       }
-      
     }
     
     public static void query() 
@@ -189,11 +206,16 @@ public class Peer {
          return q;
     }
     
+    public static void allfiles(){
+      Scanner scan = new Scanner(System.in);
+      System.out.println("Enter the IP to request files from: ");
+      String fileIP = scan.nextLine();
+      
+    }
+    
     public static void exit() 
     throws UnknownHostException, IOException, InterruptedException{
-      if (centralServerIP.equals("") ) {
-        System.out.println("You can't exit if you haven't logged in and set a folder.");
-      }else{
+      if (!centralServerIP.equals("") ) {
         System.out.println("Informing Server...");
         String code = "E";    // E for exit
         String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
@@ -208,8 +230,7 @@ public class Peer {
           System.out.println("Central Server has removed your files from the directory.  Have a peachy day.");
           } else {
           System.out.print("Exit failed.");
-          } 
-        keepListening = false; //turn off the listening thread
+          }  
       }
     }
     
@@ -231,21 +252,23 @@ public class Peer {
       System.out.println("F: Select sharing folder");
       System.out.println("I: Inform and Update");
       System.out.println("Q: Query for content");
-      //T take all files froma  specific peer
       System.out.println("R: Request Content");
+      System.out.println("A: Request ALL files form a peer");
       System.out.println("E: Exit Network");
       System.out.print("Enter desired operation: ");
       input = in.nextLine().toUpperCase();
       switch (input) {
+        case "S": setIP();
+                  break;
+        case "F": chooseFolder();
+                  break;
         case "I": informAndUpdate();
                   break;
         case "Q": query();
                   break;
         case "R": requestContent();
                   break;
-        case "F": chooseFolder();
-                  break;
-        case "S": setIP();
+        case "A": allfiles();
                   break;
         case "E": exit();
                   break;
@@ -253,13 +276,14 @@ public class Peer {
                   break;
         }
       }
-    System.out.println("Exiting Network and Deleting Corresponding Entries in Server");
-    in.close();
+    keepListening = false;
+    //Can't figure out how to stop the ears thread.
   } 
-}
 
-class peerListener extends Thread {
-  public peerListener(){
+
+private static class peerListener extends Thread {
+  
+  private peerListener(){
     //empty constructor right now.
   }
   @Override
@@ -267,31 +291,33 @@ class peerListener extends Thread {
     int portOffset = 0;
     int ackPort;
     System.out.println("peer listener running, using port " + Globals.P_PORT);
-    while (Peer.keepListening){
+    while (keepListening){
+      System.out.println("keeplistingin is " + keepListening);
+      
       HTTP received = new HTTP();
       try {
         //System.out.println("just inside try");
         received = RDT.listen(Globals.P_PORT);
-        
-        System.out.println("there was a http received by a peer");
+        System.out.println("there was a http received by peer");
         System.out.println(received.asString());
-        
       } catch (SocketException ex) {
       } catch (IOException | InterruptedException ex) {
+        break;
       }
       ackPort = Globals.BASE_PORT + 100 + portOffset;  //portOffset: separate threads, 100: separarate threads
       portOffset = (portOffset + 1) % 100;
       peerRequestHandler newThread = new peerRequestHandler(received, ackPort);
       newThread.start();
+      
     }
   }
 }
 
-class peerRequestHandler extends Thread {
+private static class peerRequestHandler extends Thread {
     HTTP received;
     int ackPort; 
     
-  public peerRequestHandler(HTTP received, int ackPort){
+  private peerRequestHandler(HTTP received, int ackPort){
     this.received = received;
     this.ackPort = ackPort;
   }
@@ -313,32 +339,20 @@ class peerRequestHandler extends Thread {
                 File targetFile = new File(Peer.folder,  received.getPayload());
                 boolean hasFile = true;  //need some check to see if the file is on the peer
                 if (targetFile.isFile()) {
-                  
                   //###############  Insert TCP send stuff here ###################
-                  System.out.println("In file handling thread.  File is available.  TCP transfer should happen now....");
-                  
+                  //System.out.println("In file handling thread.  File is available.  TCP transfer should happen now....");
                   TCPServer serverThread = null;
                   try {
                     // Start server  TCPServer(String name, int port, String filename) {
-                    serverThread = new TCPServer("Server", 49000, targetFile );
+                    serverThread = new TCPServer("Server", Globals.TCP_PORT, targetFile );
                     serverThread.start();
                   } catch (Exception e) {
                     e.printStackTrace();
                   }
-                  
-                  
-                  
-                  
                   response = new HTTP("200","F",LocalIP.getHostAddress(),"1","Enjoy your new file.");
                 } else {
                   response = new HTTP("404","F",LocalIP.getHostAddress(),"1","File not found.");
                 }
-                
-                
-                
-                
-                
-                
                 break; 
       default:  // request did not match any of the expected cases.
                 System.out.println("processing Default");
@@ -350,4 +364,7 @@ class peerRequestHandler extends Thread {
     } catch (IOException | InterruptedException ex) {
     }
   }
+}
+
+
 }

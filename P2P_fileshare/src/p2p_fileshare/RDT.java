@@ -21,13 +21,15 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-class RDT {
+class RDT  {
   
   //Timeout calculation variables
   static double estimatedRTT;  
   static double timout;
   static double devRTT;
+    
   
+  public static DatagramSocket MSGSocket;
   
   public static void transmit(String transmitIP, int transmitPort, int ackPort, String transmitMessage)
   throws IOException, InterruptedException{

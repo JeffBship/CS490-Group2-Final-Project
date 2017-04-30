@@ -43,10 +43,7 @@ public class Hash {
         return dTab;
     }
  
-  //Modify to return query as a string!!!!
   public String processQuery(Hashtable<String, Song> sTable, String query) {
-    //Scanner not closed to allow for Peer to continue using scanner
-    // query.close();
     String q = " ";
     String IP;
     //DONT CHANGE THIS PART
@@ -61,6 +58,21 @@ public class Hash {
    if (q.equals(""))
        q= " ";
    return q;
+  }
+  
+  public static Song getSongFromSNum(Hashtable<String, Song> sTable, int num) {
+    Song result = null;
+    String IP;
+    //DONT CHANGE THIS PART
+    Enumeration songNames = sTable.elements();
+    Song key;
+    while(songNames.hasMoreElements()){
+          key = (Song) songNames.nextElement();
+          if ( key.getSNum()== num) {
+            result = key;
+          }
+      }
+   return result;
   }
   
   
@@ -94,7 +106,7 @@ public class Hash {
     while(keys.hasMoreElements()){
       key =(String) keys.nextElement();
       temp = dTab.get(key);
-      songs+= temp.getName() + "\t\t" + temp.getFilesize() + "\t\t" + temp.getIP() + "\n";
+      songs+= temp.getName() + "\t" + temp.getFilesize() + "\t" + temp.getIP() + "\n";
     }
     return songs;
   }

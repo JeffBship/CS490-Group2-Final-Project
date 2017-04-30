@@ -57,19 +57,13 @@ public class Song {
     return key;
   }
 
-  //!!!!!add in functionality to erase entries no longer in directory!!!!!
   
   //###  Might need to change this to return a hashtable instead of using global variables.
   public static void processSongString(String songList, Hashtable<String, Song> dTab){
-    //Hash result = new Hash(dTab);
-    //parse into char works!!!!
+    
     char[] list = songList.toCharArray();
     Integer snum = 0;
-    /*
-    System.out.println("CHAR ARRAY");
-    for(char f: list)
-        System.out.print(f);
-    */
+    
     
     //use parse to read up to newline character
     ArrayList<Character> parse = new ArrayList<>();

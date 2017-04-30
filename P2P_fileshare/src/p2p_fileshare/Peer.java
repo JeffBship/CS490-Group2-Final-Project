@@ -127,6 +127,7 @@ public class Peer {
       String fileName = scan.nextLine();
       System.out.println("Enter the exact filesize you saw: ");
       int filesize = scan.nextInt();
+      scan.nextLine(); //gotta clear the enter from the buffer
       System.out.println("Enter the IP to request it from: ");
       String fileIP = scan.nextLine();
       
@@ -268,9 +269,12 @@ class peerListener extends Thread {
     while (Peer.keepListening){
       HTTP received = new HTTP();
       try {
-        System.out.println("just inside try");
+        //System.out.println("just inside try");
         received = RDT.listen(Globals.P_PORT);
+        
         System.out.println("there was a http received by a peer");
+        System.out.println(received.asString());
+        
       } catch (SocketException ex) {
       } catch (IOException | InterruptedException ex) {
       }

@@ -11,12 +11,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Scanner;
+import java.util.*;
+import javax.swing.JFileChooser;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
+
+
 /**
  *
  * @author Jeff Blankenship and Adrian Ward-Manthey
@@ -36,7 +37,10 @@ public class Peer {
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     static Hash LocalHash = new Hash();
-    private static volatile boolean pingResult = false;
+    private static boolean pingResult = false;
+    private static volatile String pstring = "this shit is broke";
+    private static volatile AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -244,9 +248,11 @@ public class Peer {
       
       System.out.println("IP wanted is: " + songReq.getIP() );
       
-      pingClient poke = new pingClient( songReq.getIP() );
-      poke.start();
-      System.out.println("ping result is: " + pingResult );
+      //pingClient poke = new pingClient( songReq.getIP() );
+      //poke.start();
+      boolean pingtest = pingClient( songReq.getIP() );
+      System.out.println("ping result received by ping function is: " + pingResult );
+      System.out.println("atomicBoolean:" + atomicBoolean);
       
     }
     
@@ -431,7 +437,7 @@ private static class peerRequestHandler extends Thread {
     }
   }
 
-  
+  /*
   private static class pingClient extends Thread {  
     String serverIP;
     
@@ -441,10 +447,19 @@ private static class peerRequestHandler extends Thread {
 
     @Override
     public void run() {
+      pstring = "--------------------------   It works!!";
       pingResult = true;
+      atomicBoolean.set(true);
+      
       Socket clientSocket = null;
       try {
         clientSocket = new Socket(serverIP, Globals.PING_PORT);
+        
+        System.out.println("pingClient got a socket");
+        pingResult = true;
+        atomicBoolean.set(true);
+        
+        
       } catch (IOException e) {
         System.out.println("ping socket exception.");
         pingResult = false;  //it's false if the socket won't open, creating an exception
@@ -453,8 +468,46 @@ private static class peerRequestHandler extends Thread {
         clientSocket.close();
       } catch (IOException ex) {
       }
+      
+      pingResult = true;
+      System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  in pingClient and inside here result is " +  pingResult );
+      
     }
   }
+  */
+  
+  
+  private static boolean pingClient(String serverIP) {
+      boolean result = false;
+      
+      Socket clientSocket = null;
+      try {
+        clientSocket = new Socket(serverIP, Globals.PING_PORT);
+        
+        System.out.println("pingClient got a socket");
+        result = true;
+        
+      } catch (IOException e) {
+        System.out.println("ping open the socket exception.");
+        result = false;  //it's false if the socket won't open, creating an exception
+      } 
+      
+      if (clientSocket != null){
+          if (clientSocket.isConnected() && !clientSocket.isClosed()) {
+            System.out.println("ping close the socket exception.");
+            try {
+              clientSocket.close();
+            } catch (IOException ex) {
+            }
+          }
+      }
+          
+      
+      //pingResult = true;
+      System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  in pingClient at last line and inside here result is " +  result );
+      return result;
+    }
+  
 
 
 }// end class Peer

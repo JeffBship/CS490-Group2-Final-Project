@@ -47,6 +47,8 @@ public class Globals {
   public static final String JEFF_LAB = "192.168.2.49";
   
   
+  //public static volatile boolean pingResult = false;
+  
   
   
   // This is a big long string for test purposes.

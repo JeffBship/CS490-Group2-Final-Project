@@ -14,6 +14,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 /**
  *
@@ -414,12 +416,13 @@ private static class peerRequestHandler extends Thread {
     @Override
     public void run() {
       ServerSocket pingSocket = null;
-      System.out.println("Ping listener accepting pings"); 
+      System.out.println("Ping listener accepting pings on port " + Globals.PING_PORT); 
       while (keepListening){
         try {
           pingSocket = new ServerSocket(Globals.PING_PORT);
           while (true) {
             Socket clientConnectionSocket = pingSocket.accept();
+            System.out.println("Listener accepted a socket");
             // This is regarding the server state of the connection
           }
         } catch (IOException e) {
@@ -442,9 +445,13 @@ private static class peerRequestHandler extends Thread {
       Socket clientSocket = null;
       try {
         clientSocket = new Socket(serverIP, Globals.PING_PORT);
-        clientSocket.close();
       } catch (IOException e) {
+        System.out.println("ping socket exception.");
         pingResult = false;  //it's false if the socket won't open, creating an exception
+      } 
+      try {
+        clientSocket.close();
+      } catch (IOException ex) {
       }
     }
   }

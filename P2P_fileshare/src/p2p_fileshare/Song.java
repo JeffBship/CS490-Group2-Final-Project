@@ -105,8 +105,8 @@ public class Song {
       while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
           //System.out.println(sTable.get(key).getAll());
-          System.out.printf("%2.2s%1.1s%15.15s%15.15s%30.30s", 
-              key.getSNum(), space, key.getIP(), key.getFilesize(), key.getName());
+          System.out.printf("%2.2s%1.1s%15.15s%15.15s%2.2s%30.30s", 
+              key.getSNum(), space, key.getIP(), key.getFilesize(), space, key.getName());
           System.out.println();
       }
   }

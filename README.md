@@ -3,12 +3,30 @@ Adrian Ward-Manthey, Jeff Blankenship
 CS 490 Networking, Spring 2017
 Prof. Williams
 
+**I works!!!!**
+
+
 **To do list:**
-- [ ] Finishe the checkpoint documentation
-- [ ] Ask for destination IP
-- [ ] Ask for and load a file to send
-- [ ] Make the receiver save as a file
-- [ ] Shoule the receiver stay on infinite loop, or close after saving the file?
+- [ ] Detect disconnect without exit (ping?)
+- [ ] GUI
+- [ ] Test with wireshark
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -13,6 +13,7 @@ import java.nio.file.Files;
  * 
  * @author Adrian and Jeff
  */
+
 public class TCPServer extends Thread {
 
   private int port;
@@ -45,16 +46,9 @@ public class TCPServer extends Thread {
         if (Globals.SHOWALL) System.out.println("SERVER accepting connections");
         Socket clientConnectionSocket = serverSocket.accept();
         if (Globals.SHOWALL) System.out.println("SERVER accepted connection (single threaded so others wait)");
-        
-        //outFile = new File("C:\\Users\\Surface Book\\Desktop\\Music\\07 - You Shook Me All Night Long.mp3");
         outFile = targetFile;
-        
         bSend = new byte[(int) outFile.length()];
         if (Globals.SHOWALL) System.out.println("Array is "+ bSend.length);
-        
-        //Should read all bytes from file into bSend
-        //bSend = Files.readAllBytes(outFile.toPath());
-        
         
         fis = new FileInputStream(outFile);
         buffRead = new BufferedInputStream(fis);
@@ -84,7 +78,6 @@ public class TCPServer extends Thread {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
       if (serverSocket != null) {
         try {
           serverSocket.close();

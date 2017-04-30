@@ -7,6 +7,8 @@ package p2p_fileshare;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class Peer {
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     static Hash LocalHash = new Hash();
+    private static volatile boolean pingResult = false;
     
     //
     //  Adrian:  I'll set up the HTTP methods to call this in order to transmit a file.
@@ -230,6 +233,20 @@ public class Peer {
          return q;
     }
     
+    public static void ping(){
+      Scanner scan = new Scanner(System.in);
+      System.out.println("Enter the number of any song from the peer you want to ping: ");
+      int num = scan.nextInt(); scan.nextLine();
+      Song songReq = new Song();
+      songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
+      
+      System.out.println("IP wanted is: " + songReq.getIP() );
+      
+      pingClient poke = new pingClient( songReq.getIP() );
+      poke.start();
+      System.out.println("ping result is: " + pingResult );
+      
+    }
     
     
     public static void exit() 
@@ -257,8 +274,10 @@ public class Peer {
   public static void main(String[] args) 
   throws IOException, UnknownHostException, InterruptedException{
     keepListening = true;
-    peerListener ears = new peerListener();
-    ears.start();
+    peerListener peerEars = new peerListener();
+    peerEars.start();
+    pingServer pingEars = new pingServer();
+    pingEars.start();
     Scanner in = new Scanner(System.in);
     portOffset = 0;
     String input = "";
@@ -273,6 +292,7 @@ public class Peer {
       System.out.println("Q: Query for content");
       System.out.println("R: Request Content");
       System.out.println("A: Request ALL files form a peer");
+      System.out.println("P: Ping a peer");
       System.out.println("E: Exit Network");
       System.out.print("Enter desired operation: ");
       input = in.nextLine().toUpperCase();
@@ -289,6 +309,8 @@ public class Peer {
                   break;
         case "A": allfiles();
                   break;
+        case "P": ping();
+                  break;
         case "E": exit();
                   break;
         default:  System.out.println("Please Enter a valid input:");
@@ -296,7 +318,7 @@ public class Peer {
         }
       }
     keepListening = false;
-    //Can't figure out how to stop the ears thread.
+    //Can't figure out how to stop the ears threads.
   } 
 
 
@@ -384,5 +406,48 @@ private static class peerRequestHandler extends Thread {
   }
 }
 
+  private static class pingServer extends Thread {
 
-}
+    public pingServer( ){
+    }
+    
+    @Override
+    public void run() {
+      ServerSocket pingSocket = null;
+      System.out.println("Ping listener accepting pings"); 
+      while (keepListening){
+        try {
+          pingSocket = new ServerSocket(Globals.PING_PORT);
+          while (true) {
+            Socket clientConnectionSocket = pingSocket.accept();
+            // This is regarding the server state of the connection
+          }
+        } catch (IOException e) {
+        } 
+      }
+    }
+  }
+
+  
+  private static class pingClient extends Thread {  
+    String serverIP;
+    
+    public pingClient(String serverIP) {
+      this.serverIP = serverIP;
+    }
+
+    @Override
+    public void run() {
+      pingResult = true;
+      Socket clientSocket = null;
+      try {
+        clientSocket = new Socket(serverIP, Globals.PING_PORT);
+        clientSocket.close();
+      } catch (IOException e) {
+        pingResult = false;  //it's false if the socket won't open, creating an exception
+      }
+    }
+  }
+
+
+}// end class Peer

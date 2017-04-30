@@ -1,9 +1,6 @@
 package p2p_fileshare;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -17,25 +14,30 @@ import java.io.IOException;
 public class Main {
 
   public static void main(String[] args) throws FileNotFoundException, IOException {
+    
+    
+    
+    
+    
     //TEST FILE READER CAPABILITY
-/*    
-String name = "newfile";
-File inFile = new File("C:\\Users\\Dad\\Desktop\\Music\\" + name + ".mp3");
+    /*    
+    String name = "newfile";
+    File inFile = new File("C:\\Users\\Dad\\Desktop\\Music\\" + name + ".mp3");
 
-File outFile = new File("C:\\Users\\Dad\\Desktop\\Music\\morenew.mp3");
-FileInputStream inStream = new FileInputStream(inFile);
-FileOutputStream outStream = new FileOutputStream(outFile);
-byte[] buffer = new byte[(int)inFile.length()];
-int len;
-while ((len = inStream.read(buffer)) != -1) {
-    outStream.write(buffer, 0, len);
-}
-inStream.close();
-outStream.close();
-    */
+    File outFile = new File("C:\\Users\\Dad\\Desktop\\Music\\morenew.mp3");
+    FileInputStream inStream = new FileInputStream(inFile);
+    FileOutputStream outStream = new FileOutputStream(outFile);
+    byte[] buffer = new byte[(int)inFile.length()];
+    int len;
+    while ((len = inStream.read(buffer)) != -1) {
+        outStream.write(buffer, 0, len);
+    }
+    inStream.close();
+    outStream.close();
+        */
     
     //TCPServer serverThread = null;
-    TCPClient clientThread = null;
+    //TCPClient clientThread = null;
     
     //try {
       // Start server

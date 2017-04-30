@@ -28,7 +28,8 @@ public class Globals {
   
   public static final int S_PORT = 2000;      //server listens on this port
   public static final int P_PORT = 2001;      //peers listen on this port
-  public static final int BASE_PORT = 2003;   //threads and menus reference off this  000 server threads 100 peer threads 200 peer menu
+  public static final int PING_PORT = 2003;
+  public static final int BASE_PORT = 2004;   //threads and menus reference off this  000 server threads 100 peer threads 200 peer menu
   
   //These are the variables to timeout calculations
   public static final double INIT_EST_RTT = 100.0;

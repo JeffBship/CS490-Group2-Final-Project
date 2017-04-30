@@ -49,16 +49,6 @@ public class P2P_fileshare {
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     System.out.println("Run one of the files CentralServer.java or Peer.java to use the application.");
     
-    chooseFolder();
-    Scanner scan = new Scanner(System.in);
-    System.out.println("Enter the name of the requested file: ");
-    String fileName = scan.nextLine();
-    
-    String path = folder.getPath();
-    File targetFile = new File(folder,fileName);
-    System.out.println("target is " + targetFile);
-    System.out.println("That is a file:  " + targetFile.isFile() );
-    
     
   }
   

@@ -231,6 +231,7 @@ public class Peer {
       System.out.println("F: Select sharing folder");
       System.out.println("I: Inform and Update");
       System.out.println("Q: Query for content");
+      //T take all files froma  specific peer
       System.out.println("R: Request Content");
       System.out.println("E: Exit Network");
       System.out.print("Enter desired operation: ");

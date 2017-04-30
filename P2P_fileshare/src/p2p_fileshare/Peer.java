@@ -66,7 +66,7 @@ public class Peer {
       InetAddress LocalIP = InetAddress.getLocalHost(); 
       String IPaddress = LocalIP.getHostAddress();
       String version = "1"; // because we only have one version!
-      String payload = "Payload not used";  //this is just a filler
+      String payload = "THIS IS THE LOGIN ATTEMPT HTTP";  //this is just a filler
       HTTP login = new HTTP(code, phrase, IPaddress, version, payload);
       
       RDT.transmit( tryIP, Globals.S_PORT, ackPort,  login.asString());

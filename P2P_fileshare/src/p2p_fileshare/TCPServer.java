@@ -40,7 +40,8 @@ public class TCPServer extends Thread {
     try {
       serverSocket = new ServerSocket(this.port);
      
-      while (true) {
+      //while (true) {
+        {
         System.out.println("SERVER accepting connections");
         Socket clientConnectionSocket = serverSocket.accept();
         System.out.println("SERVER accepted connection (single threaded so others wait)");

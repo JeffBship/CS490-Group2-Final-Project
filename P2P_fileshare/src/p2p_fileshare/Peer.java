@@ -122,6 +122,7 @@ public class Peer {
         if (Globals.SHOWALL) System.out.println("Transmitted \n " + inform.getPayload());
         HTTP informResponse = RDT.listen(ackPort);
         System.out.println("The current files available are:\n" +  informResponse.getPayload() );
+        LocalHash = new Hash();  //start over with an empty hash table, fill it with contents from server
         Song.processSongString(informResponse.getPayload(), LocalHash.getTable());
         System.out.println("This is the new local LocalHash:");
         Song.printDirectory(LocalHash.getTable());

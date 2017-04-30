@@ -56,7 +56,7 @@ class RDT  {
     // SYN packet isn't a handshake, it tells the receiver to start sequence count over
     // so if a previous message was dropped it can't jinx the sequence.
     sequence = "0";
-    Packet newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining , "SYN0 SYN0 SYN0 SYN0 SYN0 SYN0");
+    Packet newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining , "SYN");
     packetList.add(newPacket); 
     packetsRemainingInt--;
     sequence = "1";
@@ -80,8 +80,7 @@ class RDT  {
       packetsRemainingInt--;
     }
     //add FIN packet on the end
-    String finPayload = " FIN " + sequence +" FIN " + sequence +" FIN " + sequence;
-    newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining, finPayload);
+    newPacket = new Packet(LocalPeerID, LocalIPString, sequence, packetsRemaining, "FIN");
     packetList.add(newPacket); //adds newPacket to the end of the list.
     
     
@@ -272,7 +271,7 @@ class RDT  {
         } 
         //DELAY BY THE Ack Time +/- ACKdev
             delay = (long) (Globals.ACKtime - Globals.ACKdev / 2 + Globals.ACKdev * Math.random());
-//System.out.println("Delay for time " + delay);            
+System.out.println("Delay for time " + delay);            
             Thread.sleep(delay);
         
         ACKseq = newPacket.getSequence();
@@ -280,8 +279,7 @@ class RDT  {
         ACKseq = newPacket.getSequence();
         ACKip = newPacket.getIPAddress();
         DatagramSocket ACKSocket = new DatagramSocket();
-        String ackPayload = " ACK "+ACKseq+" ACK "+ACKseq+" ACK "+ACKseq;
-        Packet ackPacket = new Packet("XX", ACKip, ACKseq, "XX", ackPayload);
+        Packet ackPacket = new Packet("XX", ACKip, ACKseq, "XX", "ACK");
         //InetAddress ackIPinet = InetAddress.getByName(newPacket.getIPAddress());
         //Need the IP address from the incoming packet
         //InetAddress ackIPinet = InetAddress.getByName("192.168.1.46");

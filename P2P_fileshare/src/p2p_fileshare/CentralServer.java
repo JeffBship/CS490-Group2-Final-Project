@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import static p2p_fileshare.CentralServer.directory;
 import static p2p_fileshare.CentralServer.updateDirectory;
 
@@ -35,6 +37,17 @@ public class CentralServer {
   }
   
   public  static void updateDirectory(HTTP received){
+    
+    // Get ArrayList of peer IP addresses
+    ArrayList<String> peerIPlist = Hash.getListFromIP(directory.getTable());
+    // ping each peer and if ping= false clearAssociatedElements from that ip
+    while (!peerIPlist.isEmpty()){
+      String nextIP = peerIPlist.remove(0);
+      if ( !Peer.pingClient(nextIP) ){
+        directory.clearAssociatedElements(nextIP)  ;
+      }
+    }
+    
     directory.clearAssociatedElements(received.getIPaddress() )  ;
     Song.processSongString(received.getPayload(), directory.getTable());
     System.out.println("This is the server's new file list:");

@@ -97,13 +97,22 @@ public class Hash {
     return result;
   }
   
-  
-  
-  //Check whether or not all the IPS are reachable
-  public void checkIPs(){
-  
-  
+  public static ArrayList<String> getListFromIP(Hashtable<String, Song> sTable){
+    ArrayList<String> result = new ArrayList<>();
+    Enumeration songNames = sTable.elements();
+    Song key;
+    while(songNames.hasMoreElements()){
+          key = (Song) songNames.nextElement();
+          if ( !result.contains( key.getIP() ) ) {
+            result.add(key.getIP());
+          }
+      }
+    return result;
   }
+  
+  
+  
+  
   
   //MUST BE TESTED 
   //This method deletes all entries in hashtable associated with PeerIP

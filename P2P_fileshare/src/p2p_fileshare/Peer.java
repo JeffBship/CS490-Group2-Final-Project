@@ -37,9 +37,6 @@ public class Peer {
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     static Hash LocalHash = new Hash();
-    private static boolean pingResult = false;
-    private static volatile String pstring = "this shit is broke";
-    private static volatile AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 
     
     //
@@ -163,33 +160,38 @@ public class Peer {
     
   public static void getFile (Song songReq) 
   throws UnknownHostException, IOException, InterruptedException {
-    
-      int filesize = Integer.parseInt(songReq.getFilesize());
-      String fileName = songReq.getName();
-      String fileIP = songReq.getIP();
-      //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
-      String code = "R";    // R for request for file
-      String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
-      InetAddress LocalIP = InetAddress.getLocalHost(); 
-      String IPaddress = LocalIP.getHostAddress();
-      String version = "1"; // because we only have one version!
-      String payload = fileName;
-      HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
-      RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
-      HTTP exitResponse = RDT.listen(ackPort);
-      if (exitResponse.getCode().equals("404")) {
-        System.out.println("The file was not found at the requested IP.");
-        System.out.println("Be sure of spelling, and include the filetype extension.");
-      } else if (exitResponse.getCode().equals("200")) {//If the file is available, start the TCP
-        TCPClient clientThread = null;
-        int rcvTCPport = Integer.parseInt(exitResponse.getPayload());
-        try {  
-          // Create client
-          TCPClient client1 = new TCPClient("CLIENT1", fileIP ,rcvTCPport, filesize, fileName);
-          client1.start();
-        } catch (Exception e) {
+    //ping the target.  if ping= true request the file
+    if ( pingClient( songReq.getIP() ) ){
+        System.out.println("That peer is online." );
+        int filesize = Integer.parseInt(songReq.getFilesize());
+        String fileName = songReq.getName();
+        String fileIP = songReq.getIP();
+        //Build the HTTP request   public HTTP(String code, String phrase, String IPaddress, String version, String payload){
+        String code = "R";    // R for request for file
+        String phrase = Integer.toString(ackPort);  // Using phrase for ackport to make threads have differnt ports
+        InetAddress LocalIP = InetAddress.getLocalHost(); 
+        String IPaddress = LocalIP.getHostAddress();
+        String version = "1"; // because we only have one version!
+        String payload = fileName;
+        HTTP request = new HTTP(code, phrase, IPaddress, version, payload);
+        RDT.transmit( fileIP, Globals.P_PORT, ackPort, request.asString() );
+        HTTP exitResponse = RDT.listen(ackPort);
+        if (exitResponse.getCode().equals("404")) {
+          System.out.println("The file was not found at the requested IP.");
+          System.out.println("Be sure of spelling, and include the filetype extension.");
+        } else if (exitResponse.getCode().equals("200")) {//If the file is available, start the TCP
+          TCPClient clientThread = null;
+          int rcvTCPport = Integer.parseInt(exitResponse.getPayload());
+          try {  
+            // Create client
+            TCPClient client1 = new TCPClient("CLIENT1", fileIP ,rcvTCPport, filesize, fileName);
+            client1.start();
+          } catch (Exception e) {
+          }
+          System.out.println("Look in " + folder + ".  Enjoy your new file.");
         }
-        System.out.println("Look in " + folder + ".  Enjoy your new file.");
+      } else {
+        System.out.println("That peer is not responding." );
       }
     }
     
@@ -250,10 +252,12 @@ public class Peer {
       
       //pingClient poke = new pingClient( songReq.getIP() );
       //poke.start();
-      boolean pingtest = pingClient( songReq.getIP() );
-      System.out.println("ping result received by ping function is: " + pingResult );
-      System.out.println("atomicBoolean:" + atomicBoolean);
-      
+      //boolean pingtest = pingClient( songReq.getIP() );
+      if (pingClient(songReq.getIP())){
+        System.out.println("That peer is online." );
+      } else {
+        System.out.println("That peer is not responding." );
+      }
     }
     
     
@@ -414,11 +418,10 @@ private static class peerRequestHandler extends Thread {
   }
 }
 
+//This thread is just to accept pings as TCP socket reuests
   private static class pingServer extends Thread {
-
     public pingServer( ){
     }
-    
     @Override
     public void run() {
       ServerSocket pingSocket = null;
@@ -437,74 +440,27 @@ private static class peerRequestHandler extends Thread {
     }
   }
 
-  /*
-  private static class pingClient extends Thread {  
-    String serverIP;
-    
-    public pingClient(String serverIP) {
-      this.serverIP = serverIP;
-    }
-
-    @Override
-    public void run() {
-      pstring = "--------------------------   It works!!";
-      pingResult = true;
-      atomicBoolean.set(true);
-      
-      Socket clientSocket = null;
-      try {
-        clientSocket = new Socket(serverIP, Globals.PING_PORT);
-        
-        System.out.println("pingClient got a socket");
-        pingResult = true;
-        atomicBoolean.set(true);
-        
-        
-      } catch (IOException e) {
-        System.out.println("ping socket exception.");
-        pingResult = false;  //it's false if the socket won't open, creating an exception
-      } 
-      try {
-        clientSocket.close();
-      } catch (IOException ex) {
-      }
-      
-      pingResult = true;
-      System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  in pingClient and inside here result is " +  pingResult );
-      
-    }
-  }
-  */
   
   
-  private static boolean pingClient(String serverIP) {
+  //This tries to open a TCP socket with the serverIP, then closes it.
+  //If the socket opens, the ping is true.  if not, ping is false.
+  public static boolean pingClient(String serverIP) {
       boolean result = false;
-      
       Socket clientSocket = null;
       try {
         clientSocket = new Socket(serverIP, Globals.PING_PORT);
-        
-        System.out.println("pingClient got a socket");
         result = true;
-        
       } catch (IOException e) {
-        System.out.println("ping open the socket exception.");
         result = false;  //it's false if the socket won't open, creating an exception
-      } 
-      
+      }
       if (clientSocket != null){
           if (clientSocket.isConnected() && !clientSocket.isClosed()) {
-            System.out.println("ping close the socket exception.");
             try {
               clientSocket.close();
             } catch (IOException ex) {
             }
           }
       }
-          
-      
-      //pingResult = true;
-      System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  in pingClient at last line and inside here result is " +  result );
       return result;
     }
   

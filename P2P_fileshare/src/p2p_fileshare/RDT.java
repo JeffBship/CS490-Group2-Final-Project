@@ -115,7 +115,7 @@ class RDT  {
       try {
         // Delay when in SLOWMODE
           if (Globals.SLOWMODE){
-            System.out.println(" <<< SLOW MODE IN EFFECT: 4 SEC DELAY >>> ");
+            System.out.println(" <<< SLOW MODE IN EFFECT: 4 SEC DELAY before sending next packet>>> ");
             Thread.sleep(4000);
           }
           
@@ -270,9 +270,12 @@ class RDT  {
           lastSeq = newPacket.getSequence();
         } 
         //DELAY BY THE Ack Time +/- ACKdev
-            delay = (long) (Globals.ACKtime - Globals.ACKdev / 2 + Globals.ACKdev * Math.random());
-System.out.println("Delay for time " + delay);            
-            Thread.sleep(delay);
+        Thread.sleep(delay);
+        // Delay when in SLOWMODE
+          if (Globals.SLOWMODE){
+            System.out.println(" <<< SLOW MODE IN EFFECT: 4 SEC DELAY before sending ACK>>> ");
+            Thread.sleep(4000);
+          }
         
         ACKseq = newPacket.getSequence();
         //SEND THE ACK 

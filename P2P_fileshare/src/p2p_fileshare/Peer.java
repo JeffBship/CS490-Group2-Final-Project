@@ -74,12 +74,12 @@ public class Peer {
       
       RDT.transmit( tryIP, Globals.S_PORT, ackPort,  login.asString());
       HTTP loginResponse = RDT.listen(ackPort);
-      System.out.println("in login.  received HTTP response as follows: \n" +  loginResponse.display() );
+      //System.out.println("in login.  received HTTP response as follows: \n" +  loginResponse.display() );
       
       //HTTP response = new HTTP("200","O","someIP","1","some payload");
       //RDT.listen (needs to be coded)...  get the HTTP response and if check to 200:Okay
       if ( loginResponse.getCode().equals("200") ) {
-        System.out.println("Login succes, IP is working.");
+        System.out.println("\nLogin succes, There is a server running on that IP.");
         centralServerIP = tryIP;
         } else {
           centralServerIP = "";
@@ -345,8 +345,6 @@ private static class peerListener extends Thread {
     int ackPort;
     System.out.println("peer listener running, using port " + Globals.P_PORT);
     while (keepListening){
-      System.out.println("keeplistingin is " + keepListening);
-      
       HTTP received = new HTTP();
       try {
         //System.out.println("just inside try");
@@ -431,7 +429,7 @@ private static class peerRequestHandler extends Thread {
           pingSocket = new ServerSocket(Globals.PING_PORT);
           while (true) {
             Socket clientConnectionSocket = pingSocket.accept();
-            System.out.println("Listener accepted a socket");
+            //System.out.println("Listener accepted a socket");
             // This is regarding the server state of the connection
           }
         } catch (IOException e) {

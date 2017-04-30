@@ -102,15 +102,22 @@ public class Song {
       Enumeration songNames = sTable.elements();
       Song key;
       String space = " ";
+      System.out.printf("%3.3s%1.1s%15.15s%15.15s%2.2s%30.30s", 
+              "Num", space, "IP address", "filesize", space, "filename");
+      System.out.println();
+      System.out.printf("%3.3s%1.1s%15.15s%15.15s%2.2s%30.30s", 
+              "---", space, "-------------", "-------------", space, "----------------------------");
+      System.out.println();
+      
       while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
           //System.out.println(sTable.get(key).getAll());
-          System.out.printf("%2.2s%1.1s%15.15s%15.15s%2.2s%30.30s", 
+          
+          System.out.printf("%3.3s%1.1s%15.15s%15.15s%2.2s%30.30s", 
               key.getSNum(), space, key.getIP(), key.getFilesize(), space, key.getName());
           System.out.println();
       }
   }
- 
 
   public static void main(String[] args) {
     System.out.println("song class compiled and ran successfully.");

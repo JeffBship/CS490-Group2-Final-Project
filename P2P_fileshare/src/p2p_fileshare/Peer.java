@@ -94,12 +94,15 @@ public class Peer {
       }
     }
     
+    //if(file.isFile() && file.getName().endsWith(".mp3"))
+    
     public static String getDirectory() throws UnknownHostException{
       String songList= "";
       File[] listOfFiles = folder.listFiles();
       int j=0;
       for(File file : listOfFiles)
-       if(file.isFile() && file.getName().endsWith(".mp3"))
+        
+       if(file.isFile() )
            songList+= file.getName() + "\t" + file.length() + "\t" + InetAddress.getLocalHost().getHostAddress() + "\n"; 
       return songList;
     }
@@ -193,7 +196,7 @@ public class Peer {
       
       ArrayList<Song> getThese = new ArrayList<>();
       getThese = Hash.getListFromIP(LocalHash.getTable(), songReq.getIP());
-      System.out.println("size of arraylist is " + getThese.size() );
+      System.out.println("Getting " + getThese.size() + " files from " + songReq.getIP() );
       
       //This is going to be innefficient.  Might want to clean it up later if we have extra time.
       ackPort = Globals.BASE_PORT + 200 + portOffset;  //portOffset: separate threads, 200: separarate menu from threads

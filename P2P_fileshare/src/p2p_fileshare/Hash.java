@@ -54,7 +54,8 @@ public class Hash {
     Song key;
     while(songNames.hasMoreElements()){
           key = (Song) songNames.nextElement();
-          if(key.getName().toLowerCase().replace(" ","").contains(query))
+          if(( key.getName().toLowerCase().replace(" ","").contains(query))
+              || ( key.getIP().contains(query)) )
            q += key.getName() + "\t" + key.getFilesize() + "\t" + key.getIP() + "\n";
       }
    if (q.equals(""))

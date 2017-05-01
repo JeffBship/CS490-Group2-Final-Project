@@ -27,13 +27,14 @@ public class CentralServer {
     LocalIP = InetAddress.getLocalHost(); 
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     System.out.println("now on an infinite loop of RDT.listen");
-    
+    autoPing ping = new autoPing();
+    ping.start();
     while (true){
       HTTP received = RDT.listen( Globals.S_PORT  );
       ackPort = Globals.BASE_PORT + portOffset;  //portOffset for separation from other threads, peers
       portOffset = (portOffset + 1) % 100;
       serverRequestHandler newThread = new serverRequestHandler(received, ackPort);
-      newThread.start();
+      newThread.run();
       }
   }
   
@@ -67,25 +68,26 @@ class autoPing extends Thread {
 
   @Override
   public void run(){
-    try {
-      Thread.sleep(10000);
-    } catch (InterruptedException ex) {
-    }
-    // Get ArrayList of peer IP addresses
-    ArrayList<String> peerIPlist = Hash.getListFromIP(directory.getTable());
-    // ping each peer and if ping= false clearAssociatedElements from that ip
-    System.out.println("autoPing is checking for disconnected peers.");
-    while (!peerIPlist.isEmpty()){
-      String nextIP = peerIPlist.remove(0);
-      if ( !Peer.pingClient(nextIP) ){
-        directory.clearAssociatedElements(nextIP)  ;
-        System.out.println("Peer at " + nextIP + " has disconnected.  Files removed from directory.");
-        
-      }
+      
+    while (true){  
+        try {
+          Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+        }
+        // Get ArrayList of peer IP addresses
+        ArrayList<String> peerIPlist = Hash.getListFromIP(directory.getTable());
+        // ping each peer and if ping= false clearAssociatedElements from that ip
+        System.out.println("autoPing is checking for disconnected peers.");
+        while (!peerIPlist.isEmpty()){
+          String nextIP = peerIPlist.remove(0);
+          if ( !Peer.pingClient(nextIP) ){
+            directory.clearAssociatedElements(nextIP)  ;
+            System.out.println("Peer at " + nextIP + " has disconnected.  Files removed from directory.");
+
+          }
+        }
     }
   }
-
-
 }
     
 

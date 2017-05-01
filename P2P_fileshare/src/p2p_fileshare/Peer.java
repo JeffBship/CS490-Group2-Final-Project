@@ -7,6 +7,7 @@ package p2p_fileshare;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -34,7 +35,8 @@ public class Peer {
     public static volatile boolean keepListening;
     public static String localDirectory = "";
     static Hash LocalHash = new Hash();
-    //Hashtable<String, Song> LocalHash;
+    
+    public static int pingTimeout = 1000;
 
     
     //
@@ -476,7 +478,15 @@ private static class peerRequestHandler extends Thread {
       boolean result = false;
       Socket clientSocket = null;
       try {
-        clientSocket = new Socket(serverIP, Globals.PING_PORT);
+        //clientSocket = new Socket(serverIP, Globals.PING_PORT);
+        
+        
+        InetSocketAddress ipPort = new InetSocketAddress(serverIP, Globals.PING_PORT);
+        //creating an unbound socket, then connecting allows a timeout to be used in the connect method.
+        Socket newSocket = new Socket();
+        newSocket.connect(ipPort, pingTimeout);
+        
+        
         result = true;
       } catch (IOException e) {
         result = false;  //it's false if the socket won't open, creating an exception

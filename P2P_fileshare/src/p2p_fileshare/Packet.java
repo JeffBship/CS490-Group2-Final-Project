@@ -22,15 +22,18 @@ public Packet () throws UnsupportedEncodingException{
   
 public Packet (String peerID, String IPAddress, String sequence, String packetsRemaining, String data) 
 throws UnsupportedEncodingException, FileNotFoundException, IOException{
-  if (peerID.length()>4) {
+  /*
+    if (peerID.length()>5) {
     System.out.println("Error in Class packet, PeerID to long");
     System.out.println("attempted peerID is: " + peerID + " which is length " + peerID.length() );
   }
+*/
   if (IPAddress.length()>15) System.out.println("Error in packet, IPAddress to long");
   if (sequence.length()>5) System.out.println("Error in packet, Sequence to long");
   if (packetsRemaining.length()>5) System.out.println("Error in packet, PacketsRemaining to long");
   if (data.length()>94) System.out.println("Error in packet, data to long");
-  String contents = peerID + " " + IPAddress + "\n" + sequence + " " + packetsRemaining + "\n" + data + "\n";
+  
+String contents = peerID + " " + IPAddress + "\n" + sequence + " " + packetsRemaining + "\n" + data + "\n";
   this.body = contents.getBytes("UTF-8");
   if (this.body.length > 128) {
     System.out.println("%%%%%%%%%%  PACKET OVER 128 BYTES  %%%%%%%%%%%%");

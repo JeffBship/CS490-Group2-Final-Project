@@ -377,8 +377,8 @@ private static class peerListener extends Thread {
       try {
         //System.out.println("just inside try");
         received = RDT.listen(Globals.P_PORT);
-        System.out.println("there was a http received by peer");
-        System.out.println(received.asString());
+        //System.out.println("there was a http received by peer");
+        //System.out.println(received.asString());
       } catch (SocketException ex) {
       } catch (IOException | InterruptedException ex) {
         break;
@@ -414,7 +414,7 @@ private static class peerRequestHandler extends Thread {
     int responsePort = Integer.parseInt(received.getPhrase() );
     switch (received.getCode()) {
       case "R": // REQUEST FOR CONTENT  should have gone to a peer
-                System.out.println("processing R on peer");
+                System.out.println("processing request from other peer");
                 File targetFile = new File(Peer.folder,  received.getPayload());
                 boolean hasFile = true;  //need some check to see if the file is on the peer
                 if (targetFile.isFile()) {

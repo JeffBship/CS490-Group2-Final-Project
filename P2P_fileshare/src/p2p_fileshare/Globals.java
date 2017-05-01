@@ -26,10 +26,10 @@ public class Globals {
   public static final boolean SLOWMODE = false;   //this adds a 4000ms delay send and ack
   public static final boolean SHOWALL = false;    //set this to true/false to show packet data as sent/received
   
-  public static final int S_PORT = 2000;      //server listens on this port
-  public static final int P_PORT = 2001;      //peers listen on this port
-  public static final int PING_PORT = 2003;
-  public static final int BASE_PORT = 2004;   //threads and menus reference off this  000 server threads 100 peer threads 200 peer menu
+  public static final int S_PORT = 20000;      //server listens on this port
+  public static final int P_PORT = 20001;      //peers listen on this port
+  public static final int PING_PORT = 20003;
+  public static final int BASE_PORT = 20004;   //threads and menus reference off this  000 server threads 100 peer threads 200 peer menu
   
   //These are the variables to timeout calculations
   public static final double INIT_EST_RTT = 100.0;

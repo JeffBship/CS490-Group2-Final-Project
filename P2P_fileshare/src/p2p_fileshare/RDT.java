@@ -206,14 +206,8 @@ class RDT  {
   
   public static HTTP listen(int listenPort)
   throws UnknownHostException, SocketException, IOException, InterruptedException {
-    int responsePort = 999999999;
-    /*
-    if (listenPort==Globals.ACK_PORT){
-      responsePort = Globals.MSG_PORT;
-    } else {
-      responsePort = Globals.ACK_PORT;
-    }
-    */
+    int responsePort = 999999999;  //This is an error flag value.
+   
     HTTP result = new HTTP();
     if (Globals.SHOWALL) System.out.println("####Inside RDT.listen#######");
     if (Globals.SHOWALL) System.out.println("listen port is: " + listenPort);

@@ -10,7 +10,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static p2p_fileshare.CentralServer.directory;
 import static p2p_fileshare.CentralServer.updateDirectory;
 
@@ -37,7 +38,6 @@ public class CentralServer {
   }
   
   public  static void updateDirectory(HTTP received){
-    
     // Get ArrayList of peer IP addresses
     ArrayList<String> peerIPlist = Hash.getListFromIP(directory.getTable());
     // ping each peer and if ping= false clearAssociatedElements from that ip
@@ -58,6 +58,36 @@ public class CentralServer {
     //System.out.println("Inside updateDirectory method");
   }
 } //end class CentralServer
+
+
+class autoPing extends Thread {
+  
+  public autoPing(){
+  }
+
+  @Override
+  public void run(){
+    try {
+      Thread.sleep(10000);
+    } catch (InterruptedException ex) {
+    }
+    // Get ArrayList of peer IP addresses
+    ArrayList<String> peerIPlist = Hash.getListFromIP(directory.getTable());
+    // ping each peer and if ping= false clearAssociatedElements from that ip
+    System.out.println("autoPing is checking for disconnected peers.");
+    while (!peerIPlist.isEmpty()){
+      String nextIP = peerIPlist.remove(0);
+      if ( !Peer.pingClient(nextIP) ){
+        directory.clearAssociatedElements(nextIP)  ;
+        System.out.println("Peer at " + nextIP + " has disconnected.  Files removed from directory.");
+        
+      }
+    }
+  }
+
+
+}
+    
 
 class serverRequestHandler extends Thread {
   

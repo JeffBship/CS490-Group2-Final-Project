@@ -23,7 +23,7 @@ public Packet () throws UnsupportedEncodingException{
 public Packet (String peerID, String IPAddress, String sequence, String packetsRemaining, String data) 
 throws UnsupportedEncodingException, FileNotFoundException, IOException{
   
-    if (peerID.length()>4) {
+    if (peerID.length()>5) {
     System.out.println("Error in Class packet, PeerID to long");
     System.out.println("attempted peerID is: " + peerID + " which is length " + peerID.length() );
   }

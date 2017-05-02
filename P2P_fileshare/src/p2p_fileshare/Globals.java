@@ -25,6 +25,7 @@ public class Globals {
   
   public static final boolean SLOWMODE = false;   //this adds a 4000ms delay send and ack
   public static final boolean SHOWALL = false;    //set this to true/false to show packet data as sent/received
+  public static final boolean AUTOPING = true;
   
   public static final int S_PORT = 2000;      //server listens on this port
   public static final int P_PORT = 2001;      //peers listen on this port

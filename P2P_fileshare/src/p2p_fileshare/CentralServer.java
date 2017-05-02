@@ -28,7 +28,7 @@ public class CentralServer {
     System.out.println("Local IP is: " + LocalIP.getHostAddress());
     System.out.println("now on an infinite loop of RDT.listen");
     autoPing ping = new autoPing();
-    ping.start();
+    if (Globals.AUTOPING) { ping.start(); }
     while (true){
       HTTP received = RDT.listen( Globals.S_PORT  );
       ackPort = Globals.BASE_PORT + portOffset;  //portOffset for separation from other threads, peers

@@ -286,7 +286,7 @@ public class Peer {
            num = Integer.parseInt(sNum);
          }
         catch(NumberFormatException ex){
-          System.out.println("Invalid Output");
+          System.out.println("Invalid Input");
           loop=true;
          } 
         
@@ -316,8 +316,25 @@ public class Peer {
     
     public static void ping(){
       Scanner scan = new Scanner(System.in);
-      System.out.print("Enter the number of any song from the peer you want to ping: ");
-      int num = scan.nextInt(); scan.nextLine();
+     // System.out.print("Enter the number of any song from the peer you want to ping: ");
+       /****************CHANGED****************/
+      boolean loop = true;
+      int num = 0;
+      do{
+        loop=false;
+        System.out.print("Enter the number of any song from the peer you want to ping: ");
+        String sNum = scan.nextLine().trim();
+        try{
+           num = Integer.parseInt(sNum);
+         }
+        catch(NumberFormatException ex){
+          System.out.println("Invalid Input!!");
+          loop=true;
+         } 
+        
+      }while(loop);
+      /****************CHANGED****************/
+      //int num = scan.nextInt(); scan.nextLine();
       Song songReq = new Song();
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
       

@@ -61,7 +61,8 @@ public class Peer {
     public static void setIP() throws IOException, InterruptedException{
       System.out.print("Enter the IP to look for the Server: ");
       Scanner scan = new Scanner(System.in);
-      String tryIP = scan.nextLine();
+      String tryIP = scan.nextLine().trim().replace(" ", "");
+      
       
       //Try login attempt...basically a fancy ping
       String code = "L";    // I for inform and update
@@ -148,8 +149,23 @@ public class Peer {
       //public Song getSongFromSNum(Hashtable<String, Song> sTable, int num) 
       Scanner scan = new Scanner(System.in);
       System.out.println("\nRequest Content.");
-      System.out.println("Enter the number of the song you want: ");
-      int num = scan.nextInt(); scan.nextLine();
+      //System.out.println("Enter the number of the song you want: ");
+      //int num = scan.nextInt(); scan.nextLine();
+      /*******************CHANGED**********************/
+      boolean loop = true;
+      int num = 0;
+      while(loop){
+        System.out.println("Enter the number of the song you want: ");
+        String sNum = scan.nextLine().trim();
+        try{
+           num = Integer.parseInt(sNum);
+           loop = false;
+         }
+        catch(NumberFormatException ex){
+            System.out.println("Input Invalid!!");
+         } 
+      }
+       /*******************CHANGED**********************/
       Song songReq = new Song();
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
         
@@ -199,8 +215,24 @@ public class Peer {
     public static void allfiles() 
     throws IOException, UnknownHostException, InterruptedException{
       Scanner scan = new Scanner(System.in);
-      System.out.println("Enter the number of any song from the peer you want all the songs from: ");
-      int num = scan.nextInt(); scan.nextLine();
+      //System.out.println("Enter the number of any song from the peer you want all the songs from: ");
+       /****************CHANGED****************/
+      boolean loop = true;
+      int num = 0;
+      do{
+        loop = false;
+        System.out.println("Enter the number of any song from the peer you want all the songs from: ");
+        String sNum = scan.nextLine().trim();
+        try{
+           num = Integer.parseInt(sNum);
+         }
+        catch(NumberFormatException ex){
+           System.out.println("Invalid Input!!");
+           loop=true;
+         } 
+      }while(loop);
+      /****************CHANGED****************/
+      //int num = scan.nextInt(); scan.nextLine();
       Song songReq = new Song();
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
       
@@ -240,9 +272,27 @@ public class Peer {
       String q; 
       Scanner scan = new Scanner(System.in);
       System.out.println("\nRequest Content.");
-      System.out.print("Enter the number of the song you want: ");
-      String numString = scan.nextLine(); //scan.nextLine();
-      int num = Integer.parseInt(numString);
+     // System.out.print("Enter the number of the song you want: ");
+      //String numString = scan.nextLine(); //scan.nextLine();
+      //int num = Integer.parseInt(numString);
+      /****************CHANGED****************/
+      boolean loop = true;
+      int num = 0;
+      do{
+        loop=false;
+        System.out.print("Enter the number of the song you want: ");
+        String sNum = scan.nextLine().trim();
+        try{
+           num = Integer.parseInt(sNum);
+         }
+        catch(NumberFormatException ex){
+          System.out.println("Invalid Output");
+          loop=true;
+         } 
+        
+      }while(loop);
+      /****************CHANGED****************/
+      //int num = scan.nextInt(); scan.nextLine();
       Song songReq = new Song();
       //System.out.println("num is " + num);
       songReq = Hash.getSongFromSNum(LocalHash.getTable(), num);
@@ -333,11 +383,11 @@ public class Peer {
       System.out.println("I: Inform and Update");
       System.out.println("Q: Query for content");
       System.out.println("R: Request Content");
-      System.out.println("A: Request ALL files form a peer");
+      System.out.println("A: Request ALL files from a Peer");
       System.out.println("P: Ping a peer");
       System.out.println("E: Exit Network");
-      System.out.print("Enter desired operation: ");
-      input = in.nextLine().toUpperCase();
+      System.out.print("Enter Desired Operation: ");
+      input = in.nextLine().toUpperCase().trim();
       switch (input) {
         case "S": setIP();
                   break;

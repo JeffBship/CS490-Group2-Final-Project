@@ -22,7 +22,7 @@ public class MultiThreadServer implements Runnable {
       try {
          PrintStream pstream = new PrintStream(csocket.getOutputStream());
          for (int i = 100; i >= 0; i--) {
-            pstream.println(i + " bottles of beer on the wall");
+            pstream.println(i + " bottles of milk on the wall");
          }
          pstream.close();
          csocket.close();
